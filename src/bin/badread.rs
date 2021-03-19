@@ -7,7 +7,7 @@ use badread_rs::cli;
 
 #[cfg(not(tarpaulin_include))]
 fn main() -> Result<()> {
-    let params = cli::Command::parse();
+    let params = cli::Command::try_parse()?;
 
     if let Some(level) = cli::i82level(params.verbosity) {
         env_logger::builder()
@@ -26,5 +26,6 @@ fn main() -> Result<()> {
         cli::set_nb_threads(threads);
     }
 
+    println!("{:?}", params);
     Ok(())
 }
