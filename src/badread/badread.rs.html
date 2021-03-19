@@ -31,7 +31,6 @@
 <span id="28">28</span>
 <span id="29">29</span>
 <span id="30">30</span>
-<span id="31">31</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">/* crate use */</span>
 <span class="kw">use</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span>;
@@ -42,7 +41,6 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">tarpaulin_include</span>))]</span>
 <span class="kw">fn</span> <span class="ident">main</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-
     <span class="kw">let</span> <span class="ident">params</span> <span class="op">=</span> <span class="ident">cli</span>::<span class="ident">Command</span>::<span class="ident">parse</span>();
 
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">level</span>) <span class="op">=</span> <span class="ident">cli</span>::<span class="ident">i82level</span>(<span class="ident">params</span>.<span class="ident">verbosity</span>) {
