@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["badread_rs"] = [{"text":"impl Freeze for Quantity","synthetic":true,"types":[]},{"text":"impl Freeze for Command","synthetic":true,"types":[]},{"text":"impl Freeze for Command","synthetic":true,"types":[]},{"text":"impl Freeze for SubCommand","synthetic":true,"types":[]},{"text":"impl Freeze for Cli","synthetic":true,"types":[]},{"text":"impl Freeze for Error","synthetic":true,"types":[]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

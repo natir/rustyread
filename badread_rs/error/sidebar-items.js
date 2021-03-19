@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Error","Enum to manage error polymorphism"]],"mod":[["cli","Command line interface error"]]});

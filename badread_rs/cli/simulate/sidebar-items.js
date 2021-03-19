@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Command","Struct use to parse simulate subcommand argument"],["Quantity","Store quantity as coverage of number of base"]]});
