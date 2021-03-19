@@ -246,7 +246,7 @@ pub struct Command {
 }
 
 #[cfg(test)]
-mod tests {
+mod t {
     use super::*;
 
     use std::str::FromStr;

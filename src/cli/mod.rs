@@ -66,7 +66,7 @@ pub fn set_nb_threads(nb_threads: usize) {
 }
 
 #[cfg(test)]
-mod tests {
+mod t {
     use super::*;
 
     #[test]
