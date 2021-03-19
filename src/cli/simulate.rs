@@ -4,7 +4,7 @@
 #[derive(Debug, PartialEq)]
 pub struct Quantity {
     coverage: u64,
-    base: u64,
+    base: Option<u64>,
 }
 
 impl std::str::FromStr for Quantity {
@@ -16,7 +16,7 @@ impl std::str::FromStr for Quantity {
                 Ok(number) => match u64::from_str(number) {
                     Ok(n) => Ok(Quantity {
                         coverage: n,
-                        base: 0,
+                        base: None,
                     }),
                     Err(_) => Err(crate::error::Cli::CantParssQuantity),
                 },
@@ -26,7 +26,7 @@ impl std::str::FromStr for Quantity {
                 Ok(number) => match u64::from_str(number) {
                     Ok(n) => Ok(Quantity {
                         coverage: 0,
-                        base: n * 1_000_000_000,
+                        base: Some(n * 1_000_000_000),
                     }),
                     Err(_) => Err(crate::error::Cli::CantParssQuantity),
                 },
@@ -36,7 +36,7 @@ impl std::str::FromStr for Quantity {
                 Ok(number) => match u64::from_str(number) {
                     Ok(n) => Ok(Quantity {
                         coverage: 0,
-                        base: n * 1_000_000,
+                        base: Some(n * 1_000_000),
                     }),
                     Err(_) => Err(crate::error::Cli::CantParssQuantity),
                 },
@@ -46,7 +46,7 @@ impl std::str::FromStr for Quantity {
                 Ok(number) => match u64::from_str(number) {
                     Ok(n) => Ok(Quantity {
                         coverage: 0,
-                        base: n * 1_000,
+                        base: Some(n * 1_000),
                     }),
                     Err(_) => Err(crate::error::Cli::CantParssQuantity),
                 },
@@ -56,12 +56,22 @@ impl std::str::FromStr for Quantity {
                 Ok(number) => match u64::from_str(number) {
                     Ok(n) => Ok(Quantity {
                         coverage: 0,
-                        base: n,
+                        base: Some(n),
                     }),
                     Err(_) => Err(crate::error::Cli::CantParssQuantity),
                 },
                 Err(_) => Err(crate::error::Cli::CantParssQuantity),
             },
+        }
+    }
+}
+
+impl Quantity {
+    /// Convert Quantity in a number of base, if base is set return just number of base else return genome_length times coverage
+    pub fn number_of_base(&self, genome_length: u64) -> u64 {
+        match self.base {
+            Some(n) => n,
+            None => genome_length * self.coverage,
         }
     }
 }
@@ -92,40 +102,40 @@ mod tests {
     use std::str::FromStr;
 
     #[test]
-    fn quantity() {
+    fn parse_quantity() {
         assert_eq!(
             Quantity::from_str("50").unwrap(),
             Quantity {
                 coverage: 0,
-                base: 50
+                base: Some(50)
             }
         );
         assert_eq!(
             Quantity::from_str("50K").unwrap(),
             Quantity {
                 coverage: 0,
-                base: 50_000
+                base: Some(50_000)
             }
         );
         assert_eq!(
             Quantity::from_str("50M").unwrap(),
             Quantity {
                 coverage: 0,
-                base: 50_000_000
+                base: Some(50_000_000)
             }
         );
         assert_eq!(
             Quantity::from_str("50G").unwrap(),
             Quantity {
                 coverage: 0,
-                base: 50_000_000_000
+                base: Some(50_000_000_000)
             }
         );
         assert_eq!(
             Quantity::from_str("50x").unwrap(),
             Quantity {
                 coverage: 50,
-                base: 0
+                base: None
             }
         );
 
@@ -136,5 +146,26 @@ mod tests {
         assert!(Quantity::from_str("bépo50M").is_err());
         assert!(Quantity::from_str("bépo50G").is_err());
         assert!(Quantity::from_str("bépo50x").is_err());
+    }
+
+    #[test]
+    fn quantity2number_of_base() {
+        assert_eq!(Quantity::from_str("50").unwrap().number_of_base(50), 50);
+        assert_eq!(
+            Quantity::from_str("50K").unwrap().number_of_base(50),
+            50_000
+        );
+        assert_eq!(
+            Quantity::from_str("50M").unwrap().number_of_base(50),
+            50_000_000
+        );
+        assert_eq!(
+            Quantity::from_str("50G").unwrap().number_of_base(50),
+            50_000_000_000
+        );
+        assert_eq!(
+            Quantity::from_str("50x").unwrap().number_of_base(50),
+	    2500
+        );
     }
 }
