@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["cli","All stuff relate to command line"],["error","All stuff relate to error"]]});
+initSidebarItems({"mod":[["cli","All stuff relate to command line"],["error","All stuff relate to error"],["references","A collections of sequence to store reference sequence"]]});
