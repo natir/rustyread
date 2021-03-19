@@ -1,0 +1,38 @@
+[package]
+name = "badread-rs"
+version = "0.1.0"
+authors = ["Pierre Marijon <pierre.marijon@hhu.de>"]
+edition = "2018"
+
+[lib]
+name = "badread_rs"
+crate-type = ["rlib", "cdylib", "staticlib"]
+
+
+[dependencies]
+bio            = "0.33"
+
+# parallel
+rayon          = "1"
+
+# input output management
+term_size      = "0.3"
+niffler	       = { version = "2", features = ["bz2", "lzma", "gz"] }
+
+# CLI management
+clap           = "3.0.0-beta.2"
+
+# Logging and error management
+log 	       = "0.4"
+anyhow         = "1"
+thiserror      = "1"
+env_logger     = "0.7"
+
+
+[profile.release]
+#debug = true # uncomment for profiling
+lto = 'thin'
+opt-level = 3
+overflow-checks = false
+panic = 'abort'
+incremental = false
