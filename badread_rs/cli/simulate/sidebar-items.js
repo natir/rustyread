@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Command","Struct use to parse simulate subcommand argument"],["Quantity","Store quantity as coverage of number of base"]]});
+initSidebarItems({"struct":[["Command","Struct use to parse simulate subcommand argument"],["Duo","Store a pair of value, can be parse from str if it's match with \\d+,\\d+"],["Quantity","Store quantity as coverage of number of base"],["Trio","Store a trio of value, can be parse from str if it's match with \\d+,\\d+,\\d++"]]});
