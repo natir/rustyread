@@ -9,6 +9,7 @@ pub mod references;
 
 const NUCS: [u8; 4] = [b'A', b'C', b'T', b'G'];
 
+/// Get a random base
 pub fn random_base<R>(rng: &mut R) -> u8
 where
     R: rand::Rng,
@@ -16,6 +17,7 @@ where
     NUCS[rng.gen_range(0..=3)]
 }
 
+/// Get a random base diffrent than nuc
 pub fn random_base_diff<R>(nuc: u8, rng: &mut R) -> u8
 where
     R: rand::Rng,
