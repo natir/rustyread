@@ -37,4 +37,8 @@ WIP
 
 Currently the minimum supported Rust version is 1.45.0.
 
+## Difference with python badread
 
+### Error model
+
+- If some of alternative kmer is lower than 1.0, python generate a random error on fly, we build a static random error durring error model generation

@@ -12,6 +12,10 @@ crate-type = ["rlib", "cdylib", "staticlib"]
 [dependencies]
 bio            = "0.33"
 rustc-hash     = "1"
+csv            = "1.1"
+rand           = "0.8"
+bstr           = "0.2"
+
 # parallel
 rayon          = "1"
 
