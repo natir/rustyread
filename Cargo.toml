@@ -16,6 +16,7 @@ rustc-hash     = "1"
 csv            = "1.1"
 rand           = "0.8"
 bstr           = "0.2"
+regex          = "1"
 
 # parallel
 rayon          = "1"
