@@ -1,7 +1,9 @@
-[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/natir/badread-rs/blob/master/LICENSE)
-![CI](https://github.com/natir/badread-rs/workflows/CI/badge.svg)
-[![Documentation](https://github.com/natir/badread-rs/workflows/Documentation/badge.svg)](https://natir.github.io/badread-rs/badread_rs)
+![Test](https://github.com/natir/badread-rs/workflows/Test/badge.svg)
+![Lints](https://github.com/natir/badread-rs/workflows/Lints/badge.svg)
+![MRV](https://github.com/natir/badread-rs/workflows/MRV/badge.svg)
 [![CodeCov](https://codecov.io/gh/natir/badread-rs/branch/master/graph/badge.svg)](https://codecov.io/gh/natir/badread-rs)
+[![Documentation](https://github.com/natir/badread-rs/workflows/Documentation/badge.svg)](https://natir.github.io/badread-rs/badread_rs)
+[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/natir/badread-rs/blob/master/LICENSE)
 
 # Badread-rs, a rewrite of Badread in rust 🧬 💻
 
