@@ -18,11 +18,11 @@ pub struct Command {
     #[clap(subcommand)]
     pub subcmd: SubCommand,
 
-    /// Number of thread badread_rs can use
+    /// Number of thread rustyread can use
     #[clap(
         short = 't',
         long = "threads",
-        about = "Number of thread use by badread, 0 use all avaible core, default value 0"
+        about = "Number of thread use by rustyread, 0 use all avaible core, default value 0"
     )]
     pub threads: Option<usize>,
 
@@ -31,7 +31,7 @@ pub struct Command {
         short = 'v',
         long = "verbosity",
         parse(from_occurrences),
-        about = "verbosity level also control by environment variable BADREAD_LOG if flag is set BADREAD_LOG value is ignored"
+        about = "verbosity level also control by environment variable RUSTYREAD_LOG if flag is set RUSTYREAD_LOG value is ignored"
     )]
     pub verbosity: i8,
 }

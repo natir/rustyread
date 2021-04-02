@@ -1,11 +1,12 @@
 [package]
-name = "badread-rs"
+name = "rustyread"
 version = "0.1.0"
 authors = ["Pierre Marijon <pierre.marijon@hhu.de>"]
 edition = "2018"
+description = "A long read generator based on badread method"
 
 [lib]
-name = "badread_rs"
+name = "rustyread"
 crate-type = ["rlib", "cdylib", "staticlib"]
 
 

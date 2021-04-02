@@ -134,7 +134,7 @@ pub struct Command {
     )]
     pub reference_path: String,
 
-    /// Quantity of base badread have to generate
+    /// Quantity of base rustyread have to generate
     #[clap(
         long = "quantity",
         about = "Either an absolute value (e.g. 250M) or a relative depth (e.g. 25x)",

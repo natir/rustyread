@@ -3,7 +3,7 @@ use anyhow::Result;
 use clap::Clap;
 
 /* local use */
-use badread_rs::cli;
+use rustyread::cli;
 
 #[cfg(not(tarpaulin_include))]
 fn main() -> Result<()> {
