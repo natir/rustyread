@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Quality","Struct to load and apply quality model"]]});
