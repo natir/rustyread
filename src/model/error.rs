@@ -12,10 +12,11 @@ use rand::distributions::WeightedIndex;
 use crate::error::Model;
 
 type Kmer = Vec<u8>;
+type KmerEdit = (Kmer, u64);
 
 /// Struct to load and apply error model
 pub struct Error {
-    kmer2alts_edit_prob: rustc_hash::FxHashMap<Kmer, (Vec<(Kmer, u64)>, Vec<f64>)>,
+    kmer2alts_edit_prob: rustc_hash::FxHashMap<Kmer, (Vec<KmerEdit>, Vec<f64>)>,
 }
 
 impl Error {
@@ -132,6 +133,7 @@ mod t {
     }
 
     static MODEL: &[u8] = b"ACAGTTG,0.25;ACGGTTG,0.25;ACAGG,0.25;";
+
     #[test]
     fn read_error_model() {
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
