@@ -8,17 +8,21 @@ use thiserror::Error;
 pub enum Model {
     /// Error durring error model parsing
     #[error("We aren't able to parse error model")]
-    ErrorModelParsing,
+    ErrorParsing,
 
     /// Error durring quality model parsing
     #[error("We aren't able to parse error model")]
-    QualityModelParsing,
+    QualityParsing,
 
     /// Quality model not contains minimal cigar string
     #[error("Quality model not contains minimal cigar string")]
-    QualityModelNotMinimalCigarString,
+    QualityNotMinimalCigarString,
 
     /// Cigar string length must be odd
     #[error("Cigar string length must be odd")]
-    QualityModelCigarLenNotOdd,
+    QualityCigarLenNotOdd,
+
+    /// Length model parameter must be upper than 0.0
+    #[error("Length model parameter must be upper than 0.0")]
+    LengthParamMustBeUpperThan0,
 }

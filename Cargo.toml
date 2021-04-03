@@ -17,6 +17,7 @@ csv            = "1.1"
 rand           = "0.8"
 bstr           = "0.2"
 regex          = "1"
+rand_distr     = "0.4"
 
 # parallel
 rayon          = "1"

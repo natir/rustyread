@@ -46,12 +46,8 @@ impl Error {
 
                 let mut info = row.split(',');
 
-                let kmer: Vec<u8> = info
-                    .next()
-                    .ok_or(Model::ErrorModelParsing)?
-                    .bytes()
-                    .collect();
-                let p = f64::from_str(info.next().ok_or(Model::ErrorModelParsing)?)?;
+                let kmer: Vec<u8> = info.next().ok_or(Model::ErrorParsing)?.bytes().collect();
+                let p = f64::from_str(info.next().ok_or(Model::ErrorParsing)?)?;
 
                 let dist = if !alts.is_empty() {
                     crate::alignment::edit_distance(&alts[0].0, &kmer)

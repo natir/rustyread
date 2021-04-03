@@ -37,13 +37,9 @@ impl Quality {
 
         while let Some(Ok(record)) = records.next() {
             let mut rows = record.iter();
-            let cigar = rows
-                .next()
-                .ok_or(Model::QualityModelParsing)?
-                .bytes()
-                .collect();
+            let cigar = rows.next().ok_or(Model::QualityParsing)?.bytes().collect();
             let _cigar_count = rows.next();
-            let scores_weight = rows.next().ok_or(Model::QualityModelParsing)?.split(',');
+            let scores_weight = rows.next().ok_or(Model::QualityParsing)?.split(',');
 
             let mut scores = Vec::new();
             let mut weights = Vec::new();
@@ -54,8 +50,8 @@ impl Quality {
                 }
 
                 let mut info = row.split(':');
-                scores.push(u8::from_str(info.next().ok_or(Model::ErrorModelParsing)?)?);
-                weights.push(f64::from_str(info.next().ok_or(Model::ErrorModelParsing)?)?);
+                scores.push(u8::from_str(info.next().ok_or(Model::ErrorParsing)?)?);
+                weights.push(f64::from_str(info.next().ok_or(Model::ErrorParsing)?)?);
             }
 
             data.insert(cigar, (scores, weights));
@@ -65,7 +61,7 @@ impl Quality {
             || !data.contains_key(&vec![b'X'])
             || !data.contains_key(&vec![b'I'])
         {
-            Err(anyhow::Error::new(Model::QualityModelNotMinimalCigarString))
+            Err(anyhow::Error::new(Model::QualityNotMinimalCigarString))
         } else {
             Ok(Self {
                 cigar2score_weight: data,
@@ -82,7 +78,7 @@ impl Quality {
 
         while !c.is_empty() {
             if c.len() % 2 == 0 {
-                anyhow::bail!(Model::QualityModelCigarLenNotOdd);
+                anyhow::bail!(Model::QualityCigarLenNotOdd);
             }
 
             if let Some((scores, weights)) = self.cigar2score_weight.get(c) {
@@ -93,7 +89,7 @@ impl Quality {
             }
         }
 
-        Err(anyhow::Error::new(Model::QualityModelNotMinimalCigarString))
+        Err(anyhow::Error::new(Model::QualityNotMinimalCigarString))
     }
 }
 
