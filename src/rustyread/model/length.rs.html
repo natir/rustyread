@@ -136,7 +136,7 @@
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Length</span>::<span class="ident">new</span>(<span class="number">0.0</span>, <span class="number">1.0</span>).<span class="ident">is_err</span>());
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Length</span>::<span class="ident">new</span>(<span class="op">-</span><span class="number">10.0</span>, <span class="op">-</span><span class="number">0.8</span>).<span class="ident">is_err</span>());
 
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Length</span>::<span class="ident">new</span>(<span class="number">1.0</span>, <span class="number">1.0</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Length</span>::<span class="ident">new</span>(<span class="number">1.0</span>, <span class="number">1.0</span>).<span class="ident">is_ok</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
