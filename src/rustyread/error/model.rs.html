@@ -25,6 +25,10 @@
 <span id="22">22</span>
 <span id="23">23</span>
 <span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Model error</span>
 
@@ -36,19 +40,23 @@
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Model</span> {
     <span class="doccomment">/// Error durring error model parsing</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;We aren&#39;t able to parse error model&quot;</span>)]</span>
-    <span class="ident">ErrorModelParsing</span>,
+    <span class="ident">ErrorParsing</span>,
 
     <span class="doccomment">/// Error durring quality model parsing</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;We aren&#39;t able to parse error model&quot;</span>)]</span>
-    <span class="ident">QualityModelParsing</span>,
+    <span class="ident">QualityParsing</span>,
 
     <span class="doccomment">/// Quality model not contains minimal cigar string</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Quality model not contains minimal cigar string&quot;</span>)]</span>
-    <span class="ident">QualityModelNotMinimalCigarString</span>,
+    <span class="ident">QualityNotMinimalCigarString</span>,
 
     <span class="doccomment">/// Cigar string length must be odd</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Cigar string length must be odd&quot;</span>)]</span>
-    <span class="ident">QualityModelCigarLenNotOdd</span>,
+    <span class="ident">QualityCigarLenNotOdd</span>,
+
+    <span class="doccomment">/// Length model parameter must be upper than 0.0</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Length model parameter must be upper than 0.0&quot;</span>)]</span>
+    <span class="ident">LengthParamMustBeUpperThan0</span>,
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rustyread"></div>

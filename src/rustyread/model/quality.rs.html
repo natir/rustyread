@@ -163,10 +163,6 @@
 <span id="160">160</span>
 <span id="161">161</span>
 <span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
-<span id="165">165</span>
-<span id="166">166</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Model to generate qscore</span>
 
@@ -207,13 +203,9 @@
 
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">record</span>)) <span class="op">=</span> <span class="ident">records</span>.<span class="ident">next</span>() {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rows</span> <span class="op">=</span> <span class="ident">record</span>.<span class="ident">iter</span>();
-            <span class="kw">let</span> <span class="ident">cigar</span> <span class="op">=</span> <span class="ident">rows</span>
-                .<span class="ident">next</span>()
-                .<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">QualityModelParsing</span>)<span class="question-mark">?</span>
-                .<span class="ident">bytes</span>()
-                .<span class="ident">collect</span>();
+            <span class="kw">let</span> <span class="ident">cigar</span> <span class="op">=</span> <span class="ident">rows</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">QualityParsing</span>)<span class="question-mark">?</span>.<span class="ident">bytes</span>().<span class="ident">collect</span>();
             <span class="kw">let</span> <span class="ident">_cigar_count</span> <span class="op">=</span> <span class="ident">rows</span>.<span class="ident">next</span>();
-            <span class="kw">let</span> <span class="ident">scores_weight</span> <span class="op">=</span> <span class="ident">rows</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">QualityModelParsing</span>)<span class="question-mark">?</span>.<span class="ident">split</span>(<span class="string">&#39;,&#39;</span>);
+            <span class="kw">let</span> <span class="ident">scores_weight</span> <span class="op">=</span> <span class="ident">rows</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">QualityParsing</span>)<span class="question-mark">?</span>.<span class="ident">split</span>(<span class="string">&#39;,&#39;</span>);
 
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">scores</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">weights</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
@@ -224,8 +216,8 @@
                 }
 
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">row</span>.<span class="ident">split</span>(<span class="string">&#39;:&#39;</span>);
-                <span class="ident">scores</span>.<span class="ident">push</span>(<span class="ident">u8</span>::<span class="ident">from_str</span>(<span class="ident">info</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">ErrorModelParsing</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>);
-                <span class="ident">weights</span>.<span class="ident">push</span>(<span class="ident">f64</span>::<span class="ident">from_str</span>(<span class="ident">info</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">ErrorModelParsing</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>);
+                <span class="ident">scores</span>.<span class="ident">push</span>(<span class="ident">u8</span>::<span class="ident">from_str</span>(<span class="ident">info</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">ErrorParsing</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>);
+                <span class="ident">weights</span>.<span class="ident">push</span>(<span class="ident">f64</span>::<span class="ident">from_str</span>(<span class="ident">info</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">ErrorParsing</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>);
             }
 
             <span class="ident">data</span>.<span class="ident">insert</span>(<span class="ident">cigar</span>, (<span class="ident">scores</span>, <span class="ident">weights</span>));
@@ -235,7 +227,7 @@
             <span class="op">|</span><span class="op">|</span> <span class="op">!</span><span class="ident">data</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="macro">vec</span><span class="macro">!</span>[<span class="string">b&#39;X&#39;</span>])
             <span class="op">|</span><span class="op">|</span> <span class="op">!</span><span class="ident">data</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="macro">vec</span><span class="macro">!</span>[<span class="string">b&#39;I&#39;</span>])
         {
-            <span class="prelude-val">Err</span>(<span class="ident">anyhow</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Model</span>::<span class="ident">QualityModelNotMinimalCigarString</span>))
+            <span class="prelude-val">Err</span>(<span class="ident">anyhow</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Model</span>::<span class="ident">QualityNotMinimalCigarString</span>))
         } <span class="kw">else</span> {
             <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
                 <span class="ident">cigar2score_weight</span>: <span class="ident">data</span>,
@@ -252,7 +244,7 @@
 
         <span class="kw">while</span> <span class="op">!</span><span class="ident">c</span>.<span class="ident">is_empty</span>() {
             <span class="kw">if</span> <span class="ident">c</span>.<span class="ident">len</span>() <span class="op">%</span> <span class="number">2</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
-                <span class="ident">anyhow</span>::<span class="macro">bail</span><span class="macro">!</span>(<span class="ident">Model</span>::<span class="ident">QualityModelCigarLenNotOdd</span>);
+                <span class="ident">anyhow</span>::<span class="macro">bail</span><span class="macro">!</span>(<span class="ident">Model</span>::<span class="ident">QualityCigarLenNotOdd</span>);
             }
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">scores</span>, <span class="ident">weights</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cigar2score_weight</span>.<span class="ident">get</span>(<span class="ident">c</span>) {
@@ -263,7 +255,7 @@
             }
         }
 
-        <span class="prelude-val">Err</span>(<span class="ident">anyhow</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Model</span>::<span class="ident">QualityModelNotMinimalCigarString</span>))
+        <span class="prelude-val">Err</span>(<span class="ident">anyhow</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Model</span>::<span class="ident">QualityNotMinimalCigarString</span>))
     }
 }
 

@@ -172,10 +172,6 @@
 <span id="169">169</span>
 <span id="170">170</span>
 <span id="171">171</span>
-<span id="172">172</span>
-<span id="173">173</span>
-<span id="174">174</span>
-<span id="175">175</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Model to add error sequence</span>
 
@@ -225,12 +221,8 @@
 
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">row</span>.<span class="ident">split</span>(<span class="string">&#39;,&#39;</span>);
 
-                <span class="kw">let</span> <span class="ident">kmer</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">info</span>
-                    .<span class="ident">next</span>()
-                    .<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">ErrorModelParsing</span>)<span class="question-mark">?</span>
-                    .<span class="ident">bytes</span>()
-                    .<span class="ident">collect</span>();
-                <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">f64</span>::<span class="ident">from_str</span>(<span class="ident">info</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">ErrorModelParsing</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">kmer</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">info</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">ErrorParsing</span>)<span class="question-mark">?</span>.<span class="ident">bytes</span>().<span class="ident">collect</span>();
+                <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">f64</span>::<span class="ident">from_str</span>(<span class="ident">info</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">ErrorParsing</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
                 <span class="kw">let</span> <span class="ident">dist</span> <span class="op">=</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">alts</span>.<span class="ident">is_empty</span>() {
                     <span class="kw">crate</span>::<span class="ident">alignment</span>::<span class="ident">edit_distance</span>(<span class="kw-2">&amp;</span><span class="ident">alts</span>[<span class="number">0</span>].<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">kmer</span>)
