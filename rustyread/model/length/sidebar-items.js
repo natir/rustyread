@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Length",""]]});
+initSidebarItems({"struct":[["Length","Struct to generate length of fragment"]]});

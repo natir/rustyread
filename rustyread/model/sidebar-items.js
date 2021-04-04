@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["error","Model to add error sequence"],["length","Model to get length of reads"],["quality","Model to generate qscore"]]});
+initSidebarItems({"mod":[["error","Model to add error sequence"],["identity","Model to get read identity"],["length","Model to get length of reads"],["quality","Model to generate qscore"]]});

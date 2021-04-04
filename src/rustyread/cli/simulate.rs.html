@@ -428,7 +428,7 @@
 
 <span class="doccomment">/// Store a pair of value, can be parse from str if it&#39;s match with \d+,\d+</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Duo</span>(<span class="ident">u64</span>, <span class="ident">u64</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Duo</span>(<span class="kw">pub</span> <span class="ident">u64</span>, <span class="kw">pub</span> <span class="ident">u64</span>);
 
 <span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">Duo</span> {
     <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>;
@@ -449,7 +449,7 @@
 
 <span class="doccomment">/// Store a trio of value, can be parse from str if it&#39;s match with \d+,\d+,\d++</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Trio</span>(<span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">u64</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Trio</span>(<span class="kw">pub</span> <span class="ident">u64</span>, <span class="kw">pub</span> <span class="ident">u64</span>, <span class="kw">pub</span> <span class="ident">u64</span>);
 
 <span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">Trio</span> {
     <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>;
@@ -521,7 +521,7 @@
         <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;seed&quot;</span>,
         <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Random number generator seed for deterministic output (default: different output each time)&quot;</span>
     )]</span>
-    <span class="kw">pub</span> <span class="ident">seed</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">seed</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
 
     <span class="doccomment">/// Start adapter parameter</span>
     <span class="attribute">#[<span class="ident">clap</span>(

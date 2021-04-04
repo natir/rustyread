@@ -79,6 +79,9 @@
 <span id="76">76</span>
 <span id="77">77</span>
 <span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Model to get length of reads</span>
 
@@ -91,6 +94,7 @@
 <span class="comment">/* local use */</span>
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Model</span>;
 
+<span class="doccomment">/// Struct to generate length of fragment</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Length</span> {
     <span class="ident">mean</span>: <span class="ident">f64</span>,
     <span class="ident">stdev</span>: <span class="ident">f64</span>,
@@ -98,6 +102,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Length</span> {
+    <span class="doccomment">/// Create model from parameter</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">mean</span>: <span class="ident">f64</span>, <span class="ident">stdev</span>: <span class="ident">f64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Length</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">mean</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">0.0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">stdev</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">0.0</span> {
             <span class="ident">anyhow</span>::<span class="macro">bail</span><span class="macro">!</span>(<span class="ident">Model</span>::<span class="ident">LengthParamMustBeUpperThan0</span>);
@@ -113,6 +118,7 @@
         })
     }
 
+    <span class="doccomment">/// Get length from model</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_length</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span>
     <span class="kw">where</span>
         <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
