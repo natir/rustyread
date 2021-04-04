@@ -78,7 +78,7 @@ impl Quantity {
 
 /// Store a pair of value, can be parse from str if it's match with \d+,\d+
 #[derive(Debug, PartialEq)]
-pub struct Duo(u64, u64);
+pub struct Duo(pub u64, pub u64);
 
 impl std::str::FromStr for Duo {
     type Err = crate::error::Cli;
@@ -99,7 +99,7 @@ impl std::str::FromStr for Duo {
 
 /// Store a trio of value, can be parse from str if it's match with \d+,\d+,\d++
 #[derive(Debug, PartialEq)]
-pub struct Trio(u64, u64, u64);
+pub struct Trio(pub u64, pub u64, pub u64);
 
 impl std::str::FromStr for Trio {
     type Err = crate::error::Cli;
@@ -171,7 +171,7 @@ pub struct Command {
         long = "seed",
         about = "Random number generator seed for deterministic output (default: different output each time)"
     )]
-    pub seed: Option<String>,
+    pub seed: Option<u64>,
 
     /// Start adapter parameter
     #[clap(

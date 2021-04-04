@@ -3,7 +3,7 @@ use anyhow::Result;
 use clap::Clap;
 
 /* local use */
-use rustyread::cli;
+use rustyread::*;
 
 #[cfg(not(tarpaulin_include))]
 fn main() -> Result<()> {
@@ -26,6 +26,7 @@ fn main() -> Result<()> {
         cli::set_nb_threads(threads);
     }
 
-    println!("{:?}", params);
-    Ok(())
+    match params.subcmd {
+        cli::SubCommand::Simulate(sub) => simulate::simulate(sub),
+    }
 }

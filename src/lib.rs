@@ -6,6 +6,7 @@ pub mod cli;
 pub mod error;
 pub mod model;
 pub mod references;
+pub mod simulate;
 
 const NUCS: [u8; 4] = [b'A', b'C', b'T', b'G'];
 

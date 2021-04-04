@@ -41,12 +41,11 @@ impl Identity {
     where
         R: rand::Rng,
     {
-	
-        if self.mean == self.max {
+        if (self.mean - self.max).abs() < f64::EPSILON {
             self.mean
-	} else {
+        } else {
             self.max * self.dist.sample(rng)
-	}
+        }
     }
 }
 

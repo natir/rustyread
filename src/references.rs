@@ -39,7 +39,7 @@ pub type References = (Vec<Reference>, Vec<f64>);
 pub trait AbsReferences {
     fn from_stream<R>(input: R) -> Result<Self>
     where
-        R: std::io::BufRead,
+        R: std::io::Read,
         Self: Sized;
 }
 
@@ -50,7 +50,7 @@ impl<'a> AbsReferences for References {
     /// If sequence contains 'depth=(\[\\d.\]+)' number of reads from this sequence is multiply by float value in capturing group
     fn from_stream<R>(input: R) -> Result<Self>
     where
-        R: std::io::BufRead,
+        R: std::io::Read,
     {
         let mut me_seq = Vec::new();
         let mut me_pro = Vec::new();

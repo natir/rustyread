@@ -9,6 +9,7 @@ use rand::distributions::Distribution;
 /* local use */
 use crate::error::Model;
 
+/// Struct to generate length of fragment
 pub struct Length {
     mean: f64,
     stdev: f64,
@@ -16,6 +17,7 @@ pub struct Length {
 }
 
 impl Length {
+    /// Create model from parameter
     pub fn new(mean: f64, stdev: f64) -> Result<Length> {
         if mean <= 0.0 || stdev <= 0.0 {
             anyhow::bail!(Model::LengthParamMustBeUpperThan0);
@@ -31,6 +33,7 @@ impl Length {
         })
     }
 
+    /// Get length from model
     pub fn get_length<R>(&self, rng: &mut R) -> u64
     where
         R: rand::Rng,
