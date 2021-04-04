@@ -37,7 +37,7 @@ impl Identity {
     }
 
     /// Get identity from model
-    pub fn get_length<R>(&self, rng: &mut R) -> f64
+    pub fn get_identity<R>(&self, rng: &mut R) -> f64
     where
         R: rand::Rng,
     {
@@ -68,7 +68,7 @@ mod t {
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
         let dist = Identity::new(90.0, 20.0, 99.0).unwrap();
 
-        let data: Vec<f64> = (0..100).map(|_| dist.get_length(&mut rng)).collect();
+        let data: Vec<f64> = (0..100).map(|_| dist.get_identity(&mut rng)).collect();
 
         assert_eq!(
             data,

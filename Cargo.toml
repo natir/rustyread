@@ -5,6 +5,7 @@ authors = ["Pierre Marijon <pierre.marijon@hhu.de>"]
 edition = "2018"
 description = "A long read generator based on badread method"
 
+
 [lib]
 name = "rustyread"
 crate-type = ["rlib", "cdylib", "staticlib"]
@@ -18,6 +19,7 @@ rand           = "0.8"
 bstr           = "0.2"
 regex          = "1"
 rand_distr     = "0.4"
+uuid           = { version = "0.8", features = ["v4"] }
 
 # parallel
 rayon          = "1"
