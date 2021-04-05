@@ -168,8 +168,19 @@
 <span id="165">165</span>
 <span id="166">166</span>
 <span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Simulate reads</span>
+
+<span class="comment">/* mod declaration */</span>
+<span class="kw">mod</span> <span class="ident">description</span>;
 
 <span class="comment">/* standard use */</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span>;
@@ -187,6 +198,7 @@
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">cli</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">model</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">references</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">description</span>::{<span class="ident">Description</span>, <span class="ident">Origin</span>};
 
 <span class="doccomment">/// main simulate function</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">tarpaulin</span>))]</span>
@@ -252,7 +264,7 @@
     <span class="kw">let</span> <span class="ident">parameter</span> <span class="op">=</span> (<span class="number">0</span>..<span class="ident">rayon</span>::<span class="ident">current_num_threads</span>())
         .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> (<span class="ident">base_per_thread</span>, <span class="ident">main_rng</span>.<span class="ident">next_u64</span>()))
         .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">u64</span>)<span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">sequences</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>)<span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">parameter</span>
+    <span class="kw">let</span> <span class="ident">sequences</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Description</span>, <span class="ident">Seq</span>, <span class="ident">Quality</span>)<span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">parameter</span>
         .<span class="ident">par_iter</span>()
         .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">base</span>, <span class="ident">seed</span>)<span class="op">|</span> {
             <span class="ident">worker</span>(
@@ -277,7 +289,7 @@
                 <span class="ident">output</span>,
                 <span class="string">&quot;@{} {}\n{}\n+\n{}\n&quot;</span>,
                 <span class="ident">uuid</span>::<span class="ident">Uuid</span>::<span class="ident">new_v4</span>().<span class="ident">to_hyphenated</span>(),
-                <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">comment</span>)<span class="question-mark">?</span>,
+                <span class="ident">comment</span>,
                 <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">seq</span>)<span class="question-mark">?</span>,
                 <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">qual</span>)<span class="question-mark">?</span>
             )<span class="question-mark">?</span>;
@@ -288,6 +300,10 @@
     <span class="prelude-val">Ok</span>(())
 }
 
+<span class="kw">type</span> <span class="ident">Seq</span> <span class="op">=</span> <span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>;
+<span class="kw">type</span> <span class="ident">Quality</span> <span class="op">=</span> <span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>;
+
+<span class="doccomment">/// Function realy generate read</span>
 <span class="kw">fn</span> <span class="ident">worker</span>(
     <span class="ident">target</span>: <span class="ident">u64</span>,
     <span class="ident">references</span>: <span class="kw-2">&amp;</span><span class="ident">References</span>,
@@ -296,7 +312,7 @@
     <span class="ident">error_model</span>: <span class="kw-2">&amp;</span><span class="ident">model</span>::<span class="ident">Error</span>,
     <span class="ident">qscore_model</span>: <span class="kw-2">&amp;</span><span class="ident">model</span>::<span class="ident">Quality</span>,
     <span class="kw-2">mut</span> <span class="ident">rng</span>: <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>)<span class="op">&gt;</span> {
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Description</span>, <span class="ident">Seq</span>, <span class="ident">Quality</span>)<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">generate</span> <span class="op">=</span> <span class="number">0</span>;
@@ -304,6 +320,7 @@
 
     <span class="kw">while</span> <span class="ident">generate</span> <span class="op">&lt;</span> <span class="ident">target</span> {
         <span class="kw">let</span> <span class="ident">local_ref</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">references</span>.<span class="number">0</span>[<span class="ident">ref_dist</span>.<span class="ident">sample</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>)];
+        <span class="kw">let</span> <span class="ident">strand</span> <span class="op">=</span> [<span class="string">&#39;+&#39;</span>, <span class="string">&#39;-&#39;</span>][<span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0</span>..<span class="number">1</span>) <span class="kw">as</span> <span class="ident">usize</span>];
         <span class="kw">let</span> <span class="ident">start_pos</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0</span>..<span class="ident">local_ref</span>.<span class="ident">seq</span>.<span class="ident">len</span>()) <span class="kw">as</span> <span class="ident">usize</span>;
         <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">length_model</span>.<span class="ident">get_length</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>) <span class="kw">as</span> <span class="ident">usize</span>;
         <span class="kw">let</span> <span class="ident">identity</span> <span class="op">=</span> <span class="ident">identity_model</span>.<span class="ident">get_identity</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
@@ -314,22 +331,21 @@
             <span class="ident">start_pos</span> <span class="op">+</span> <span class="ident">length</span>
         };
 
-        <span class="ident">log</span>::<span class="macro">debug</span><span class="macro">!</span>(
-            <span class="string">&quot;local_ref {} start_pos {} length {} end_pos {} identity {}&quot;</span>,
-            <span class="ident">local_ref</span>.<span class="ident">id</span>,
-            <span class="ident">start_pos</span>,
-            <span class="ident">length</span>,
-            <span class="ident">end_pos</span>,
-            <span class="ident">identity</span>
-        );
+        <span class="kw">let</span> <span class="ident">raw_fragment</span> <span class="op">=</span> <span class="ident">local_ref</span>.<span class="ident">seq</span>[<span class="ident">start_pos</span>..<span class="ident">end_pos</span>]
+            .<span class="ident">to_vec</span>()
+            .<span class="ident">into_boxed_slice</span>();
 
-        <span class="ident">data</span>.<span class="ident">push</span>((
-            <span class="macro">vec</span><span class="macro">!</span>[<span class="number">65u8</span>].<span class="ident">into_boxed_slice</span>(),
-            <span class="ident">local_ref</span>.<span class="ident">seq</span>[<span class="ident">start_pos</span>..<span class="ident">end_pos</span>]
-                .<span class="ident">to_vec</span>()
-		.<span class="ident">into_boxed_slice</span>(),
-            <span class="macro">vec</span><span class="macro">!</span>[<span class="number">65</span>].<span class="ident">into_boxed_slice</span>(),
-        ));
+        <span class="kw">let</span> <span class="ident">ori</span> <span class="op">=</span> <span class="ident">Origin</span>::<span class="ident">new</span>(
+            <span class="ident">local_ref</span>.<span class="ident">id</span>.<span class="ident">clone</span>(),
+            <span class="ident">strand</span>,
+            <span class="ident">start_pos</span>,
+            <span class="ident">end_pos</span>,
+            <span class="bool-val">false</span>,
+            <span class="bool-val">false</span>,
+        );
+        <span class="kw">let</span> <span class="ident">des</span> <span class="op">=</span> <span class="ident">Description</span>::<span class="ident">new</span>(<span class="ident">ori</span>, <span class="prelude-val">None</span>, <span class="ident">length</span>, <span class="ident">identity</span>);
+
+        <span class="ident">data</span>.<span class="ident">push</span>((<span class="ident">des</span>, <span class="ident">raw_fragment</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="number">65</span>].<span class="ident">into_boxed_slice</span>()));
 
         <span class="ident">generate</span> <span class="op">+</span><span class="op">=</span> (<span class="ident">end_pos</span> <span class="op">-</span> <span class="ident">start_pos</span>) <span class="kw">as</span> <span class="ident">u64</span>;
     }
