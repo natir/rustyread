@@ -1,5 +1,8 @@
 //! Simulate reads
 
+/* mod declaration */
+mod description;
+
 /* standard use */
 use std::io::Write;
 
@@ -16,6 +19,7 @@ use rayon::prelude::*;
 use crate::cli;
 use crate::model;
 use crate::references::*;
+use description::{Description, Origin};
 
 /// main simulate function
 #[cfg(not(tarpaulin))]
@@ -81,7 +85,7 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     let parameter = (0..rayon::current_num_threads())
         .map(|_| (base_per_thread, main_rng.next_u64()))
         .collect::<Vec<(u64, u64)>>();
-    let sequences: Vec<Vec<(Box<[u8]>, Box<[u8]>, Box<[u8]>)>> = parameter
+    let sequences: Vec<Vec<(Description, Seq, Quality)>> = parameter
         .par_iter()
         .map(|(base, seed)| {
             worker(
@@ -106,7 +110,7 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
                 output,
                 "@{} {}\n{}\n+\n{}\n",
                 uuid::Uuid::new_v4().to_hyphenated(),
-                std::str::from_utf8(&comment)?,
+                comment,
                 std::str::from_utf8(&seq)?,
                 std::str::from_utf8(&qual)?
             )?;
@@ -117,6 +121,10 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     Ok(())
 }
 
+type Seq = Box<[u8]>;
+type Quality = Box<[u8]>;
+
+/// Function realy generate read
 fn worker(
     target: u64,
     references: &References,
@@ -125,7 +133,7 @@ fn worker(
     error_model: &model::Error,
     qscore_model: &model::Quality,
     mut rng: rand::rngs::StdRng,
-) -> Vec<(Box<[u8]>, Box<[u8]>, Box<[u8]>)> {
+) -> Vec<(Description, Seq, Quality)> {
     let mut data = Vec::new();
 
     let mut generate = 0;
@@ -133,6 +141,7 @@ fn worker(
 
     while generate < target {
         let local_ref = &references.0[ref_dist.sample(&mut rng)];
+        let strand = ['+', '-'][rng.gen_range(0..1) as usize];
         let start_pos = rng.gen_range(0..local_ref.seq.len()) as usize;
         let length = length_model.get_length(&mut rng) as usize;
         let identity = identity_model.get_identity(&mut rng);
@@ -143,22 +152,21 @@ fn worker(
             start_pos + length
         };
 
-        log::debug!(
-            "local_ref {} start_pos {} length {} end_pos {} identity {}",
-            local_ref.id,
-            start_pos,
-            length,
-            end_pos,
-            identity
-        );
+        let raw_fragment = local_ref.seq[start_pos..end_pos]
+            .to_vec()
+            .into_boxed_slice();
 
-        data.push((
-            vec![65u8].into_boxed_slice(),
-            local_ref.seq[start_pos..end_pos]
-                .to_vec()
-		.into_boxed_slice(),
-            vec![65].into_boxed_slice(),
-        ));
+        let ori = Origin::new(
+            local_ref.id.clone(),
+            strand,
+            start_pos,
+            end_pos,
+            false,
+            false,
+        );
+        let des = Description::new(ori, None, length, identity);
+
+        data.push((des, raw_fragment, vec![65].into_boxed_slice()));
 
         generate += (end_pos - start_pos) as u64;
     }
