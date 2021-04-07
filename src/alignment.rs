@@ -10,17 +10,17 @@ pub fn edit_distance(seq1: &[u8], seq2: &[u8]) -> u64 {
     bio::alignment::distance::levenshtein(seq1, seq2) as u64
 }
 
-pub fn align(raw: &[u8], err: &[u8]) -> (usize, Box<[u8]>) {
+pub fn align(query: &[u8], target: &[u8]) -> (usize, Box<[u8]>) {
     // let mut aligner = bio::alignment::pairwise::Aligner::with_capacity(
-    //     err.len(),
-    //     raw.len(),
+    //     target.len(),
+    //     query.len(),
     //     0,
     //     0,
     //     |a: u8, b: u8| if a == b { 1i32 } else { 0i32 },
     // );
     let mut aligner = bio::alignment::pairwise::banded::Aligner::with_capacity(
-        err.len(),
-        raw.len(),
+        target.len(),
+        query.len(),
         0,
         0,
         |a: u8, b: u8| if a == b { 1i32 } else { 0i32 },
@@ -28,9 +28,9 @@ pub fn align(raw: &[u8], err: &[u8]) -> (usize, Box<[u8]>) {
         10,
     );
 
-    let alignment = aligner.global(raw, err);
+    let alignment = aligner.global(query, target);
 
-    let mut cigar = Vec::with_capacity(raw.len().max(err.len()));
+    let mut cigar = Vec::with_capacity(query.len().max(target.len()));
 
     for op in alignment.operations {
         match op {
