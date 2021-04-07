@@ -25,4 +25,8 @@ pub enum Model {
     /// Length model parameter must be upper than 0.0
     #[error("Length model parameter must be upper than 0.0")]
     LengthParamMustBeUpperThan0,
+
+    /// Identity model parameter must be upper than 0.0
+    #[error("Identity model parameter must be upper than 0.0")]
+    IdentityParamMustBeUpperThan0,
 }
