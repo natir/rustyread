@@ -28,13 +28,10 @@ impl Identity {
         max /= 100.0;
         stdev /= 100.0;
 
-        println!("{} {}", (mean - max).abs(), f64::EPSILON);
         let dist = if (mean - max).abs() > f64::EPSILON {
             let beta_a = (((1.0 - (mean / max)) / ((stdev / max).powf(2.0))) - (max / mean))
                 * ((mean / max).powf(2.0));
             let beta_b = beta_a * ((max / mean) - 1.0);
-
-            println!("a {} b {}", beta_a, beta_b);
 
             Some(rand_distr::Beta::new(beta_a, beta_b)?)
         } else {

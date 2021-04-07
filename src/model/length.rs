@@ -12,25 +12,26 @@ use crate::error::Model;
 /// Struct to generate length of fragment
 pub struct Length {
     mean: f64,
-    stdev: f64,
-    dist: rand_distr::Gamma<f64>,
+    dist: Option<rand_distr::Gamma<f64>>,
 }
 
 impl Length {
     /// Create model from parameter
     pub fn new(mean: f64, stdev: f64) -> Result<Length> {
-        if mean <= 0.0 || stdev <= 0.0 {
+        if mean <= 0.0 || stdev < 0.0 {
             anyhow::bail!(Model::LengthParamMustBeUpperThan0);
         }
 
-        let k = mean.powf(2.0) / stdev.powf(2.0);
-        let t = stdev.powf(2.0) / mean;
+        let dist = if stdev != 0.0 {
+            let k = mean.powf(2.0) / stdev.powf(2.0);
+            let t = stdev.powf(2.0) / mean;
 
-        Ok(Self {
-            mean,
-            stdev,
-            dist: rand_distr::Gamma::new(k, t)?,
-        })
+            Some(rand_distr::Gamma::new(k, t)?)
+        } else {
+            None
+        };
+
+        Ok(Self { mean, dist })
     }
 
     /// Get length from model
@@ -38,10 +39,10 @@ impl Length {
     where
         R: rand::Rng,
     {
-        if self.stdev == 0.0 {
-            self.mean.round() as u64
+        if let Some(dist) = self.dist {
+            dist.sample(rng).round() as u64
         } else {
-            self.dist.sample(rng).round() as u64
+            self.mean.round() as u64
         }
     }
 }
