@@ -17,6 +17,7 @@ type Weights = Vec<f64>;
 
 /// Struct to load and apply quality model
 pub struct Quality {
+    max_k: usize,
     cigar2score_weight: rustc_hash::FxHashMap<Cigar, (Scores, Weights)>,
 }
 
@@ -35,9 +36,11 @@ impl Quality {
             .from_reader(input);
         let mut records = reader.records().skip(1);
 
+        let mut kmer_length = 0;
+
         while let Some(Ok(record)) = records.next() {
             let mut rows = record.iter();
-            let cigar = rows.next().ok_or(Model::QualityParsing)?.bytes().collect();
+            let cigar: Vec<u8> = rows.next().ok_or(Model::QualityParsing)?.bytes().collect();
             let _cigar_count = rows.next();
             let scores_weight = rows.next().ok_or(Model::QualityParsing)?.split(',');
 
@@ -54,6 +57,9 @@ impl Quality {
                 weights.push(f64::from_str(info.next().ok_or(Model::ErrorParsing)?)?);
             }
 
+            if cigar.len() > kmer_length {
+                kmer_length = cigar.len();
+            }
             data.insert(cigar, (scores, weights));
         }
 
@@ -64,6 +70,7 @@ impl Quality {
             Err(anyhow::Error::new(Model::QualityNotMinimalCigarString))
         } else {
             Ok(Self {
+                max_k: kmer_length,
                 cigar2score_weight: data,
             })
         }
@@ -90,6 +97,11 @@ impl Quality {
         }
 
         Err(anyhow::Error::new(Model::QualityNotMinimalCigarString))
+    }
+
+    /// Kmer length of model
+    pub fn max_k(&self) -> usize {
+        self.max_k
     }
 }
 
