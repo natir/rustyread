@@ -101,6 +101,6 @@ mod t {
     fn random_seq_() {
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
 
-	assert_eq!(b"TTAGATTATAGTACGGTATA".to_vec(), random_seq(20, &mut rng));
+        assert_eq!(b"TTAGATTATAGTACGGTATA".to_vec(), random_seq(20, &mut rng));
     }
 }

@@ -57,7 +57,11 @@ pub fn apply_changes(seq: &[u8], changes: Vec<(usize, Vec<u8>)>, k: usize) -> Se
     for change in changes {
         if change.0 < pos_in_raw {
             let remove = pos_in_raw - change.0;
-            err.drain((err.len() - remove)..);
+            if err.len() > remove {
+                err.drain((err.len() - remove)..);
+            } else {
+                err.drain(0..);
+            }
             pos_in_raw -= remove;
         }
 

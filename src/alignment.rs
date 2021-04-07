@@ -11,14 +11,22 @@ pub fn edit_distance(seq1: &[u8], seq2: &[u8]) -> u64 {
 }
 
 pub fn align(raw: &[u8], err: &[u8]) -> (usize, Box<[u8]>) {
-    let mut aligner = bio::alignment::pairwise::Aligner::with_capacity(
+    // let mut aligner = bio::alignment::pairwise::Aligner::with_capacity(
+    //     err.len(),
+    //     raw.len(),
+    //     0,
+    //     0,
+    //     |a: u8, b: u8| if a == b { 1i32 } else { 0i32 },
+    // );
+    let mut aligner = bio::alignment::pairwise::banded::Aligner::with_capacity(
         err.len(),
         raw.len(),
         0,
         0,
         |a: u8, b: u8| if a == b { 1i32 } else { 0i32 },
+        7,
+        10,
     );
-    //let mut aligner = bio::alignment::pairwise::banded::Aligner::with_capacity(err.len(), raw.len(), 0, 0, |a: u8, b: u8| if a == b { 1i32 } else { 0i32 }, 7, 5);
 
     let alignment = aligner.global(raw, err);
 
