@@ -22,8 +22,8 @@ use crate::model;
 use crate::references::*;
 use description::{Description, Origin};
 
+#[cfg(not(tarpaulin_include))]
 /// main simulate function
-#[cfg(not(tarpaulin))]
 pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     let mut main_rng = if let Some(seed) = params.seed {
         rand::rngs::StdRng::seed_from_u64(seed)
@@ -127,8 +127,8 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
 type Seq = Vec<u8>;
 type Quality = Vec<u8>;
 
+#[cfg(not(tarpaulin_include))]
 /// Function realy generate read
-#[cfg(not(tarpaulin))]
 fn worker(
     target: u64,
     references: &References,
