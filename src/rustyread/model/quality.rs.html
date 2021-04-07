@@ -163,6 +163,18 @@
 <span id="160">160</span>
 <span id="161">161</span>
 <span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Model to generate qscore</span>
 
@@ -183,6 +195,7 @@
 
 <span class="doccomment">/// Struct to load and apply quality model</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Quality</span> {
+    <span class="ident">max_k</span>: <span class="ident">usize</span>,
     <span class="ident">cigar2score_weight</span>: <span class="ident">rustc_hash</span>::<span class="ident">FxHashMap</span><span class="op">&lt;</span><span class="ident">Cigar</span>, (<span class="ident">Scores</span>, <span class="ident">Weights</span>)<span class="op">&gt;</span>,
 }
 
@@ -201,9 +214,11 @@
             .<span class="ident">from_reader</span>(<span class="ident">input</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">records</span> <span class="op">=</span> <span class="ident">reader</span>.<span class="ident">records</span>().<span class="ident">skip</span>(<span class="number">1</span>);
 
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">kmer_length</span> <span class="op">=</span> <span class="number">0</span>;
+
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">record</span>)) <span class="op">=</span> <span class="ident">records</span>.<span class="ident">next</span>() {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rows</span> <span class="op">=</span> <span class="ident">record</span>.<span class="ident">iter</span>();
-            <span class="kw">let</span> <span class="ident">cigar</span> <span class="op">=</span> <span class="ident">rows</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">QualityParsing</span>)<span class="question-mark">?</span>.<span class="ident">bytes</span>().<span class="ident">collect</span>();
+            <span class="kw">let</span> <span class="ident">cigar</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">rows</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">QualityParsing</span>)<span class="question-mark">?</span>.<span class="ident">bytes</span>().<span class="ident">collect</span>();
             <span class="kw">let</span> <span class="ident">_cigar_count</span> <span class="op">=</span> <span class="ident">rows</span>.<span class="ident">next</span>();
             <span class="kw">let</span> <span class="ident">scores_weight</span> <span class="op">=</span> <span class="ident">rows</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">QualityParsing</span>)<span class="question-mark">?</span>.<span class="ident">split</span>(<span class="string">&#39;,&#39;</span>);
 
@@ -220,6 +235,9 @@
                 <span class="ident">weights</span>.<span class="ident">push</span>(<span class="ident">f64</span>::<span class="ident">from_str</span>(<span class="ident">info</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">Model</span>::<span class="ident">ErrorParsing</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>);
             }
 
+            <span class="kw">if</span> <span class="ident">cigar</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">kmer_length</span> {
+                <span class="ident">kmer_length</span> <span class="op">=</span> <span class="ident">cigar</span>.<span class="ident">len</span>();
+            }
             <span class="ident">data</span>.<span class="ident">insert</span>(<span class="ident">cigar</span>, (<span class="ident">scores</span>, <span class="ident">weights</span>));
         }
 
@@ -230,6 +248,7 @@
             <span class="prelude-val">Err</span>(<span class="ident">anyhow</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Model</span>::<span class="ident">QualityNotMinimalCigarString</span>))
         } <span class="kw">else</span> {
             <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
+                <span class="ident">max_k</span>: <span class="ident">kmer_length</span>,
                 <span class="ident">cigar2score_weight</span>: <span class="ident">data</span>,
             })
         }
@@ -256,6 +275,11 @@
         }
 
         <span class="prelude-val">Err</span>(<span class="ident">anyhow</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Model</span>::<span class="ident">QualityNotMinimalCigarString</span>))
+    }
+
+    <span class="doccomment">/// Kmer length of model</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_k</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">max_k</span>
     }
 }
 

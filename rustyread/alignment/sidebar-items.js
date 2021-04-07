@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["edit_distance",""],["identity",""]]});
+initSidebarItems({"fn":[["align",""],["edit_distance",""]]});
