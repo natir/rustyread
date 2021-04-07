@@ -32,6 +32,14 @@ where
     }
 }
 
+/// Get random sequences
+pub fn random_seq<R>(length: usize, rng: &mut R) -> Vec<u8>
+where
+    R: rand::Rng,
+{
+    (0..length).map(|_| random_base(rng)).collect()
+}
+
 #[cfg(test)]
 mod t {
     use super::*;
@@ -87,5 +95,12 @@ mod t {
         .to_vec();
         data = (0..20).map(|_| random_base_diff(b'G', &mut rng)).collect();
         assert_eq!(truth, data);
+    }
+
+    #[test]
+    fn random_seq_() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+
+	assert_eq!(b"TTAGATTATAGTACGGTATA".to_vec(), random_seq(20, &mut rng));
     }
 }
