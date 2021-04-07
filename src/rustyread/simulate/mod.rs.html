@@ -389,8 +389,8 @@
         <span class="kw">let</span> (<span class="ident">real_id</span>, <span class="ident">quality</span>) <span class="op">=</span>
             <span class="ident">generate_quality</span>(<span class="kw-2">&amp;</span><span class="ident">raw_fragment</span>, <span class="kw-2">&amp;</span><span class="ident">err_fragment</span>, <span class="ident">qscore_model</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>)<span class="question-mark">?</span>;
 
-	<span class="ident">log</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;target {} real {}&quot;</span>, <span class="ident">identity</span>, <span class="ident">real_id</span>);
-	
+        <span class="ident">log</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;target {} real {}&quot;</span>, <span class="ident">identity</span>, <span class="ident">real_id</span>);
+
         <span class="kw">let</span> <span class="ident">ori</span> <span class="op">=</span> <span class="ident">Origin</span>::<span class="ident">new</span>(
             <span class="ident">local_ref</span>.<span class="ident">id</span>.<span class="ident">clone</span>(),
             <span class="ident">strand</span>,

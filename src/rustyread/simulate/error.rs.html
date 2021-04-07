@@ -214,11 +214,11 @@
     <span class="kw">for</span> <span class="ident">change</span> <span class="kw">in</span> <span class="ident">changes</span> {
         <span class="kw">if</span> <span class="ident">change</span>.<span class="number">0</span> <span class="op">&lt;</span> <span class="ident">pos_in_raw</span> {
             <span class="kw">let</span> <span class="ident">remove</span> <span class="op">=</span> <span class="ident">pos_in_raw</span> <span class="op">-</span> <span class="ident">change</span>.<span class="number">0</span>;
-	    <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">remove</span> {
-		<span class="ident">err</span>.<span class="ident">drain</span>((<span class="ident">err</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">remove</span>)..);
-	    } <span class="kw">else</span> {
-		<span class="ident">err</span>.<span class="ident">drain</span>(<span class="number">0</span>..);
-	    }
+            <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">remove</span> {
+                <span class="ident">err</span>.<span class="ident">drain</span>((<span class="ident">err</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">remove</span>)..);
+            } <span class="kw">else</span> {
+                <span class="ident">err</span>.<span class="ident">drain</span>(<span class="number">0</span>..);
+            }
             <span class="ident">pos_in_raw</span> <span class="op">-</span><span class="op">=</span> <span class="ident">remove</span>;
         }
 
