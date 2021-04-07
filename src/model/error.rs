@@ -16,6 +16,7 @@ type KmerEdit = (Kmer, u64);
 
 /// Struct to load and apply error model
 pub struct Error {
+    length: usize,
     kmer2alts_edit_prob: rustc_hash::FxHashMap<Kmer, (Vec<KmerEdit>, Vec<f64>)>,
 }
 
@@ -34,6 +35,7 @@ impl Error {
             .flexible(true)
             .from_reader(input);
         let mut records = reader.records();
+        let mut kmer_length = 0;
 
         while let Some(Ok(record)) = records.next() {
             let mut alts: Vec<(Kmer, u64)> = Vec::new();
@@ -64,10 +66,12 @@ impl Error {
                 alts.push((random_error(&alts[0].0, rng), 1));
                 prob.push(1.0 - sum_of_prob);
             }
+            kmer_length = alts[0].0.len();
             data.insert(alts[0].0.clone(), (alts, prob));
         }
 
         Ok(Self {
+            length: kmer_length,
             kmer2alts_edit_prob: data,
         })
     }
@@ -84,6 +88,11 @@ impl Error {
         } else {
             (kmer.to_vec(), 0)
         }
+    }
+
+    /// Kmer length of model
+    pub fn k(&self) -> usize {
+        self.length
     }
 }
 
