@@ -19,7 +19,7 @@ pub struct Identity {
 
 impl Identity {
     /// Create model from parameter
-    pub fn new(mut mean: f64, mut stdev: f64, mut max: f64) -> Result<Identity> {
+    pub fn new(mut mean: f64, mut max: f64, mut stdev: f64) -> Result<Identity> {
         if mean <= 0.0 || stdev <= 0.0 {
             anyhow::bail!(Model::LengthParamMustBeUpperThan0);
         }
@@ -60,13 +60,13 @@ mod t {
         assert!(Identity::new(0.0, 1.0, 0.0).is_err());
         assert!(Identity::new(-10.0, -0.8, 0.0).is_err());
 
-        assert!(Identity::new(1.0, 1.0, 0.0).is_ok());
+        assert!(Identity::new(1.0, 0.0, 1.0).is_ok());
     }
 
     #[test]
     fn get_value() {
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
-        let dist = Identity::new(90.0, 20.0, 99.0).unwrap();
+        let dist = Identity::new(90.0, 99.0, 20.0).unwrap();
 
         let data: Vec<f64> = (0..100).map(|_| dist.get_identity(&mut rng)).collect();
 
