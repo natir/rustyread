@@ -206,9 +206,6 @@
 <span id="203">203</span>
 <span id="204">204</span>
 <span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
-<span id="208">208</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Model to get read identity</span>
 
@@ -240,13 +237,10 @@
         <span class="ident">max</span> <span class="op">/</span><span class="op">=</span> <span class="number">100.0</span>;
         <span class="ident">stdev</span> <span class="op">/</span><span class="op">=</span> <span class="number">100.0</span>;
 
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{} {}&quot;</span>, (<span class="ident">mean</span> <span class="op">-</span> <span class="ident">max</span>).<span class="ident">abs</span>(), <span class="ident">f64</span>::<span class="ident">EPSILON</span>);
         <span class="kw">let</span> <span class="ident">dist</span> <span class="op">=</span> <span class="kw">if</span> (<span class="ident">mean</span> <span class="op">-</span> <span class="ident">max</span>).<span class="ident">abs</span>() <span class="op">&gt;</span> <span class="ident">f64</span>::<span class="ident">EPSILON</span> {
             <span class="kw">let</span> <span class="ident">beta_a</span> <span class="op">=</span> (((<span class="number">1.0</span> <span class="op">-</span> (<span class="ident">mean</span> <span class="op">/</span> <span class="ident">max</span>)) <span class="op">/</span> ((<span class="ident">stdev</span> <span class="op">/</span> <span class="ident">max</span>).<span class="ident">powf</span>(<span class="number">2.0</span>))) <span class="op">-</span> (<span class="ident">max</span> <span class="op">/</span> <span class="ident">mean</span>))
                 <span class="op">*</span> ((<span class="ident">mean</span> <span class="op">/</span> <span class="ident">max</span>).<span class="ident">powf</span>(<span class="number">2.0</span>));
             <span class="kw">let</span> <span class="ident">beta_b</span> <span class="op">=</span> <span class="ident">beta_a</span> <span class="op">*</span> ((<span class="ident">max</span> <span class="op">/</span> <span class="ident">mean</span>) <span class="op">-</span> <span class="number">1.0</span>);
-
-            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;a {} b {}&quot;</span>, <span class="ident">beta_a</span>, <span class="ident">beta_b</span>);
 
             <span class="prelude-val">Some</span>(<span class="ident">rand_distr</span>::<span class="ident">Beta</span>::<span class="ident">new</span>(<span class="ident">beta_a</span>, <span class="ident">beta_b</span>)<span class="question-mark">?</span>)
         } <span class="kw">else</span> {
