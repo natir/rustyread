@@ -246,6 +246,7 @@
 <span id="243">243</span>
 <span id="244">244</span>
 <span id="245">245</span>
+<span id="246">246</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Simulate reads</span>
 
@@ -413,6 +414,7 @@
     <span class="kw">let</span> <span class="ident">des</span> <span class="op">=</span> <span class="ident">Description</span>::<span class="ident">new</span>(<span class="ident">ori</span>, <span class="prelude-val">None</span>, <span class="ident">length</span>, <span class="ident">real_id</span> <span class="op">*</span> <span class="number">100.0</span>);
 
     <span class="comment">// TODO remove that</span>
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">err_fragment</span>.<span class="ident">len</span>(), <span class="ident">quality</span>.<span class="ident">len</span>());
     <span class="ident">quality</span>.<span class="ident">resize</span>(<span class="ident">err_fragment</span>.<span class="ident">len</span>(), <span class="string">b&#39;!&#39;</span>);
 
     <span class="prelude-val">Ok</span>((<span class="ident">des</span>, <span class="ident">err_fragment</span>, <span class="ident">quality</span>))
