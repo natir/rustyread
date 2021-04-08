@@ -151,6 +151,10 @@ fn worker(
         let length = length_model.get_length(&mut rng) as usize;
         let identity = identity_model.get_identity(&mut rng);
 
+        if length > 100_000 {
+            continue;
+        }
+
         let end_pos = if start_pos + length > local_ref.seq.len() {
             local_ref.seq.len() - 1
         } else {
@@ -162,13 +166,16 @@ fn worker(
         raw_fragment.extend(&local_ref.seq[start_pos..end_pos]);
         raw_fragment.extend(crate::random_seq(k, &mut rng));
 
-        let err_fragment: Vec<u8> =
+        let (err_fragment, diffpos) =
             error::add_error(identity, error_model, &raw_fragment, &mut rng);
 
-        let (real_id, quality) =
-            generate_quality(&raw_fragment, &err_fragment, qscore_model, &mut rng)?;
-
-        log::debug!("target {} real {}", identity, real_id);
+        let (real_id, mut quality) = generate_quality(
+            &raw_fragment,
+            &err_fragment,
+            qscore_model,
+            diffpos,
+            &mut rng,
+        )?;
 
         let ori = Origin::new(
             local_ref.id.clone(),
@@ -180,6 +187,8 @@ fn worker(
         );
         let des = Description::new(ori, None, length, real_id * 100.0);
 
+        quality.resize(err_fragment.len(), b'!');
+        assert_eq!(err_fragment.len(), quality.len());
         data.push((des, err_fragment, quality));
 
         generate += (end_pos - start_pos) as u64;
@@ -187,17 +196,19 @@ fn worker(
 
     Ok(data)
 }
+
 /// Generate quality string
 fn generate_quality(
     raw: &[u8],
     err: &[u8],
     model: &model::Quality,
+    diffs: error::DiffPos,
     rng: &mut rand::rngs::StdRng,
 ) -> Result<(f64, Quality)> {
     let mut qual = Vec::with_capacity(err.len());
     let margin = (model.max_k() - 1) / 2;
 
-    let (edit, cigar) = crate::alignment::align(err, raw);
+    let (edit, cigar) = rebuild_cigar(raw, err, diffs);
 
     for i in 0..cigar.len() {
         if cigar[i] == b'D' {
@@ -216,6 +227,28 @@ fn generate_quality(
     }
 
     Ok((1.0 - (edit as f64 / err.len() as f64), qual))
+}
+
+fn rebuild_cigar(raw: &[u8], err: &[u8], diffs: error::DiffPos) -> (usize, Vec<u8>) {
+    let mut edit: usize = 0;
+    let mut cigar = Vec::with_capacity(err.len());
+    let mut prev_e = 0;
+
+    crate::alignment::align(err, raw);
+    for (r, e) in diffs.raw.chunks_exact(2).zip(diffs.err.chunks_exact(2)) {
+        if e[0] > prev_e {
+            cigar.extend((0..(e[0] - prev_e)).map(|_| b'='));
+        }
+        let (ed, c) = crate::alignment::align(&err[e[0]..e[1]], &raw[r[0]..r[1]]);
+        cigar.extend(&c[..]);
+
+        edit += ed;
+        prev_e = e[1];
+    }
+
+    cigar.extend((0..(err.len() - prev_e)).map(|_| b'='));
+
+    (edit, cigar)
 }
 
 #[cfg(test)]
@@ -242,14 +275,36 @@ X;1;1:0.000076,2:0.00327,3:0.014147,4:0.034226,5:0.053392,6:0.066246,7:0.078339,
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
         let qual = model::Quality::from_stream(MODEL).unwrap();
 
-        let raw = b"CGACCCTTGCGCAGTCACTGAAAGAGATCAAAGGCGTGCAGTGGATCCCGGACTGGGGCCAGGCGCGTATCGAGTCGATGGTTGCTAACCGTCCTGACTGGTGTATCGCAAAAT";
-        let err = b"CGACCCTTGACGCAGTCACTGGAAGAAGTCAAAGGCTGCAGTGGATCCCGGATGGGGCCAGGGTATGAGTCGATGGTTGCTAACCGCCTGACTGGTGTATCGCAAAAT";
+        let raw = b"TCAGCCACACATCCAGCCCCGTCTCCATACGCTTAATGGTGTAGCTAATGGCGGAAGTGGTTAAACCCAACTCTTCTGCGGCTTTACTGAAGCTGCCAAAACGCGCAGTCCATG";
+        let err = b"TCAGCCACACTATCCAGCCCGTCTCCATACGCTTAATGGTGTGCTAATGGCGGAAGTGGTTAAACCCAGCTCTTCTGCGGCTTTGCTGAAACTGCCAAAAACGCAGTCCATG";
 
-        let (identity, qual) = generate_quality(raw, err, &qual, &mut rng).unwrap();
+        let diffpos = error::DiffPos {
+            raw: vec![7, 18, 41, 48, 67, 74, 80, 93, 93, 100, 100, 107],
+            err: vec![7, 18, 41, 47, 66, 73, 79, 92, 92, 100, 100, 105],
+        };
 
-        assert_eq!(0.8981481481481481, identity);
+        let (identity, qual) = generate_quality(raw, err, &qual, diffpos, &mut rng).unwrap();
+
+        assert_eq!(0.9196428571428571, identity);
 
         assert_eq!(err.len(), qual.len());
-        assert_eq!(b",,-*%+/2'#5,*',($,%.2,,&*+0(*.+353.(-*&+9-+%'*+72,01-(**((-+7'+,'*(,.&+-3,++5%+/)**/.-&*/5&2,00)'03)')5/)'2'".to_vec(), qual);
+        assert_eq!(b",,-*%+/2'#5,*',($,%.2,,&*+0(*.+353.(-*&+9-+%'*+72,01-(**((-+7'+,'*(,.&+-3,++5%+/)**/.-&*/5&2,00)'03)')5/)'2'**-3".to_vec(), qual);
+    }
+
+    #[test]
+    fn reconstruct_cigar() {
+        let raw = b"TTTGTTCTGCCATCGGCCCTTACTGCGTGCCGGTGGTTAACCTCGAGGCGAACGTCGATCAACTGAACGTCAACATGGTCACCTGCGGCGGCCAGGCCACCATTCCACCATATT";
+        let err = b"TTTGTTCTGGCCATCGGCCCTTACTGCGTGCCGGTGGTTAACCTCGAGGCGAACGTCGATCAACTGAACGTCACATGGTCACCTCGCGGCGGCCAGGCCACCATTCCACATATT";
+
+        let diffpos = error::DiffPos {
+            raw: vec![6, 13, 66, 73, 83, 90, 104, 111],
+            err: vec![6, 14, 67, 73, 83, 91, 105, 111],
+        };
+
+        let (edit, cigar) = rebuild_cigar(raw, err, diffpos);
+        let (t_e, t_c) = crate::alignment::align(err, raw);
+
+        assert_eq!(edit, t_e);
+        assert_eq!(cigar, t_c.to_vec());
     }
 }

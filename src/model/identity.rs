@@ -76,7 +76,6 @@ mod t {
         assert!(Identity::new(-10.0, 0.0, 0.8).is_err());
         assert!(Identity::new(10.0, 0.0, -0.8).is_err());
 
-        println!("{:?}", Identity::new(1.0, 1.0, 1.0));
         assert!(Identity::new(1.0, 1.0, 1.0).is_ok());
     }
 
