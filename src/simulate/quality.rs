@@ -49,16 +49,23 @@ pub fn rebuild_cigar(raw: &[u8], err: &[u8], diffs: error::DiffPos) -> (usize, V
     let mut cigar = Vec::with_capacity(err.len());
     let mut prev_e = 0;
 
-    crate::alignment::align(err, raw);
+    //crate::alignment::align(err, raw);
     for (r, e) in diffs.raw.chunks_exact(2).zip(diffs.err.chunks_exact(2)) {
         if e[0] > prev_e {
             cigar.extend((0..(e[0] - prev_e)).map(|_| b'='));
         }
-        let (ed, c) = crate::alignment::align(&err[e[0]..e[1]], &raw[r[0]..r[1]]);
+
+        let (ed, c) = if e[1] >= err.len() {
+            log::warn!("err.len {} e[1] {}", err.len(), e[1]);
+            prev_e = err.len();
+            crate::alignment::align(&err[e[0]..], &raw[r[0]..r[1]])
+        } else {
+            prev_e = e[1];
+            crate::alignment::align(&err[e[0]..e[1]], &raw[r[0]..r[1]])
+        };
         cigar.extend(&c[..]);
 
         edit += ed;
-        prev_e = e[1];
     }
 
     cigar.extend((0..(err.len() - prev_e)).map(|_| b'='));

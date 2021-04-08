@@ -164,6 +164,7 @@ fn generate_read(
     let des = Description::new(ori, None, length, real_id * 100.0);
 
     // TODO remove that
+    assert_eq!(err_fragment.len(), quality.len());
     quality.resize(err_fragment.len(), b'!');
 
     Ok((des, err_fragment, quality))
