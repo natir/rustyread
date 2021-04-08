@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Reference","Store a reference sequence"]],"trait":[["AbsReferences",""]],"type":[["References","A collections of sequence"]]});
+initSidebarItems({"struct":[["Reference","Store a reference sequence"],["References","A collections of sequence"]],"trait":[["AbsReferences",""]]});
