@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/simulate/quality.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>quality.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../rustyread/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+                <a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<span id="2">  2</span>
+<span id="3">  3</span>
+<span id="4">  4</span>
+<span id="5">  5</span>
+<span id="6">  6</span>
+<span id="7">  7</span>
+<span id="8">  8</span>
+<span id="9">  9</span>
+<span id="10"> 10</span>
+<span id="11"> 11</span>
+<span id="12"> 12</span>
+<span id="13"> 13</span>
+<span id="14"> 14</span>
+<span id="15"> 15</span>
+<span id="16"> 16</span>
+<span id="17"> 17</span>
+<span id="18"> 18</span>
+<span id="19"> 19</span>
+<span id="20"> 20</span>
+<span id="21"> 21</span>
+<span id="22"> 22</span>
+<span id="23"> 23</span>
+<span id="24"> 24</span>
+<span id="25"> 25</span>
+<span id="26"> 26</span>
+<span id="27"> 27</span>
+<span id="28"> 28</span>
+<span id="29"> 29</span>
+<span id="30"> 30</span>
+<span id="31"> 31</span>
+<span id="32"> 32</span>
+<span id="33"> 33</span>
+<span id="34"> 34</span>
+<span id="35"> 35</span>
+<span id="36"> 36</span>
+<span id="37"> 37</span>
+<span id="38"> 38</span>
+<span id="39"> 39</span>
+<span id="40"> 40</span>
+<span id="41"> 41</span>
+<span id="42"> 42</span>
+<span id="43"> 43</span>
+<span id="44"> 44</span>
+<span id="45"> 45</span>
+<span id="46"> 46</span>
+<span id="47"> 47</span>
+<span id="48"> 48</span>
+<span id="49"> 49</span>
+<span id="50"> 50</span>
+<span id="51"> 51</span>
+<span id="52"> 52</span>
+<span id="53"> 53</span>
+<span id="54"> 54</span>
+<span id="55"> 55</span>
+<span id="56"> 56</span>
+<span id="57"> 57</span>
+<span id="58"> 58</span>
+<span id="59"> 59</span>
+<span id="60"> 60</span>
+<span id="61"> 61</span>
+<span id="62"> 62</span>
+<span id="63"> 63</span>
+<span id="64"> 64</span>
+<span id="65"> 65</span>
+<span id="66"> 66</span>
+<span id="67"> 67</span>
+<span id="68"> 68</span>
+<span id="69"> 69</span>
+<span id="70"> 70</span>
+<span id="71"> 71</span>
+<span id="72"> 72</span>
+<span id="73"> 73</span>
+<span id="74"> 74</span>
+<span id="75"> 75</span>
+<span id="76"> 76</span>
+<span id="77"> 77</span>
+<span id="78"> 78</span>
+<span id="79"> 79</span>
+<span id="80"> 80</span>
+<span id="81"> 81</span>
+<span id="82"> 82</span>
+<span id="83"> 83</span>
+<span id="84"> 84</span>
+<span id="85"> 85</span>
+<span id="86"> 86</span>
+<span id="87"> 87</span>
+<span id="88"> 88</span>
+<span id="89"> 89</span>
+<span id="90"> 90</span>
+<span id="91"> 91</span>
+<span id="92"> 92</span>
+<span id="93"> 93</span>
+<span id="94"> 94</span>
+<span id="95"> 95</span>
+<span id="96"> 96</span>
+<span id="97"> 97</span>
+<span id="98"> 98</span>
+<span id="99"> 99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="doccomment">//! Generate quality for simulate</span>
+
+<span class="comment">/* standard use */</span>
+
+<span class="comment">/* crate use */</span>
+<span class="kw">use</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span>;
+
+<span class="comment">/* local use */</span>
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">model</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">simulate</span>::<span class="ident">error</span>;
+
+<span class="kw">type</span> <span class="ident">Quality</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>;
+
+<span class="doccomment">/// Generate quality string</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_quality</span>(
+    <span class="ident">raw</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
+    <span class="ident">err</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
+    <span class="ident">model</span>: <span class="kw-2">&amp;</span><span class="ident">model</span>::<span class="ident">Quality</span>,
+    <span class="ident">diffs</span>: <span class="ident">error</span>::<span class="ident">DiffPos</span>,
+    <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">f64</span>, <span class="ident">Quality</span>)<span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">qual</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">err</span>.<span class="ident">len</span>());
+    <span class="kw">let</span> <span class="ident">margin</span> <span class="op">=</span> (<span class="ident">model</span>.<span class="ident">max_k</span>() <span class="op">-</span> <span class="number">1</span>) <span class="op">/</span> <span class="number">2</span>;
+
+    <span class="kw">let</span> (<span class="ident">edit</span>, <span class="ident">cigar</span>) <span class="op">=</span> <span class="ident">rebuild_cigar</span>(<span class="ident">raw</span>, <span class="ident">err</span>, <span class="ident">diffs</span>);
+
+    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">cigar</span>.<span class="ident">len</span>() {
+        <span class="kw">if</span> <span class="ident">cigar</span>[<span class="ident">i</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;D&#39;</span> {
+            <span class="kw">continue</span>;
+        }
+
+        <span class="kw">let</span> (<span class="ident">start</span>, <span class="ident">end</span>) <span class="op">=</span> <span class="kw">if</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">margin</span> {
+            (<span class="number">0</span>, <span class="ident">i</span> <span class="op">+</span> <span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>)
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">i</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">cigar</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">margin</span> {
+            (<span class="ident">i</span> <span class="op">-</span> (<span class="ident">cigar</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">i</span> <span class="op">-</span> <span class="number">1</span>), <span class="ident">cigar</span>.<span class="ident">len</span>())
+        } <span class="kw">else</span> {
+            (<span class="ident">i</span> <span class="op">-</span> <span class="ident">margin</span>, <span class="ident">i</span> <span class="op">+</span> <span class="ident">margin</span> <span class="op">+</span> <span class="number">1</span>)
+        };
+
+        <span class="ident">qual</span>.<span class="ident">push</span>(<span class="ident">model</span>.<span class="ident">get_qscore</span>(<span class="kw-2">&amp;</span><span class="ident">cigar</span>[<span class="ident">start</span>..<span class="ident">end</span>], <span class="ident">rng</span>)<span class="question-mark">?</span>);
+    }
+
+    <span class="prelude-val">Ok</span>((<span class="number">1.0</span> <span class="op">-</span> (<span class="ident">edit</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">err</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>), <span class="ident">qual</span>))
+}
+
+<span class="doccomment">/// Build cigar string by align only changed position</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rebuild_cigar</span>(<span class="ident">raw</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">err</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">diffs</span>: <span class="ident">error</span>::<span class="ident">DiffPos</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">usize</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">edit</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cigar</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">err</span>.<span class="ident">len</span>());
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_e</span> <span class="op">=</span> <span class="number">0</span>;
+
+    <span class="kw">crate</span>::<span class="ident">alignment</span>::<span class="ident">align</span>(<span class="ident">err</span>, <span class="ident">raw</span>);
+    <span class="kw">for</span> (<span class="ident">r</span>, <span class="ident">e</span>) <span class="kw">in</span> <span class="ident">diffs</span>.<span class="ident">raw</span>.<span class="ident">chunks_exact</span>(<span class="number">2</span>).<span class="ident">zip</span>(<span class="ident">diffs</span>.<span class="ident">err</span>.<span class="ident">chunks_exact</span>(<span class="number">2</span>)) {
+        <span class="kw">if</span> <span class="ident">e</span>[<span class="number">0</span>] <span class="op">&gt;</span> <span class="ident">prev_e</span> {
+            <span class="ident">cigar</span>.<span class="ident">extend</span>((<span class="number">0</span>..(<span class="ident">e</span>[<span class="number">0</span>] <span class="op">-</span> <span class="ident">prev_e</span>)).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="string">b&#39;=&#39;</span>));
+        }
+        <span class="kw">let</span> (<span class="ident">ed</span>, <span class="ident">c</span>) <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">alignment</span>::<span class="ident">align</span>(<span class="kw-2">&amp;</span><span class="ident">err</span>[<span class="ident">e</span>[<span class="number">0</span>]..<span class="ident">e</span>[<span class="number">1</span>]], <span class="kw-2">&amp;</span><span class="ident">raw</span>[<span class="ident">r</span>[<span class="number">0</span>]..<span class="ident">r</span>[<span class="number">1</span>]]);
+        <span class="ident">cigar</span>.<span class="ident">extend</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>[..]);
+
+        <span class="ident">edit</span> <span class="op">+</span><span class="op">=</span> <span class="ident">ed</span>;
+        <span class="ident">prev_e</span> <span class="op">=</span> <span class="ident">e</span>[<span class="number">1</span>];
+    }
+
+    <span class="ident">cigar</span>.<span class="ident">extend</span>((<span class="number">0</span>..(<span class="ident">err</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">prev_e</span>)).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="string">b&#39;=&#39;</span>));
+
+    (<span class="ident">edit</span>, <span class="ident">cigar</span>)
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">t</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">SeedableRng</span>;
+
+    <span class="kw">fn</span> <span class="ident">init</span>() {
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">env_logger</span>::<span class="ident">builder</span>()
+            .<span class="ident">filter_level</span>(<span class="ident">log</span>::<span class="ident">LevelFilter</span>::<span class="ident">Trace</span>)
+            .<span class="ident">is_test</span>(<span class="bool-val">true</span>)
+            .<span class="ident">try_init</span>();
+    }
+
+    <span class="kw">static</span> <span class="ident">MODEL</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="string">b&quot;overall;3;1:0.000065,2:0.002683,3:0.011969,4:0.022982,5:0.03079,6:0.036889,7:0.042461,8:0.047495,9:0.051971,10:0.055876,11:0.058956,12:0.0606,13:0.060621,14:0.059446,15:0.056487,16:0.052028,17:0.047379,18:0.043445,19:0.040219,20:0.037767,21:0.035767,22:0.033816,23:0.031369,24:0.027969,25:0.023457,26:0.018417,27:0.008983,28:0.000093,
+I;1;1:0.000076,2:0.00327,3:0.014147,4:0.034226,5:0.053392,6:0.066246,7:0.078339,8:0.078491,9:0.085032,10:0.082446,11:0.078111,12:0.066854,13:0.063356,14:0.053772,15:0.040006,16:0.036431,17:0.033541,18:0.027989,19:0.020992,20:0.019851,21:0.019319,22:0.015364,23:0.012017,24:0.008442,25:0.005476,26:0.002282,27:0.000532,
+X;1;1:0.000076,2:0.00327,3:0.014147,4:0.034226,5:0.053392,6:0.066246,7:0.078339,8:0.078491,9:0.085032,10:0.082446,11:0.078111,12:0.066854,13:0.063356,14:0.053772,15:0.040006,16:0.036431,17:0.033541,18:0.027989,19:0.020992,20:0.019851,21:0.019319,22:0.015364,23:0.012017,24:0.008442,25:0.005476,26:0.002282,27:0.000532,
+=;1;1:0.000076,2:0.00327,3:0.014147,4:0.034226,5:0.053392,6:0.066246,7:0.078339,8:0.078491,9:0.085032,10:0.082446,11:0.078111,12:0.066854,13:0.063356,14:0.053772,15:0.040006,16:0.036431,17:0.033541,18:0.027989,19:0.020992,20:0.019851,21:0.019319,22:0.015364,23:0.012017,24:0.008442,25:0.005476,26:0.002282,27:0.000532,
+&quot;</span>;
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">quality</span>() {
+        <span class="ident">init</span>();
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>::<span class="ident">seed_from_u64</span>(<span class="number">42</span>);
+        <span class="kw">let</span> <span class="ident">qual</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Quality</span>::<span class="ident">from_stream</span>(<span class="ident">MODEL</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="string">b&quot;TCAGCCACACATCCAGCCCCGTCTCCATACGCTTAATGGTGTAGCTAATGGCGGAAGTGGTTAAACCCAACTCTTCTGCGGCTTTACTGAAGCTGCCAAAACGCGCAGTCCATG&quot;</span>;
+        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="string">b&quot;TCAGCCACACTATCCAGCCCGTCTCCATACGCTTAATGGTGTGCTAATGGCGGAAGTGGTTAAACCCAGCTCTTCTGCGGCTTTGCTGAAACTGCCAAAAACGCAGTCCATG&quot;</span>;
+
+        <span class="kw">let</span> <span class="ident">diffpos</span> <span class="op">=</span> <span class="ident">error</span>::<span class="ident">DiffPos</span> {
+            <span class="ident">raw</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="number">7</span>, <span class="number">18</span>, <span class="number">41</span>, <span class="number">48</span>, <span class="number">67</span>, <span class="number">74</span>, <span class="number">80</span>, <span class="number">93</span>, <span class="number">93</span>, <span class="number">100</span>, <span class="number">100</span>, <span class="number">107</span>],
+            <span class="ident">err</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="number">7</span>, <span class="number">18</span>, <span class="number">41</span>, <span class="number">47</span>, <span class="number">66</span>, <span class="number">73</span>, <span class="number">79</span>, <span class="number">92</span>, <span class="number">92</span>, <span class="number">100</span>, <span class="number">100</span>, <span class="number">105</span>],
+        };
+
+        <span class="kw">let</span> (<span class="ident">identity</span>, <span class="ident">qual</span>) <span class="op">=</span> <span class="ident">generate_quality</span>(<span class="ident">raw</span>, <span class="ident">err</span>, <span class="kw-2">&amp;</span><span class="ident">qual</span>, <span class="ident">diffpos</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>).<span class="ident">unwrap</span>();
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0.9196428571428571</span>, <span class="ident">identity</span>);
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">err</span>.<span class="ident">len</span>(), <span class="ident">qual</span>.<span class="ident">len</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">b&quot;,,-*%+/2&#39;#5,*&#39;,($,%.2,,&amp;*+0(*.+353.(-*&amp;+9-+%&#39;*+72,01-(**((-+7&#39;+,&#39;*(,.&amp;+-3,++5%+/)**/.-&amp;*/5&amp;2,00)&#39;03)&#39;)5/)&#39;2&#39;**-3&quot;</span>.<span class="ident">to_vec</span>(), <span class="ident">qual</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">reconstruct_cigar</span>() {
+        <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="string">b&quot;TTTGTTCTGCCATCGGCCCTTACTGCGTGCCGGTGGTTAACCTCGAGGCGAACGTCGATCAACTGAACGTCAACATGGTCACCTGCGGCGGCCAGGCCACCATTCCACCATATT&quot;</span>;
+        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="string">b&quot;TTTGTTCTGGCCATCGGCCCTTACTGCGTGCCGGTGGTTAACCTCGAGGCGAACGTCGATCAACTGAACGTCACATGGTCACCTCGCGGCGGCCAGGCCACCATTCCACATATT&quot;</span>;
+
+        <span class="kw">let</span> <span class="ident">diffpos</span> <span class="op">=</span> <span class="ident">error</span>::<span class="ident">DiffPos</span> {
+            <span class="ident">raw</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="number">6</span>, <span class="number">13</span>, <span class="number">66</span>, <span class="number">73</span>, <span class="number">83</span>, <span class="number">90</span>, <span class="number">104</span>, <span class="number">111</span>],
+            <span class="ident">err</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="number">6</span>, <span class="number">14</span>, <span class="number">67</span>, <span class="number">73</span>, <span class="number">83</span>, <span class="number">91</span>, <span class="number">105</span>, <span class="number">111</span>],
+        };
+
+        <span class="kw">let</span> (<span class="ident">edit</span>, <span class="ident">cigar</span>) <span class="op">=</span> <span class="ident">rebuild_cigar</span>(<span class="ident">raw</span>, <span class="ident">err</span>, <span class="ident">diffpos</span>);
+        <span class="kw">let</span> (<span class="ident">t_e</span>, <span class="ident">t_c</span>) <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">alignment</span>::<span class="ident">align</span>(<span class="ident">err</span>, <span class="ident">raw</span>);
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">edit</span>, <span class="ident">t_e</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cigar</span>, <span class="ident">t_c</span>.<span class="ident">to_vec</span>());
+    }
+}
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rustyread"></div>
+    <script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
