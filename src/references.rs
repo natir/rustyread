@@ -5,6 +5,7 @@ use std::str::FromStr;
 
 /* crate use */
 use anyhow::Result;
+use rand::distributions::Distribution;
 
 /* local use */
 
@@ -34,21 +35,28 @@ impl Reference {
 }
 
 /// A collections of sequence
-pub type References = (Vec<Reference>, Vec<f64>);
+pub struct References {
+    pub sequences: Vec<Reference>,
+    pub dist: rand::distributions::WeightedIndex<f64>,
+}
 
 pub trait AbsReferences {
     fn from_stream<R>(input: R) -> Result<Self>
     where
         R: std::io::Read,
         Self: Sized;
+
+    fn get_reference<R>(rng: &mut R) -> (&Text, char)
+    where
+        R: rand::Rng;
 }
 
-impl<'a> AbsReferences for References {
+impl References {
     /// Read a collection of sequence in fasta format from an input stream.
     ///
     /// If sequence contains 'circular=true' in his description sequence is consider as circular
     /// If sequence contains 'depth=(\[\\d.\]+)' number of reads from this sequence is multiply by float value in capturing group
-    fn from_stream<R>(input: R) -> Result<Self>
+    pub fn from_stream<R>(input: R) -> Result<Self>
     where
         R: std::io::Read,
     {
@@ -83,13 +91,30 @@ impl<'a> AbsReferences for References {
             me_pro.push(weight);
         }
 
-        Ok((me_seq, me_pro))
+        Ok(Self {
+            sequences: me_seq,
+            dist: rand::distributions::WeightedIndex::new(me_pro)?,
+        })
+    }
+
+    /// Randomly get a reference and strand according to depth
+    pub fn get_reference<R>(&self, rng: &mut R) -> (String, &Text, char)
+    where
+        R: rand::Rng,
+    {
+        let seq = &self.sequences[self.dist.sample(rng)];
+        match ['+', '-'][rng.gen_range(0..=1) as usize] {
+            '+' => (seq.id.clone(), &seq.seq, '+'),
+            '-' => (seq.id.clone(), &seq.revcomp, '-'),
+            _ => unreachable!(),
+        }
     }
 }
 
 #[cfg(test)]
 mod t {
     use super::*;
+    use rand::SeedableRng;
 
     static FASTA: &'static [u8] = b">random_seq_0
 TCCTAACGTG
@@ -105,7 +130,7 @@ TAGCCGTGGT
 CGCTTTGTGA
 >random_seq_6 circular=true depth=1
 CACATGGGCG
->random_seq_7 depth=50.0 circular=false
+>random_seq_7 depth=2.0 circular=false
 ATCTAATGCG
 >random_seq_8 depth=0.5 circular=true
 CGGAACTCAG
@@ -115,10 +140,10 @@ TCCCGCTGTC
 
     #[test]
     fn read_reference() {
-        let (me, prob) = References::from_stream(std::io::Cursor::new(FASTA)).unwrap();
+        let refs = References::from_stream(std::io::Cursor::new(FASTA)).unwrap();
 
         assert_eq!(
-            me,
+            refs.sequences,
             vec![
                 Reference {
                     id: "random_seq_0".to_string(),
@@ -182,9 +207,70 @@ TCCCGCTGTC
                 }
             ]
         );
+    }
+
+    #[test]
+    fn get_reference() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let refs = References::from_stream(std::io::Cursor::new(FASTA)).unwrap();
+
+        let seqs: Vec<(String, &Text, char)> =
+            (0..10).map(|_| refs.get_reference(&mut rng)).collect();
+
         assert_eq!(
-            prob,
-            vec![1.0, 1.5, 1.0, 1.0, 1.0, 1.0, 1.0, 50.0, 0.5, 1.0]
+            vec![
+                (
+                    "random_seq_5".to_string(),
+                    &vec![67, 71, 67, 84, 84, 84, 71, 84, 71, 65].into_boxed_slice(),
+                    '+'
+                ),
+                (
+                    "random_seq_8".to_string(),
+                    &vec![67, 84, 71, 65, 71, 84, 84, 67, 67, 71].into_boxed_slice(),
+                    '-'
+                ),
+                (
+                    "random_seq_3".to_string(),
+                    &vec![84, 71, 67, 65, 65, 71, 65, 84, 67, 65].into_boxed_slice(),
+                    '+'
+                ),
+                (
+                    "random_seq_4".to_string(),
+                    &vec![65, 67, 67, 65, 67, 71, 71, 67, 84, 65].into_boxed_slice(),
+                    '-'
+                ),
+                (
+                    "random_seq_7".to_string(),
+                    &vec![67, 71, 67, 65, 84, 84, 65, 71, 65, 84].into_boxed_slice(),
+                    '-'
+                ),
+                (
+                    "random_seq_4".to_string(),
+                    &vec![84, 65, 71, 67, 67, 71, 84, 71, 71, 84].into_boxed_slice(),
+                    '+'
+                ),
+                (
+                    "random_seq_9".to_string(),
+                    &vec![71, 65, 67, 65, 71, 67, 71, 71, 71, 65].into_boxed_slice(),
+                    '-'
+                ),
+                (
+                    "random_seq_8".to_string(),
+                    &vec![67, 84, 71, 65, 71, 84, 84, 67, 67, 71].into_boxed_slice(),
+                    '-'
+                ),
+                (
+                    "random_seq_7".to_string(),
+                    &vec![67, 71, 67, 65, 84, 84, 65, 71, 65, 84].into_boxed_slice(),
+                    '-'
+                ),
+                (
+                    "random_seq_1".to_string(),
+                    &vec![71, 84, 65, 65, 84, 67, 71, 84, 71, 65].into_boxed_slice(),
+                    '-'
+                ),
+            ],
+            seqs
         );
     }
 }

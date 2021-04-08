@@ -39,7 +39,7 @@ env_logger     = "0.7"
 
 
 [profile.release]
-debug = true # uncomment for profiling
+#debug = true # uncomment for profiling
 lto = 'thin'
 opt-level = 3
 overflow-checks = false

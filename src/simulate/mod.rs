@@ -9,8 +9,6 @@ use std::io::Write;
 
 /* crate use */
 use anyhow::Result;
-use rand::distributions::Distribution;
-use rand::distributions::WeightedIndex;
 use rand::Rng;
 use rand::RngCore;
 use rand::SeedableRng;
@@ -76,9 +74,13 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     )?;
     log::info!("End read quality score model");
 
-    let total_base = params
-        .quantity
-        .number_of_base(references.0.iter().map(|x| x.seq.len() as u64).sum());
+    let total_base = params.quantity.number_of_base(
+        references
+            .sequences
+            .iter()
+            .map(|x| x.seq.len() as u64)
+            .sum(),
+    );
     log::info!("Total number {}", total_base);
     let base_per_thread = total_base / rayon::current_num_threads() as u64;
     log::info!("Number of base per thread {}", base_per_thread);
@@ -142,12 +144,10 @@ fn worker(
 
     let k = error_model.k();
     let mut generate = 0;
-    let ref_dist = WeightedIndex::new(&references.1).unwrap();
 
     while generate < target {
-        let local_ref = &references.0[ref_dist.sample(&mut rng)];
-        let strand = ['+', '-'][rng.gen_range(0..1) as usize];
-        let start_pos = rng.gen_range(0..local_ref.seq.len()) as usize;
+        let (id, local_ref, strand) = &references.get_reference(&mut rng);
+        let start_pos = rng.gen_range(0..local_ref.len()) as usize;
         let length = length_model.get_length(&mut rng) as usize;
         let identity = identity_model.get_identity(&mut rng);
 
@@ -155,15 +155,15 @@ fn worker(
             continue;
         }
 
-        let end_pos = if start_pos + length > local_ref.seq.len() {
-            local_ref.seq.len() - 1
+        let end_pos = if start_pos + length > local_ref.len() {
+            local_ref.len() - 1
         } else {
             start_pos + length
         };
 
         let mut raw_fragment = Vec::with_capacity(end_pos - start_pos + error_model.k() * 2);
         raw_fragment.extend(crate::random_seq(k, &mut rng));
-        raw_fragment.extend(&local_ref.seq[start_pos..end_pos]);
+        raw_fragment.extend(&local_ref[start_pos..end_pos]);
         raw_fragment.extend(crate::random_seq(k, &mut rng));
 
         let (err_fragment, diffpos) =
@@ -177,18 +177,12 @@ fn worker(
             &mut rng,
         )?;
 
-        let ori = Origin::new(
-            local_ref.id.clone(),
-            strand,
-            start_pos,
-            end_pos,
-            false,
-            false,
-        );
+        let ori = Origin::new(id.clone(), *strand, start_pos, end_pos, false, false);
         let des = Description::new(ori, None, length, real_id * 100.0);
 
+        // TODO remove that
         quality.resize(err_fragment.len(), b'!');
-        assert_eq!(err_fragment.len(), quality.len());
+
         data.push((des, err_fragment, quality));
 
         generate += (end_pos - start_pos) as u64;
