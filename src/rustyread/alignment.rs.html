@@ -42,15 +42,6 @@
 <span id="39">39</span>
 <span id="40">40</span>
 <span id="41">41</span>
-<span id="42">42</span>
-<span id="43">43</span>
-<span id="44">44</span>
-<span id="45">45</span>
-<span id="46">46</span>
-<span id="47">47</span>
-<span id="48">48</span>
-<span id="49">49</span>
-<span id="50">50</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Function to align sequence</span>
 
@@ -65,21 +56,12 @@
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">align</span>(<span class="ident">query</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">target</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">usize</span>, <span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>) {
-    <span class="comment">// let mut aligner = bio::alignment::pairwise::Aligner::with_capacity(</span>
-    <span class="comment">//     target.len(),</span>
-    <span class="comment">//     query.len(),</span>
-    <span class="comment">//     0,</span>
-    <span class="comment">//     0,</span>
-    <span class="comment">//     |a: u8, b: u8| if a == b { 1i32 } else { 0i32 },</span>
-    <span class="comment">// );</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">aligner</span> <span class="op">=</span> <span class="ident">bio</span>::<span class="ident">alignment</span>::<span class="ident">pairwise</span>::<span class="ident">banded</span>::<span class="ident">Aligner</span>::<span class="ident">with_capacity</span>(
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">aligner</span> <span class="op">=</span> <span class="ident">bio</span>::<span class="ident">alignment</span>::<span class="ident">pairwise</span>::<span class="ident">Aligner</span>::<span class="ident">with_capacity</span>(
         <span class="ident">target</span>.<span class="ident">len</span>(),
         <span class="ident">query</span>.<span class="ident">len</span>(),
         <span class="number">0</span>,
         <span class="number">0</span>,
         <span class="op">|</span><span class="ident">a</span>: <span class="ident">u8</span>, <span class="ident">b</span>: <span class="ident">u8</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">a</span> <span class="op">=</span><span class="op">=</span> <span class="ident">b</span> { <span class="number">1i32</span> } <span class="kw">else</span> { <span class="number">0i32</span> },
-        <span class="number">7</span>,
-        <span class="number">10</span>,
     );
 
     <span class="kw">let</span> <span class="ident">alignment</span> <span class="op">=</span> <span class="ident">aligner</span>.<span class="ident">global</span>(<span class="ident">query</span>, <span class="ident">target</span>);

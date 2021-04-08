@@ -205,7 +205,6 @@
 <span id="202">202</span>
 <span id="203">203</span>
 <span id="204">204</span>
-<span id="205">205</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Model to get read identity</span>
 
@@ -285,7 +284,6 @@
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Identity</span>::<span class="ident">new</span>(<span class="op">-</span><span class="number">10.0</span>, <span class="number">0.0</span>, <span class="number">0.8</span>).<span class="ident">is_err</span>());
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Identity</span>::<span class="ident">new</span>(<span class="number">10.0</span>, <span class="number">0.0</span>, <span class="op">-</span><span class="number">0.8</span>).<span class="ident">is_err</span>());
 
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">Identity</span>::<span class="ident">new</span>(<span class="number">1.0</span>, <span class="number">1.0</span>, <span class="number">1.0</span>));
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Identity</span>::<span class="ident">new</span>(<span class="number">1.0</span>, <span class="number">1.0</span>, <span class="number">1.0</span>).<span class="ident">is_ok</span>());
     }
 
