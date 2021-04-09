@@ -70,6 +70,14 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     )?;
     log::info!("End init adapter model");
 
+    log::info!("Start init glitches model");
+    let glitches = model::Glitch::new(
+        params.glitches.0 as f64,
+        params.glitches.1 as f64,
+        params.glitches.2 as f64,
+    )?;
+    log::info!("End init glitches model");
+
     log::info!("Start read error model");
     let error = model::Error::from_stream(
         niffler::get_reader(Box::new(std::io::BufReader::new(std::fs::File::open(
@@ -115,6 +123,7 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
                     random_rate,
                     &adapter,
                     &error,
+                    &glitches,
                     &qscore,
                     rand::rngs::StdRng::seed_from_u64(seed),
                 )
@@ -129,7 +138,7 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     for (comment, seq, qual) in sequences {
         writeln!(
             output,
-            "@{} {}\n{}\n+\n{}\n",
+            "@{} {}\n{}\n+\n{}",
             uuid::Uuid::new_v4().to_hyphenated(),
             comment,
             std::str::from_utf8(&seq[k..(seq.len() - k)])?, // begin and end of fragment is just random base
@@ -155,6 +164,7 @@ fn generate_read(
     random_rate: f64,
     adapter_model: &model::Adapter,
     error_model: &model::Error,
+    glitch_model: &model::Glitch,
     qscore_model: &model::Quality,
     mut rng: rand::rngs::StdRng,
 ) -> Result<(Description, Seq, Quality)> {
@@ -199,7 +209,8 @@ fn generate_read(
     raw_fragment.extend(crate::random_seq(k, &mut rng));
 
     // Add error in fragment and produce quality
-    let (err_fragment, diffpos) = error::add_error(identity, &raw_fragment, error_model, &mut rng);
+    let (err_fragment, diffpos) =
+        error::add_error(identity, &raw_fragment, error_model, glitch_model, &mut rng);
 
     let (real_id, mut quality) = quality::generate_quality(
         &raw_fragment,

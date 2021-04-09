@@ -20,10 +20,14 @@ pub fn add_error(
     target: f64,
     seq: &[u8],
     error_model: &model::Error,
+    glitch_model: &model::Glitch,
     rng: &mut rand::rngs::StdRng,
 ) -> (Seq, DiffPos) {
     let k = error_model.k();
-    let changes = generate_change(seq, number_of_edit(target, seq.len()), error_model, rng);
+    let mut changes = generate_change(seq, number_of_edit(target, seq.len()), error_model, rng);
+    changes.extend(generate_glitches(seq.len(), glitch_model, rng));
+
+    changes.sort_by_cached_key(|x| x.begin);
 
     let asm_changes = assemble_change(changes, k);
 
@@ -33,14 +37,35 @@ pub fn add_error(
     )
 }
 
+/// Generate glitches
+pub fn generate_glitches(
+    length: usize,
+    model: &model::Glitch,
+    rng: &mut rand::rngs::StdRng,
+) -> Vec<Change> {
+    let mut glitches = Vec::new();
+
+    let mut position = 0;
+
+    while let Some((begin, end, seq)) = model.get_glitch(rng) {
+        position += begin;
+        if position > length || position + end > length {
+            break;
+        }
+        glitches.push(Change::new(position, end - begin, &seq));
+    }
+
+    glitches
+}
+
 /// Generate change have to apply on read
 pub fn generate_change(
     seq: &[u8],
     mut target: f64,
     model: &model::Error,
     rng: &mut rand::rngs::StdRng,
-) -> Vec<(usize, Vec<u8>)> {
-    let mut changes: Vec<(usize, Vec<u8>)> = Vec::new();
+) -> Vec<Change> {
+    let mut changes = Vec::new();
     let k = model.k();
 
     // generate change
@@ -51,24 +76,22 @@ pub fn generate_change(
         if edit == 0 {
             continue;
         }
-        changes.push((pos, kmer));
+        changes.push(Change::new(pos, k, &kmer));
         target -= edit as f64;
     }
-
-    changes.sort();
 
     changes
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct AsmChange {
+pub struct Change {
     pub begin: usize,
     pub end_raw: usize,
     pub end_err: usize,
     pub err_seq: Vec<u8>,
 }
 
-impl AsmChange {
+impl Change {
     pub fn new(begin: usize, k: usize, err_seq: &[u8]) -> Self {
         Self {
             begin,
@@ -80,12 +103,12 @@ impl AsmChange {
 }
 
 /// Assemble overlapping change
-pub fn assemble_change(old: Vec<(usize, Vec<u8>)>, k: usize) -> Vec<AsmChange> {
+pub fn assemble_change(old: Vec<Change>, k: usize) -> Vec<Change> {
     let mut changes = Vec::new();
 
     log::trace!("RAW CHANGE {:?}", old);
-    let mut prev: Option<AsmChange> = None;
-    for change in old.iter().map(|x| AsmChange::new(x.0, k, &x.1)) {
+    let mut prev: Option<Change> = None;
+    for change in old.iter() {
         log::trace!("TOP change {:?} prev {:?}", change, prev);
         if let Some(ref mut p) = prev {
             if change.begin < p.end_err {
@@ -100,16 +123,16 @@ pub fn assemble_change(old: Vec<(usize, Vec<u8>)>, k: usize) -> Vec<AsmChange> {
             } else if change.begin < p.end_raw {
                 p.end_raw = change.begin + k;
 
-                p.err_seq.extend(change.err_seq);
+                p.err_seq.extend(&change.err_seq);
                 p.end_err = p.begin + p.err_seq.len();
                 log::trace!("OVL RAW {:?}", prev)
             } else {
                 changes.push(p.clone());
-                prev = Some(change);
+                prev = Some(change.clone());
                 log::trace!("NEW PREV {:?}", prev);
             }
         } else {
-            prev = Some(change);
+            prev = Some(change.clone());
             log::trace!("new prev {:?}", prev);
         }
     }
@@ -128,7 +151,7 @@ pub struct DiffPos {
 }
 
 impl DiffPos {
-    pub fn from_change(changes: &[AsmChange]) -> Self {
+    pub fn from_change(changes: &[Change]) -> Self {
         let mut raw = Vec::new();
         let mut err = Vec::new();
         let mut err_len = 0;
@@ -156,7 +179,7 @@ impl DiffPos {
 }
 
 /// Apply changes on sequencs
-pub fn apply_changes(seq: &[u8], changes: &[AsmChange]) -> Seq {
+pub fn apply_changes(seq: &[u8], changes: &[Change]) -> Seq {
     let mut err = Vec::with_capacity(seq.len());
     let mut pos_in_raw = 0;
 
@@ -191,29 +214,64 @@ mod t {
         )
         .unwrap();
 
-        let changes = generate_change(&seq, 20.0, &model, &mut rng);
+        let changes = generate_change(&seq, 10.0, &model, &mut rng);
 
         assert_eq!(
             vec![
-                (14, [71, 71, 84, 65, 84, 71, 65, 71].to_vec()),
-                (21, [84, 65, 71, 84, 84, 84, 65, 67].to_vec()),
-                (30, [84, 71, 84, 65, 67, 67, 67].to_vec()),
-                (31, [71, 71, 84, 65, 71, 67, 67, 84].to_vec()),
-                (41, [84, 71, 67, 71, 67, 67].to_vec()),
-                (44, [67, 71, 67, 67, 71, 84].to_vec()),
-                (49, [71, 84, 84, 71, 84, 71, 65, 71].to_vec()),
-                (50, [84, 84, 71, 84, 65, 71, 71, 65].to_vec()),
-                (50, [84, 84, 71, 84, 71, 65].to_vec()),
-                (52, [71, 84, 65, 71, 65, 71].to_vec()),
-                (54, [65, 71, 65, 71, 65, 65].to_vec()),
-                (66, [84, 84, 71, 84, 65, 84, 65].to_vec()),
-                (71, [84, 65, 65, 67, 67, 65].to_vec()),
-                (79, [71, 84, 65, 84, 65, 71, 84].to_vec()),
-                (82, [84, 65, 84, 67, 67, 71].to_vec()),
-                (83, [65, 65, 84, 67, 71, 71].to_vec()),
-                (87, [67, 71, 71, 65, 67, 65, 71].to_vec()),
-                (90, [65, 67, 65, 71, 67, 65, 84].to_vec()),
-                (91, [67, 71, 71, 67, 65, 67, 84, 71].to_vec())
+                Change {
+                    begin: 31,
+                    end_raw: 38,
+                    end_err: 39,
+                    err_seq: vec![71, 71, 84, 65, 71, 67, 67, 84]
+                },
+                Change {
+                    begin: 41,
+                    end_raw: 48,
+                    end_err: 47,
+                    err_seq: vec![84, 71, 67, 71, 67, 67]
+                },
+                Change {
+                    begin: 50,
+                    end_raw: 57,
+                    end_err: 56,
+                    err_seq: vec![84, 84, 71, 84, 71, 65]
+                },
+                Change {
+                    begin: 50,
+                    end_raw: 57,
+                    end_err: 58,
+                    err_seq: vec![84, 84, 71, 84, 65, 71, 71, 65]
+                },
+                Change {
+                    begin: 90,
+                    end_raw: 97,
+                    end_err: 97,
+                    err_seq: vec![65, 67, 65, 71, 67, 65, 84]
+                },
+                Change {
+                    begin: 71,
+                    end_raw: 78,
+                    end_err: 77,
+                    err_seq: vec![84, 65, 65, 67, 67, 65]
+                },
+                Change {
+                    begin: 21,
+                    end_raw: 28,
+                    end_err: 29,
+                    err_seq: vec![84, 65, 71, 84, 84, 84, 65, 67]
+                },
+                Change {
+                    begin: 83,
+                    end_raw: 90,
+                    end_err: 89,
+                    err_seq: vec![65, 65, 84, 67, 71, 71]
+                },
+                Change {
+                    begin: 66,
+                    end_raw: 73,
+                    end_err: 73,
+                    err_seq: vec![84, 84, 71, 84, 65, 84, 65]
+                }
             ],
             changes
         );
@@ -224,15 +282,15 @@ mod t {
         init();
 
         let mut changes = vec![
-            (1, vec![65, 65, 84, 65, 65, 67, 67, 65]),
-            (2, vec![65, 84, 65, 71, 67, 65, 67]),
-            (3, vec![84, 65, 71, 67, 65, 65, 84]),
+            Change::new(1, 7, &[65, 65, 84, 65, 65, 67, 67, 65]),
+            Change::new(2, 7, &[65, 84, 65, 71, 67, 65, 67]),
+            Change::new(3, 7, &[84, 65, 71, 67, 65, 65, 84]),
         ];
 
         let mut asm = assemble_change(changes, 7);
 
         assert_eq!(
-            vec![AsmChange {
+            vec![Change {
                 begin: 1,
                 end_raw: 10,
                 end_err: 10,
@@ -242,17 +300,17 @@ mod t {
         );
 
         changes = vec![
-            (5, vec![65, 71, 65, 65, 71, 71]),
-            (5, vec![65, 71, 65, 71]),
-            (6, vec![71, 65, 71]),
-            (7, vec![65, 65, 71, 71, 71, 67]),
-            (7, vec![65, 71, 71, 71, 71, 67]),
+            Change::new(5, 7, &[65, 71, 65, 65, 71, 71]),
+            Change::new(5, 7, &[65, 71, 65, 71]),
+            Change::new(6, 7, &[71, 65, 71]),
+            Change::new(7, 7, &[65, 65, 71, 71, 71, 67]),
+            Change::new(7, 7, &[65, 71, 71, 71, 71, 67]),
         ];
 
         asm = assemble_change(changes, 7);
 
         assert_eq!(
-            vec![AsmChange {
+            vec![Change {
                 begin: 5,
                 end_raw: 14,
                 end_err: 13,
@@ -267,23 +325,23 @@ mod t {
         init();
 
         let changes = vec![
-            (72, vec![67, 71, 67, 84, 71, 71]),
-            (76, vec![84, 65, 71, 67]),
-            (83, vec![65, 65, 67, 84, 84, 67, 71, 67]),
-            (88, vec![84, 67, 67, 84, 84, 67, 67]),
-            (88, vec![84, 67, 67, 84, 84, 67, 67]),
-            (90, vec![67, 84, 84, 67, 71, 71]),
-            (92, vec![84, 67, 65, 71, 71, 67]),
+            Change::new(72, 7, &[67, 71, 67, 84, 71, 71]),
+            Change::new(76, 7, &[84, 65, 71, 67]),
+            Change::new(83, 7, &[65, 65, 67, 84, 84, 67, 71, 67]),
+            Change::new(88, 7, &[84, 67, 67, 84, 84, 67, 67]),
+            Change::new(88, 7, &[84, 67, 67, 84, 84, 67, 67]),
+            Change::new(90, 7, &[67, 84, 84, 67, 71, 71]),
+            Change::new(92, 7, &[84, 67, 65, 71, 71, 67]),
         ];
 
         let t_asm = vec![
-            AsmChange {
+            Change {
                 begin: 72,
                 end_raw: 83,
                 end_err: 80,
                 err_seq: vec![67, 71, 67, 84, 71, 71, 71, 67],
             },
-            AsmChange {
+            Change {
                 begin: 83,
                 end_raw: 99,
                 end_err: 98,
@@ -297,15 +355,15 @@ mod t {
     #[test]
     fn match_pos() {
         let changes = vec![
-            (21, [84, 65, 71, 84, 84, 84, 65, 67].to_vec()),
-            (31, [71, 71, 84, 65, 71, 67, 67, 84].to_vec()),
-            (41, [84, 71, 67, 71, 67, 67].to_vec()),
-            (50, [84, 84, 71, 84, 65, 71, 71, 65].to_vec()),
-            (50, [84, 84, 71, 84, 71, 65].to_vec()),
-            (66, [84, 84, 71, 84, 65, 84, 65].to_vec()),
-            (71, [84, 65, 65, 67, 67, 65].to_vec()),
-            (83, [65, 65, 84, 67, 71, 71].to_vec()),
-            (90, [65, 67, 65, 71, 67, 65, 84].to_vec()),
+            Change::new(21, 7, &[84, 65, 71, 84, 84, 84, 65, 67]),
+            Change::new(31, 7, &[71, 71, 84, 65, 71, 67, 67, 84]),
+            Change::new(41, 7, &[84, 71, 67, 71, 67, 67]),
+            Change::new(50, 7, &[84, 84, 71, 84, 65, 71, 71, 65]),
+            Change::new(50, 7, &[84, 84, 71, 84, 71, 65]),
+            Change::new(66, 7, &[84, 84, 71, 84, 65, 84, 65]),
+            Change::new(71, 7, &[84, 65, 65, 67, 67, 65]),
+            Change::new(83, 7, &[65, 65, 84, 67, 71, 71]),
+            Change::new(90, 7, &[65, 67, 65, 71, 67, 65, 84]),
         ];
 
         let match_pos = DiffPos::from_change(&assemble_change(changes, 7));
@@ -349,21 +407,31 @@ mod t {
 
     #[test]
     fn match_pos_simple() {
-        let mut changes = vec![(3, vec![84; 8]), (24, vec![71; 6]), (34, vec![71; 7])];
+        let mut changes = vec![
+            Change::new(3, 7, &vec![84; 8]),
+            Change::new(24, 7, &vec![71; 6]),
+            Change::new(34, 7, &vec![71; 7]),
+        ];
 
         let mut match_pos = DiffPos::from_change(&assemble_change(changes, 7));
 
         assert_eq!(vec![3, 10, 24, 31, 34, 41], match_pos.raw);
         assert_eq!(vec![3, 11, 25, 31, 34, 41], match_pos.err);
 
-        changes = vec![(56, vec![71; 6]), (60, vec![71; 7])];
+        changes = vec![
+            Change::new(56, 7, &vec![71; 6]),
+            Change::new(60, 7, &vec![71; 7]),
+        ];
 
         match_pos = DiffPos::from_change(&assemble_change(changes, 7));
 
         assert_eq!(vec![56, 67], match_pos.raw);
         assert_eq!(vec![56, 67], match_pos.err);
 
-        changes = vec![(80, vec![71; 8]), (85, vec![71; 7])];
+        changes = vec![
+            Change::new(80, 7, &vec![71; 8]),
+            Change::new(85, 7, &vec![71; 7]),
+        ];
 
         match_pos = DiffPos::from_change(&assemble_change(changes, 7));
 
@@ -376,9 +444,9 @@ mod t {
         init();
 
         let mut changes = vec![
-            (1, vec![65, 65, 84, 65, 65, 67, 67, 65]),
-            (2, vec![65, 84, 65, 71, 67, 65, 67]),
-            (3, vec![84, 65, 71, 67, 65, 65, 84]),
+            Change::new(1, 7, &[65, 65, 84, 65, 65, 67, 67, 65]),
+            Change::new(2, 7, &[65, 84, 65, 71, 67, 65, 67]),
+            Change::new(3, 7, &[84, 65, 71, 67, 65, 65, 84]),
         ];
 
         let mut match_pos = DiffPos::from_change(&assemble_change(changes, 7));
@@ -386,11 +454,11 @@ mod t {
         assert_eq!(vec![1, 10], match_pos.err);
 
         changes = vec![
-            (5, vec![65, 71, 65, 65, 71, 71]),
-            (5, vec![65, 71, 65, 71]),
-            (6, vec![71, 65, 71]),
-            (7, vec![65, 65, 71, 71, 71, 67]),
-            (7, vec![65, 71, 71, 71, 71, 67]),
+            Change::new(5, 7, &[65, 71, 65, 65, 71, 71]),
+            Change::new(5, 7, &[65, 71, 65, 71]),
+            Change::new(6, 7, &[71, 65, 71]),
+            Change::new(7, 7, &[65, 65, 71, 71, 71, 67]),
+            Change::new(7, 7, &[65, 71, 71, 71, 71, 67]),
         ];
         match_pos = DiffPos::from_change(&assemble_change(changes, 7));
 
@@ -404,25 +472,25 @@ mod t {
         let raw = crate::random_seq(100, &mut rng);
 
         let changes = vec![
-            (14, [71, 71, 84, 65, 84, 71, 65, 71].to_vec()),
-            (21, [84, 65, 71, 84, 84, 84, 65, 67].to_vec()),
-            (30, [84, 71, 84, 65, 67, 67, 67].to_vec()),
-            (31, [71, 71, 84, 65, 71, 67, 67, 84].to_vec()),
-            (41, [84, 71, 67, 71, 67, 67].to_vec()),
-            (44, [67, 71, 67, 67, 71, 84].to_vec()),
-            (49, [71, 84, 84, 71, 84, 71, 65, 71].to_vec()),
-            (50, [84, 84, 71, 84, 65, 71, 71, 65].to_vec()),
-            (50, [84, 84, 71, 84, 71, 65].to_vec()),
-            (52, [71, 84, 65, 71, 65, 71].to_vec()),
-            (54, [65, 71, 65, 71, 65, 65].to_vec()),
-            (66, [84, 84, 71, 84, 65, 84, 65].to_vec()),
-            (71, [84, 65, 65, 67, 67, 65].to_vec()),
-            (79, [71, 84, 65, 84, 65, 71, 84].to_vec()),
-            (82, [84, 65, 84, 67, 67, 71].to_vec()),
-            (83, [65, 65, 84, 67, 71, 71].to_vec()),
-            (87, [67, 71, 71, 65, 67, 65, 71].to_vec()),
-            (90, [65, 67, 65, 71, 67, 65, 84].to_vec()),
-            (91, [67, 71, 71, 67, 65, 67, 84, 71].to_vec()),
+            Change::new(14, 7, &[71, 71, 84, 65, 84, 71, 65, 71]),
+            Change::new(21, 7, &[84, 65, 71, 84, 84, 84, 65, 67]),
+            Change::new(30, 7, &[84, 71, 84, 65, 67, 67, 67]),
+            Change::new(31, 7, &[71, 71, 84, 65, 71, 67, 67, 84]),
+            Change::new(41, 7, &[84, 71, 67, 71, 67, 67]),
+            Change::new(44, 7, &[67, 71, 67, 67, 71, 84]),
+            Change::new(49, 7, &[71, 84, 84, 71, 84, 71, 65, 71]),
+            Change::new(50, 7, &[84, 84, 71, 84, 65, 71, 71, 65]),
+            Change::new(50, 7, &[84, 84, 71, 84, 71, 65]),
+            Change::new(52, 7, &[71, 84, 65, 71, 65, 71]),
+            Change::new(54, 7, &[65, 71, 65, 71, 65, 65]),
+            Change::new(66, 7, &[84, 84, 71, 84, 65, 84, 65]),
+            Change::new(71, 7, &[84, 65, 65, 67, 67, 65]),
+            Change::new(79, 7, &[71, 84, 65, 84, 65, 71, 84]),
+            Change::new(82, 7, &[84, 65, 84, 67, 67, 71]),
+            Change::new(83, 7, &[65, 65, 84, 67, 71, 71]),
+            Change::new(87, 7, &[67, 71, 71, 65, 67, 65, 71]),
+            Change::new(90, 7, &[65, 67, 65, 71, 67, 65, 84]),
+            Change::new(91, 7, &[67, 71, 71, 67, 65, 67, 84, 71]),
         ];
 
         let err = apply_changes(&raw, &assemble_change(changes, 7));

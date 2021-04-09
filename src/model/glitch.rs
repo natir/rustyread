@@ -9,15 +9,15 @@ use rand::distributions::Distribution;
 /* local use */
 
 /// Struct to generate glitches in fragment
-pub struct Glitches {
+pub struct Glitch {
     distance: Option<rand_distr::Geometric>,
     length_size: rand_distr::Geometric,
     length_skip: rand_distr::Geometric,
 }
 
-impl Glitches {
+impl Glitch {
     /// Create model from parameter
-    pub fn new(rate: f64, size: f64, skip: f64) -> Result<Glitches> {
+    pub fn new(rate: f64, size: f64, skip: f64) -> Result<Glitch> {
         let distance = if rate != 0.0 {
             if rate > 1.0 {
                 Some(rand_distr::Geometric::new(1.0 / rate)?)
@@ -71,17 +71,17 @@ mod t {
 
     #[test]
     fn create_dist() {
-        assert!(Glitches::new(10_000.0, 25.0, 25.0).is_ok());
-        assert!(Glitches::new(10_000.0, 25.0, 0.0).is_ok());
-        assert!(Glitches::new(10_000.0, 0.0, 25.0).is_ok());
-        assert!(Glitches::new(0.0, 25.0, 25.0).is_ok());
-        assert!(Glitches::new(0.0, 0.0, 0.0).is_ok());
+        assert!(Glitch::new(10_000.0, 25.0, 25.0).is_ok());
+        assert!(Glitch::new(10_000.0, 25.0, 0.0).is_ok());
+        assert!(Glitch::new(10_000.0, 0.0, 25.0).is_ok());
+        assert!(Glitch::new(0.0, 25.0, 25.0).is_ok());
+        assert!(Glitch::new(0.0, 0.0, 0.0).is_ok());
     }
 
     #[test]
     fn get_value() {
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
-        let model = Glitches::new(10_000.0, 25.0, 25.0).unwrap();
+        let model = Glitch::new(10_000.0, 25.0, 25.0).unwrap();
 
         let data: Vec<(usize, usize, Vec<u8>)> = (0..20)
             .map(|_| model.get_glitch(&mut rng).unwrap())
@@ -214,7 +214,7 @@ mod t {
             data
         );
 
-        assert!(Glitches::new(0.0, 25.0, 25.0)
+        assert!(Glitch::new(0.0, 25.0, 25.0)
             .unwrap()
             .get_glitch(&mut rng)
             .is_none());
