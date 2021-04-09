@@ -21,6 +21,10 @@ use crate::model;
 use crate::references::*;
 use description::{Description, Origin};
 
+/* constant definition */
+const CHIMERA_START_ADAPTER_CHANCE: f64 = 0.25;
+const CHIMERA_END_ADAPTER_CHANCE: f64 = 0.25;
+
 #[cfg(not(tarpaulin_include))]
 /// main simulate function
 pub fn simulate(params: cli::simulate::Command) -> Result<()> {
@@ -95,14 +99,15 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     );
     log::info!("Target number of base {}", total_base);
 
+    let chimera_rate = params.chimera / 100.0;
     log::info!("Start generate sequences");
     let sequences: Vec<(Description, Seq, Quality)> =
-        LenIdSeed::new(total_base, &length, &identity, &mut main_rng)
+        LenIdSeed::new(total_base, chimera_rate, &length, &identity, &mut main_rng)
             .par_bridge()
-            .map(|(len, id, seed)| {
+            .map(|(len, len2, id, seed)| {
                 generate_read(
                     &references,
-                    len as usize,
+                    (len, len2),
                     id,
                     &adapter,
                     &error,
@@ -139,7 +144,7 @@ type Quality = Vec<u8>;
 /// Function realy generate read
 fn generate_read(
     references: &References,
-    length: usize,
+    length: (usize, Option<usize>),
     identity: f64,
     adapter_model: &model::Adapter,
     error_model: &model::Error,
@@ -148,18 +153,40 @@ fn generate_read(
 ) -> Result<(Description, Seq, Quality)> {
     let k = error_model.k();
 
-    // Generate fragment
-    let (ref_fragment, origin) = get_fragment(length, references, &mut rng);
-    let start_adapter = adapter_model.get_start(&mut rng);
-    let end_adapter = adapter_model.get_end(&mut rng);
+    // Estimate size of final fragment all edit is consider as insertion -> it's overestimation
+    let mut estimate_length = 2 * k + adapter_model.max_len() + length.0 + length.1.unwrap_or(0);
+    estimate_length += error::number_of_edit(identity, estimate_length).round() as usize;
 
-    let mut raw_fragment = Vec::with_capacity(
-        ref_fragment.len() + error_model.k() * 2 + start_adapter.len() + end_adapter.len(),
-    );
+    // Generate fragment
+    let mut raw_fragment = Vec::with_capacity(estimate_length);
     raw_fragment.extend(crate::random_seq(k, &mut rng));
+
+    let start_adapter = adapter_model.get_start(&mut rng);
     raw_fragment.extend(&start_adapter);
+
+    let (ref_fragment, origin) = get_fragment(length.0, references, &mut rng);
     raw_fragment.extend(&ref_fragment);
+
+    // Add chimeric part
+    let chimera_origin = if let Some(length2) = length.1 {
+        if rng.gen_bool(CHIMERA_END_ADAPTER_CHANCE) {
+            raw_fragment.extend(adapter_model.get_end(&mut rng));
+        }
+        if rng.gen_bool(CHIMERA_START_ADAPTER_CHANCE) {
+            raw_fragment.extend(adapter_model.get_start(&mut rng));
+        }
+
+        let (other_fragment, other_origin) = get_fragment(length2, references, &mut rng);
+        raw_fragment.extend(other_fragment);
+
+        Some(other_origin)
+    } else {
+        None
+    };
+
+    let end_adapter = adapter_model.get_end(&mut rng);
     raw_fragment.extend(&end_adapter);
+
     raw_fragment.extend(crate::random_seq(k, &mut rng));
 
     // Add error in fragment and produce quality
@@ -179,7 +206,12 @@ fn generate_read(
     }
 
     // Generate information on read
-    let des = Description::new(origin, None, length, real_id * 100.0);
+    let des = Description::new(
+        origin,
+        chimera_origin,
+        raw_fragment.len() - (k * 2),
+        real_id * 100.0,
+    );
 
     Ok((des, err_fragment, quality))
 }
@@ -215,6 +247,7 @@ fn get_ref_fragment(
 /// An iterator produce a length and u64 seed, until sum of length not reach target
 struct LenIdSeed<'a> {
     target: u64,
+    chimera_rate: f64,
     length_model: &'a model::Length,
     identity_model: &'a model::Identity,
     rng: &'a mut rand::rngs::StdRng,
@@ -224,12 +257,14 @@ impl<'a> LenIdSeed<'a> {
     /// Create a new LenIdSeed
     pub fn new(
         target: u64,
+        chimera_rate: f64,
         length_model: &'a model::Length,
         identity_model: &'a model::Identity,
         rng: &'a mut rand::rngs::StdRng,
     ) -> Self {
         Self {
             target,
+            chimera_rate,
             length_model,
             identity_model,
             rng,
@@ -238,23 +273,32 @@ impl<'a> LenIdSeed<'a> {
 }
 
 impl<'a> Iterator for LenIdSeed<'a> {
-    type Item = (u64, f64, u64);
+    type Item = (usize, Option<usize>, f64, u64);
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.target == 0 {
             return None;
         }
 
-        let length = self.length_model.get_length(self.rng);
+        let length = self.length_model.get_length(self.rng) as usize;
 
-        if length > self.target {
+        let length2 = if self.rng.gen_bool(self.chimera_rate) {
+            Some(self.length_model.get_length(self.rng) as usize)
+        } else {
+            None
+        };
+
+        let tt_length = (length + length2.unwrap_or(0)) as u64;
+
+        if tt_length > self.target {
             self.target = 0;
         } else {
-            self.target -= length;
+            self.target -= tt_length;
         }
 
         Some((
             length,
+            length2,
             self.identity_model.get_identity(self.rng),
             self.rng.next_u64(),
         ))
@@ -272,22 +316,22 @@ mod t {
         let identity = model::Identity::new(90.0, 100.0, 5.0).unwrap();
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
 
-        let it = LenIdSeed::new(1_000, &length, &identity, &mut rng);
+        let it = LenIdSeed::new(1_000, 0.1, &length, &identity, &mut rng);
 
-        let lengths: Vec<(u64, f64, u64)> = it.collect();
+        let lengths: Vec<(usize, Option<usize>, f64, u64)> = it.collect();
 
         assert_eq!(
             vec![
-                (100, 0.8766417197970516, 633513173585076202),
-                (99, 0.812764901371403, 59990589126097438),
-                (109, 0.915656282506864, 9648369018563374588),
-                (96, 0.8970375784344082, 11924907057293251871),
-                (104, 0.8990886407136385, 6475006809388010320),
-                (99, 0.9411813514218517, 12075250104723286995),
-                (99, 0.8741520990047399, 10644393278569127094),
-                (99, 0.9104462472912016, 11204491199501125651),
-                (99, 0.9485885683427931, 9064963017249372811),
-                (104, 0.8928093807556134, 14957698519116010673)
+                (100, None, 0.9135596717952422, 7654602743214997928),
+                (101, None, 0.8990623479644879, 2598777197943013338),
+                (100, Some(100), 0.8746476160545346, 9181438499313657906),
+                (100, None, 0.9077129516303598, 3754557543903678404),
+                (99, None, 0.9387255684776452, 7196201290701505999),
+                (93, None, 0.8821726775189294, 520811042500337745),
+                (93, None, 0.8928093807556134, 14957698519116010673),
+                (102, None, 0.9152291848490597, 4532762459406505246),
+                (102, None, 0.946352414331155, 9855488741258874048),
+                (95, None, 0.8890601689755928, 1094680473675979714),
             ],
             lengths
         );

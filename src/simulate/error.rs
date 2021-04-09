@@ -10,6 +10,11 @@ use crate::model;
 
 type Seq = Vec<u8>;
 
+/// From identity an seq length compute number of edit
+pub fn number_of_edit(target: f64, length: usize) -> f64 {
+    (1.0 - target) * length as f64
+}
+
 /// Apply error on read
 pub fn add_error(
     target: f64,
@@ -18,7 +23,7 @@ pub fn add_error(
     rng: &mut rand::rngs::StdRng,
 ) -> (Seq, DiffPos) {
     let k = error_model.k();
-    let changes = generate_change(seq, (1.0 - target) * seq.len() as f64, error_model, rng);
+    let changes = generate_change(seq, number_of_edit(target, seq.len()), error_model, rng);
 
     let asm_changes = assemble_change(changes, k);
 

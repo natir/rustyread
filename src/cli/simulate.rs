@@ -225,13 +225,13 @@ pub struct Command {
     )]
     pub random_reads: u64,
 
-    /// Chimeras parameter
+    /// Chimera parameter
     #[clap(
         long = "chimera",
         about = "Percentage at which separate fragments join together",
         default_value = "1"
     )]
-    pub chimeras: u64,
+    pub chimera: f64,
 
     /// Glitches parameter
     #[clap(
