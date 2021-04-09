@@ -3,6 +3,7 @@
 /* module declaration */
 pub mod adapter;
 pub mod error;
+pub mod glitches;
 pub mod identity;
 pub mod length;
 pub mod quality;

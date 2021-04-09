@@ -199,7 +199,7 @@ fn generate_read(
     raw_fragment.extend(crate::random_seq(k, &mut rng));
 
     // Add error in fragment and produce quality
-    let (err_fragment, diffpos) = error::add_error(identity, error_model, &raw_fragment, &mut rng);
+    let (err_fragment, diffpos) = error::add_error(identity, &raw_fragment, error_model, &mut rng);
 
     let (real_id, mut quality) = quality::generate_quality(
         &raw_fragment,

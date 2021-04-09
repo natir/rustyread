@@ -18,8 +18,8 @@ pub fn number_of_edit(target: f64, length: usize) -> f64 {
 /// Apply error on read
 pub fn add_error(
     target: f64,
-    error_model: &model::Error,
     seq: &[u8],
+    error_model: &model::Error,
     rng: &mut rand::rngs::StdRng,
 ) -> (Seq, DiffPos) {
     let k = error_model.k();
