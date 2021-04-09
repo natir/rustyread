@@ -428,6 +428,11 @@
 <span id="425">425</span>
 <span id="426">426</span>
 <span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Add error on reads</span>
 
@@ -441,6 +446,11 @@
 
 <span class="kw">type</span> <span class="ident">Seq</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>;
 
+<span class="doccomment">/// From identity an seq length compute number of edit</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">number_of_edit</span>(<span class="ident">target</span>: <span class="ident">f64</span>, <span class="ident">length</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    (<span class="number">1.0</span> <span class="op">-</span> <span class="ident">target</span>) <span class="op">*</span> <span class="ident">length</span> <span class="kw">as</span> <span class="ident">f64</span>
+}
+
 <span class="doccomment">/// Apply error on read</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_error</span>(
     <span class="ident">target</span>: <span class="ident">f64</span>,
@@ -449,7 +459,7 @@
     <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Seq</span>, <span class="ident">DiffPos</span>) {
     <span class="kw">let</span> <span class="ident">k</span> <span class="op">=</span> <span class="ident">error_model</span>.<span class="ident">k</span>();
-    <span class="kw">let</span> <span class="ident">changes</span> <span class="op">=</span> <span class="ident">generate_change</span>(<span class="ident">seq</span>, (<span class="number">1.0</span> <span class="op">-</span> <span class="ident">target</span>) <span class="op">*</span> <span class="ident">seq</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>, <span class="ident">error_model</span>, <span class="ident">rng</span>);
+    <span class="kw">let</span> <span class="ident">changes</span> <span class="op">=</span> <span class="ident">generate_change</span>(<span class="ident">seq</span>, <span class="ident">number_of_edit</span>(<span class="ident">target</span>, <span class="ident">seq</span>.<span class="ident">len</span>()), <span class="ident">error_model</span>, <span class="ident">rng</span>);
 
     <span class="kw">let</span> <span class="ident">asm_changes</span> <span class="op">=</span> <span class="ident">assemble_change</span>(<span class="ident">changes</span>, <span class="ident">k</span>);
 

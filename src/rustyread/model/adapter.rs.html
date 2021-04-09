@@ -173,6 +173,28 @@
 <span id="170">170</span>
 <span id="171">171</span>
 <span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Model to get sequence adapter</span>
 
@@ -267,6 +289,10 @@
             <span class="ident">Vec</span>::<span class="ident">new</span>()
         }
     }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">start</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">end</span>.<span class="ident">len</span>()
+    }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -322,28 +348,46 @@
             <span class="ident">starts</span>
         );
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="macro">vec</span><span class="macro">!</span>[
-            <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;CAA&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;CAACAT&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;CA&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;CAA&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;CA&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;CAACAT&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;CAAC&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;CAACAT&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
-            <span class="string">b&quot;CAACATAT&quot;</span>.<span class="ident">to_vec</span>(),
-        ], <span class="ident">ends</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="macro">vec</span><span class="macro">!</span>[
+                <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;CAA&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;CAACAT&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;CA&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;CAA&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;CA&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;CAACAT&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;CAAC&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;CAACAT&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;&quot;</span>.<span class="ident">to_vec</span>(),
+                <span class="string">b&quot;CAACATAT&quot;</span>.<span class="ident">to_vec</span>(),
+            ],
+            <span class="ident">ends</span>
+        );
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">max_len_</span>() {
+        <span class="kw">let</span> <span class="ident">model</span> <span class="op">=</span> <span class="ident">Adapter</span>::<span class="ident">new</span>(
+            <span class="string">b&quot;CGATCACAAA&quot;</span>.<span class="ident">to_vec</span>(),
+            <span class="string">b&quot;CAACATATGT&quot;</span>.<span class="ident">to_vec</span>(),
+            <span class="number">90.0</span>,
+            <span class="number">60.0</span>,
+            <span class="number">50.0</span>,
+            <span class="number">20.0</span>,
+        )
+        .<span class="ident">unwrap</span>();
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">model</span>.<span class="ident">max_len</span>(), <span class="number">20</span>);
     }
 }
 </pre></div>

@@ -269,6 +269,77 @@
 <span id="266">266</span>
 <span id="267">267</span>
 <span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Simulate reads</span>
 
@@ -292,6 +363,10 @@
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">model</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">references</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">description</span>::{<span class="ident">Description</span>, <span class="ident">Origin</span>};
+
+<span class="comment">/* constant definition */</span>
+<span class="kw">const</span> <span class="ident">CHIMERA_START_ADAPTER_CHANCE</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="number">0.25</span>;
+<span class="kw">const</span> <span class="ident">CHIMERA_END_ADAPTER_CHANCE</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="number">0.25</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">tarpaulin_include</span>))]</span>
 <span class="doccomment">/// main simulate function</span>
@@ -329,14 +404,14 @@
 
     <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Start init adapter model&quot;</span>);
     <span class="kw">let</span> <span class="ident">adapter</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Adapter</span>::<span class="ident">new</span>(
-	<span class="ident">params</span>.<span class="ident">start_adapter_seq</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>(),
-	<span class="ident">params</span>.<span class="ident">end_adapter_seq</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>(),
-	<span class="ident">params</span>.<span class="ident">start_adapter</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f64</span>,
-	<span class="ident">params</span>.<span class="ident">start_adapter</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f64</span>,
-	<span class="ident">params</span>.<span class="ident">end_adapter</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f64</span>,
-	<span class="ident">params</span>.<span class="ident">end_adapter</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f64</span>,
+        <span class="ident">params</span>.<span class="ident">start_adapter_seq</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>(),
+        <span class="ident">params</span>.<span class="ident">end_adapter_seq</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>(),
+        <span class="ident">params</span>.<span class="ident">start_adapter</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f64</span>,
+        <span class="ident">params</span>.<span class="ident">start_adapter</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f64</span>,
+        <span class="ident">params</span>.<span class="ident">end_adapter</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f64</span>,
+        <span class="ident">params</span>.<span class="ident">end_adapter</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f64</span>,
     )<span class="question-mark">?</span>;
-    <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;End init adapter model&quot;</span>);    
+    <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;End init adapter model&quot;</span>);
 
     <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Start read error model&quot;</span>);
     <span class="kw">let</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Error</span>::<span class="ident">from_stream</span>(
@@ -357,7 +432,7 @@
         .<span class="number">0</span>,
     )<span class="question-mark">?</span>;
     <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;End read quality score model&quot;</span>);
-    
+
     <span class="kw">let</span> <span class="ident">total_base</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">quantity</span>.<span class="ident">number_of_base</span>(
         <span class="ident">references</span>
             .<span class="ident">sequences</span>
@@ -367,16 +442,17 @@
     );
     <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Target number of base {}&quot;</span>, <span class="ident">total_base</span>);
 
+    <span class="kw">let</span> <span class="ident">chimera_rate</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">chimera</span> <span class="op">/</span> <span class="number">100.0</span>;
     <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Start generate sequences&quot;</span>);
     <span class="kw">let</span> <span class="ident">sequences</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Description</span>, <span class="ident">Seq</span>, <span class="ident">Quality</span>)<span class="op">&gt;</span> <span class="op">=</span>
-        <span class="ident">LenSeed</span>::<span class="ident">new</span>(<span class="ident">total_base</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">main_rng</span>, <span class="kw-2">&amp;</span><span class="ident">length</span>)
+        <span class="ident">LenIdSeed</span>::<span class="ident">new</span>(<span class="ident">total_base</span>, <span class="ident">chimera_rate</span>, <span class="kw-2">&amp;</span><span class="ident">length</span>, <span class="kw-2">&amp;</span><span class="ident">identity</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">main_rng</span>)
             .<span class="ident">par_bridge</span>()
-            .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">length</span>, <span class="ident">seed</span>)<span class="op">|</span> {
+            .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">len</span>, <span class="ident">len2</span>, <span class="ident">id</span>, <span class="ident">seed</span>)<span class="op">|</span> {
                 <span class="ident">generate_read</span>(
                     <span class="kw-2">&amp;</span><span class="ident">references</span>,
-                    <span class="ident">length</span> <span class="kw">as</span> <span class="ident">usize</span>,
-                    <span class="kw-2">&amp;</span><span class="ident">identity</span>,
-		    <span class="kw-2">&amp;</span><span class="ident">adapter</span>,
+                    (<span class="ident">len</span>, <span class="ident">len2</span>),
+                    <span class="ident">id</span>,
+                    <span class="kw-2">&amp;</span><span class="ident">adapter</span>,
                     <span class="kw-2">&amp;</span><span class="ident">error</span>,
                     <span class="kw-2">&amp;</span><span class="ident">qscore</span>,
                     <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>::<span class="ident">seed_from_u64</span>(<span class="ident">seed</span>),
@@ -411,8 +487,8 @@
 <span class="doccomment">/// Function realy generate read</span>
 <span class="kw">fn</span> <span class="ident">generate_read</span>(
     <span class="ident">references</span>: <span class="kw-2">&amp;</span><span class="ident">References</span>,
-    <span class="ident">length</span>: <span class="ident">usize</span>,
-    <span class="ident">identity_model</span>: <span class="kw-2">&amp;</span><span class="ident">model</span>::<span class="ident">Identity</span>,
+    <span class="ident">length</span>: (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>),
+    <span class="ident">identity</span>: <span class="ident">f64</span>,
     <span class="ident">adapter_model</span>: <span class="kw-2">&amp;</span><span class="ident">model</span>::<span class="ident">Adapter</span>,
     <span class="ident">error_model</span>: <span class="kw-2">&amp;</span><span class="ident">model</span>::<span class="ident">Error</span>,
     <span class="ident">qscore_model</span>: <span class="kw-2">&amp;</span><span class="ident">model</span>::<span class="ident">Quality</span>,
@@ -420,25 +496,43 @@
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Description</span>, <span class="ident">Seq</span>, <span class="ident">Quality</span>)<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">k</span> <span class="op">=</span> <span class="ident">error_model</span>.<span class="ident">k</span>();
 
-    <span class="kw">let</span> (<span class="ident">id</span>, <span class="ident">local_ref</span>, <span class="ident">strand</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">references</span>.<span class="ident">get_reference</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
-    <span class="kw">let</span> <span class="ident">start_pos</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0</span>..<span class="ident">local_ref</span>.<span class="ident">len</span>()) <span class="kw">as</span> <span class="ident">usize</span>;
-    <span class="kw">let</span> <span class="ident">identity</span> <span class="op">=</span> <span class="ident">identity_model</span>.<span class="ident">get_identity</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
+    <span class="comment">// Estimate size of final fragment all edit is consider as insertion -&gt; it&#39;s overestimation</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">estimate_length</span> <span class="op">=</span> <span class="number">2</span> <span class="op">*</span> <span class="ident">k</span> <span class="op">+</span> <span class="ident">adapter_model</span>.<span class="ident">max_len</span>() <span class="op">+</span> <span class="ident">length</span>.<span class="number">0</span> <span class="op">+</span> <span class="ident">length</span>.<span class="number">1</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>);
+    <span class="ident">estimate_length</span> <span class="op">+</span><span class="op">=</span> <span class="ident">error</span>::<span class="ident">number_of_edit</span>(<span class="ident">identity</span>, <span class="ident">estimate_length</span>).<span class="ident">round</span>() <span class="kw">as</span> <span class="ident">usize</span>;
 
-    <span class="kw">let</span> <span class="ident">end_pos</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">start_pos</span> <span class="op">+</span> <span class="ident">length</span> <span class="op">&gt;</span> <span class="ident">local_ref</span>.<span class="ident">len</span>() {
-        <span class="ident">local_ref</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>
-    } <span class="kw">else</span> {
-        <span class="ident">start_pos</span> <span class="op">+</span> <span class="ident">length</span>
-    };
+    <span class="comment">// Generate fragment</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">raw_fragment</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">estimate_length</span>);
+    <span class="ident">raw_fragment</span>.<span class="ident">extend</span>(<span class="kw">crate</span>::<span class="ident">random_seq</span>(<span class="ident">k</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>));
 
     <span class="kw">let</span> <span class="ident">start_adapter</span> <span class="op">=</span> <span class="ident">adapter_model</span>.<span class="ident">get_start</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
-    <span class="kw">let</span> <span class="ident">end_adapter</span> <span class="op">=</span> <span class="ident">adapter_model</span>.<span class="ident">get_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">raw_fragment</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">end_pos</span> <span class="op">-</span> <span class="ident">start_pos</span> <span class="op">+</span> <span class="ident">error_model</span>.<span class="ident">k</span>() <span class="op">*</span> <span class="number">2</span> <span class="op">+</span> <span class="ident">start_adapter</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="ident">end_adapter</span>.<span class="ident">len</span>());
-    <span class="ident">raw_fragment</span>.<span class="ident">extend</span>(<span class="kw">crate</span>::<span class="ident">random_seq</span>(<span class="ident">k</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>));
     <span class="ident">raw_fragment</span>.<span class="ident">extend</span>(<span class="kw-2">&amp;</span><span class="ident">start_adapter</span>);
-    <span class="ident">raw_fragment</span>.<span class="ident">extend</span>(<span class="kw-2">&amp;</span><span class="ident">local_ref</span>[<span class="ident">start_pos</span>..<span class="ident">end_pos</span>]);
+
+    <span class="kw">let</span> (<span class="ident">ref_fragment</span>, <span class="ident">origin</span>) <span class="op">=</span> <span class="ident">get_fragment</span>(<span class="ident">length</span>.<span class="number">0</span>, <span class="ident">references</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
+    <span class="ident">raw_fragment</span>.<span class="ident">extend</span>(<span class="kw-2">&amp;</span><span class="ident">ref_fragment</span>);
+
+    <span class="comment">// Add chimeric part</span>
+    <span class="kw">let</span> <span class="ident">chimera_origin</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">length2</span>) <span class="op">=</span> <span class="ident">length</span>.<span class="number">1</span> {
+        <span class="kw">if</span> <span class="ident">rng</span>.<span class="ident">gen_bool</span>(<span class="ident">CHIMERA_END_ADAPTER_CHANCE</span>) {
+            <span class="ident">raw_fragment</span>.<span class="ident">extend</span>(<span class="ident">adapter_model</span>.<span class="ident">get_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>));
+        }
+        <span class="kw">if</span> <span class="ident">rng</span>.<span class="ident">gen_bool</span>(<span class="ident">CHIMERA_START_ADAPTER_CHANCE</span>) {
+            <span class="ident">raw_fragment</span>.<span class="ident">extend</span>(<span class="ident">adapter_model</span>.<span class="ident">get_start</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>));
+        }
+
+        <span class="kw">let</span> (<span class="ident">other_fragment</span>, <span class="ident">other_origin</span>) <span class="op">=</span> <span class="ident">get_fragment</span>(<span class="ident">length2</span>, <span class="ident">references</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
+        <span class="ident">raw_fragment</span>.<span class="ident">extend</span>(<span class="ident">other_fragment</span>);
+
+        <span class="prelude-val">Some</span>(<span class="ident">other_origin</span>)
+    } <span class="kw">else</span> {
+        <span class="prelude-val">None</span>
+    };
+
+    <span class="kw">let</span> <span class="ident">end_adapter</span> <span class="op">=</span> <span class="ident">adapter_model</span>.<span class="ident">get_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
     <span class="ident">raw_fragment</span>.<span class="ident">extend</span>(<span class="kw-2">&amp;</span><span class="ident">end_adapter</span>);
+
     <span class="ident">raw_fragment</span>.<span class="ident">extend</span>(<span class="kw">crate</span>::<span class="ident">random_seq</span>(<span class="ident">k</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>));
 
+    <span class="comment">// Add error in fragment and produce quality</span>
     <span class="kw">let</span> (<span class="ident">err_fragment</span>, <span class="ident">diffpos</span>) <span class="op">=</span> <span class="ident">error</span>::<span class="ident">add_error</span>(<span class="ident">identity</span>, <span class="ident">error_model</span>, <span class="kw-2">&amp;</span><span class="ident">raw_fragment</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
 
     <span class="kw">let</span> (<span class="ident">real_id</span>, <span class="kw-2">mut</span> <span class="ident">quality</span>) <span class="op">=</span> <span class="ident">quality</span>::<span class="ident">generate_quality</span>(
@@ -454,55 +548,103 @@
         <span class="ident">quality</span>.<span class="ident">resize</span>(<span class="ident">err_fragment</span>.<span class="ident">len</span>(), <span class="string">b&#39;!&#39;</span>);
     }
 
-    <span class="kw">let</span> <span class="ident">ori</span> <span class="op">=</span> <span class="ident">Origin</span>::<span class="ident">new</span>(<span class="ident">id</span>.<span class="ident">clone</span>(), <span class="kw-2">*</span><span class="ident">strand</span>, <span class="ident">start_pos</span>, <span class="ident">end_pos</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>);
-    <span class="kw">let</span> <span class="ident">des</span> <span class="op">=</span> <span class="ident">Description</span>::<span class="ident">new</span>(<span class="ident">ori</span>, <span class="prelude-val">None</span>, <span class="ident">length</span>, <span class="ident">real_id</span> <span class="op">*</span> <span class="number">100.0</span>);
-
-    <span class="comment">// TODO remove that</span>
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">err_fragment</span>.<span class="ident">len</span>(), <span class="ident">quality</span>.<span class="ident">len</span>());
-    <span class="ident">quality</span>.<span class="ident">resize</span>(<span class="ident">err_fragment</span>.<span class="ident">len</span>(), <span class="string">b&#39;!&#39;</span>);
+    <span class="comment">// Generate information on read</span>
+    <span class="kw">let</span> <span class="ident">des</span> <span class="op">=</span> <span class="ident">Description</span>::<span class="ident">new</span>(
+        <span class="ident">origin</span>,
+        <span class="ident">chimera_origin</span>,
+        <span class="ident">raw_fragment</span>.<span class="ident">len</span>() <span class="op">-</span> (<span class="ident">k</span> <span class="op">*</span> <span class="number">2</span>),
+        <span class="ident">real_id</span> <span class="op">*</span> <span class="number">100.0</span>,
+    );
 
     <span class="prelude-val">Ok</span>((<span class="ident">des</span>, <span class="ident">err_fragment</span>, <span class="ident">quality</span>))
 }
 
-<span class="doccomment">/// An iterator produce a length and u64 seed, until sum of length not reach target</span>
-<span class="kw">struct</span> <span class="ident">LenSeed</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">target</span>: <span class="ident">u64</span>,
-    <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
-    <span class="ident">length_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model</span>::<span class="ident">Length</span>,
+<span class="kw">fn</span> <span class="ident">get_fragment</span>(
+    <span class="ident">length</span>: <span class="ident">usize</span>,
+    <span class="ident">references</span>: <span class="kw-2">&amp;</span><span class="ident">References</span>,
+    <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
+) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Origin</span>) {
+    <span class="ident">get_ref_fragment</span>(<span class="ident">length</span>, <span class="ident">references</span>, <span class="ident">rng</span>)
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">LenSeed</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a new LenSeed</span>
+<span class="kw">fn</span> <span class="ident">get_ref_fragment</span>(
+    <span class="ident">length</span>: <span class="ident">usize</span>,
+    <span class="ident">references</span>: <span class="kw-2">&amp;</span><span class="ident">References</span>,
+    <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
+) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Origin</span>) {
+    <span class="kw">let</span> (<span class="ident">id</span>, <span class="ident">local_ref</span>, <span class="ident">strand</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">references</span>.<span class="ident">get_reference</span>(<span class="ident">rng</span>);
+    <span class="kw">let</span> <span class="ident">start_pos</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0</span>..<span class="ident">local_ref</span>.<span class="ident">len</span>()) <span class="kw">as</span> <span class="ident">usize</span>;
+
+    <span class="kw">let</span> <span class="ident">end_pos</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">start_pos</span> <span class="op">+</span> <span class="ident">length</span> <span class="op">&gt;</span> <span class="ident">local_ref</span>.<span class="ident">len</span>() {
+        <span class="ident">local_ref</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>
+    } <span class="kw">else</span> {
+        <span class="ident">start_pos</span> <span class="op">+</span> <span class="ident">length</span>
+    };
+
+    (
+        <span class="ident">local_ref</span>[<span class="ident">start_pos</span>..<span class="ident">end_pos</span>].<span class="ident">to_vec</span>(),
+        <span class="ident">Origin</span>::<span class="ident">new</span>(<span class="ident">id</span>.<span class="ident">clone</span>(), <span class="kw-2">*</span><span class="ident">strand</span>, <span class="ident">start_pos</span>, <span class="ident">end_pos</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>),
+    )
+}
+
+<span class="doccomment">/// An iterator produce a length and u64 seed, until sum of length not reach target</span>
+<span class="kw">struct</span> <span class="ident">LenIdSeed</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">target</span>: <span class="ident">u64</span>,
+    <span class="ident">chimera_rate</span>: <span class="ident">f64</span>,
+    <span class="ident">length_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model</span>::<span class="ident">Length</span>,
+    <span class="ident">identity_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model</span>::<span class="ident">Identity</span>,
+    <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">LenIdSeed</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Create a new LenIdSeed</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
         <span class="ident">target</span>: <span class="ident">u64</span>,
-        <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
+        <span class="ident">chimera_rate</span>: <span class="ident">f64</span>,
         <span class="ident">length_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model</span>::<span class="ident">Length</span>,
+        <span class="ident">identity_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model</span>::<span class="ident">Identity</span>,
+        <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">target</span>,
-            <span class="ident">rng</span>,
+            <span class="ident">chimera_rate</span>,
             <span class="ident">length_model</span>,
+            <span class="ident">identity_model</span>,
+            <span class="ident">rng</span>,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">LenSeed</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> (<span class="ident">u64</span>, <span class="ident">u64</span>);
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">LenIdSeed</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">f64</span>, <span class="ident">u64</span>);
 
     <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">target</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
             <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">length_model</span>.<span class="ident">get_length</span>(<span class="self">self</span>.<span class="ident">rng</span>);
+        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">length_model</span>.<span class="ident">get_length</span>(<span class="self">self</span>.<span class="ident">rng</span>) <span class="kw">as</span> <span class="ident">usize</span>;
 
-        <span class="kw">if</span> <span class="ident">length</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">target</span> {
+        <span class="kw">let</span> <span class="ident">length2</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">rng</span>.<span class="ident">gen_bool</span>(<span class="self">self</span>.<span class="ident">chimera_rate</span>) {
+            <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">length_model</span>.<span class="ident">get_length</span>(<span class="self">self</span>.<span class="ident">rng</span>) <span class="kw">as</span> <span class="ident">usize</span>)
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
+        };
+
+        <span class="kw">let</span> <span class="ident">tt_length</span> <span class="op">=</span> (<span class="ident">length</span> <span class="op">+</span> <span class="ident">length2</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>)) <span class="kw">as</span> <span class="ident">u64</span>;
+
+        <span class="kw">if</span> <span class="ident">tt_length</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">target</span> {
             <span class="self">self</span>.<span class="ident">target</span> <span class="op">=</span> <span class="number">0</span>;
         } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">target</span> <span class="op">-</span><span class="op">=</span> <span class="ident">length</span>;
+            <span class="self">self</span>.<span class="ident">target</span> <span class="op">-</span><span class="op">=</span> <span class="ident">tt_length</span>;
         }
 
-        <span class="prelude-val">Some</span>((<span class="ident">length</span>, <span class="self">self</span>.<span class="ident">rng</span>.<span class="ident">next_u64</span>()))
+        <span class="prelude-val">Some</span>((
+            <span class="ident">length</span>,
+            <span class="ident">length2</span>,
+            <span class="self">self</span>.<span class="ident">identity_model</span>.<span class="ident">get_identity</span>(<span class="self">self</span>.<span class="ident">rng</span>),
+            <span class="self">self</span>.<span class="ident">rng</span>.<span class="ident">next_u64</span>(),
+        ))
     }
 }
 
@@ -513,26 +655,26 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">length_iterator</span>() {
-        <span class="kw">let</span> <span class="ident">model</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Length</span>::<span class="ident">new</span>(<span class="number">100.0</span>, <span class="number">5.0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Length</span>::<span class="ident">new</span>(<span class="number">100.0</span>, <span class="number">5.0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">identity</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Identity</span>::<span class="ident">new</span>(<span class="number">90.0</span>, <span class="number">100.0</span>, <span class="number">5.0</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>::<span class="ident">seed_from_u64</span>(<span class="number">42</span>);
 
-        <span class="kw">let</span> <span class="ident">it</span> <span class="op">=</span> <span class="ident">LenSeed</span>::<span class="ident">new</span>(<span class="number">1_000</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>, <span class="kw-2">&amp;</span><span class="ident">model</span>);
+        <span class="kw">let</span> <span class="ident">it</span> <span class="op">=</span> <span class="ident">LenIdSeed</span>::<span class="ident">new</span>(<span class="number">1_000</span>, <span class="number">0.1</span>, <span class="kw-2">&amp;</span><span class="ident">length</span>, <span class="kw-2">&amp;</span><span class="ident">identity</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
 
-        <span class="kw">let</span> <span class="ident">lengths</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">u64</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">it</span>.<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="ident">lengths</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">f64</span>, <span class="ident">u64</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">it</span>.<span class="ident">collect</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="macro">vec</span><span class="macro">!</span>[
-                (<span class="number">100</span>, <span class="number">11740708795755607249</span>),
-                (<span class="number">99</span>, <span class="number">7654602743214997928</span>),
-                (<span class="number">101</span>, <span class="number">2421668070752551774</span>),
-                (<span class="number">88</span>, <span class="number">9336807752121363465</span>),
-                (<span class="number">98</span>, <span class="number">9648369018563374588</span>),
-                (<span class="number">96</span>, <span class="number">9578448464351515635</span>),
-                (<span class="number">96</span>, <span class="number">15602080788219557311</span>),
-                (<span class="number">100</span>, <span class="number">1079037894117179173</span>),
-                (<span class="number">97</span>, <span class="number">14653814560646992085</span>),
-                (<span class="number">97</span>, <span class="number">12075250104723286995</span>),
-                (<span class="number">99</span>, <span class="number">17007309290515904425</span>)
+                (<span class="number">100</span>, <span class="prelude-val">None</span>, <span class="number">0.9135596717952422</span>, <span class="number">7654602743214997928</span>),
+                (<span class="number">101</span>, <span class="prelude-val">None</span>, <span class="number">0.8990623479644879</span>, <span class="number">2598777197943013338</span>),
+                (<span class="number">100</span>, <span class="prelude-val">Some</span>(<span class="number">100</span>), <span class="number">0.8746476160545346</span>, <span class="number">9181438499313657906</span>),
+                (<span class="number">100</span>, <span class="prelude-val">None</span>, <span class="number">0.9077129516303598</span>, <span class="number">3754557543903678404</span>),
+                (<span class="number">99</span>, <span class="prelude-val">None</span>, <span class="number">0.9387255684776452</span>, <span class="number">7196201290701505999</span>),
+                (<span class="number">93</span>, <span class="prelude-val">None</span>, <span class="number">0.8821726775189294</span>, <span class="number">520811042500337745</span>),
+                (<span class="number">93</span>, <span class="prelude-val">None</span>, <span class="number">0.8928093807556134</span>, <span class="number">14957698519116010673</span>),
+                (<span class="number">102</span>, <span class="prelude-val">None</span>, <span class="number">0.9152291848490597</span>, <span class="number">4532762459406505246</span>),
+                (<span class="number">102</span>, <span class="prelude-val">None</span>, <span class="number">0.946352414331155</span>, <span class="number">9855488741258874048</span>),
+                (<span class="number">95</span>, <span class="prelude-val">None</span>, <span class="number">0.8890601689755928</span>, <span class="number">1094680473675979714</span>),
             ],
             <span class="ident">lengths</span>
         );
