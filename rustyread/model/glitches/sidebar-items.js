@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Glitches","Struct to generate glitches in fragment"]]});
