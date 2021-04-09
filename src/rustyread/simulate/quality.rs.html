@@ -134,6 +134,18 @@
 <span id="131">131</span>
 <span id="132">132</span>
 <span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Generate quality for simulate</span>
 
@@ -186,7 +198,6 @@
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cigar</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">err</span>.<span class="ident">len</span>());
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_e</span> <span class="op">=</span> <span class="number">0</span>;
 
-    <span class="comment">//crate::alignment::align(err, raw);</span>
     <span class="kw">for</span> (<span class="ident">r</span>, <span class="ident">e</span>) <span class="kw">in</span> <span class="ident">diffs</span>.<span class="ident">raw</span>.<span class="ident">chunks_exact</span>(<span class="number">2</span>).<span class="ident">zip</span>(<span class="ident">diffs</span>.<span class="ident">err</span>.<span class="ident">chunks_exact</span>(<span class="number">2</span>)) {
         <span class="kw">if</span> <span class="ident">e</span>[<span class="number">0</span>] <span class="op">&gt;</span> <span class="ident">prev_e</span> {
             <span class="ident">cigar</span>.<span class="ident">extend</span>((<span class="number">0</span>..(<span class="ident">e</span>[<span class="number">0</span>] <span class="op">-</span> <span class="ident">prev_e</span>)).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="string">b&#39;=&#39;</span>));
@@ -256,13 +267,26 @@ X;1;1:0.000076,2:0.00327,3:0.014147,4:0.034226,5:0.053392,6:0.066246,7:0.078339,
         <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="string">b&quot;TTTGTTCTGCCATCGGCCCTTACTGCGTGCCGGTGGTTAACCTCGAGGCGAACGTCGATCAACTGAACGTCAACATGGTCACCTGCGGCGGCCAGGCCACCATTCCACCATATT&quot;</span>;
         <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="string">b&quot;TTTGTTCTGGCCATCGGCCCTTACTGCGTGCCGGTGGTTAACCTCGAGGCGAACGTCGATCAACTGAACGTCACATGGTCACCTCGCGGCGGCCAGGCCACCATTCCACATATT&quot;</span>;
 
-        <span class="kw">let</span> <span class="ident">diffpos</span> <span class="op">=</span> <span class="ident">error</span>::<span class="ident">DiffPos</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diffpos</span> <span class="op">=</span> <span class="ident">error</span>::<span class="ident">DiffPos</span> {
             <span class="ident">raw</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="number">6</span>, <span class="number">13</span>, <span class="number">66</span>, <span class="number">73</span>, <span class="number">83</span>, <span class="number">90</span>, <span class="number">104</span>, <span class="number">111</span>],
             <span class="ident">err</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="number">6</span>, <span class="number">14</span>, <span class="number">67</span>, <span class="number">73</span>, <span class="number">83</span>, <span class="number">91</span>, <span class="number">105</span>, <span class="number">111</span>],
         };
 
         <span class="kw">let</span> (<span class="ident">edit</span>, <span class="ident">cigar</span>) <span class="op">=</span> <span class="ident">rebuild_cigar</span>(<span class="ident">raw</span>, <span class="ident">err</span>, <span class="ident">diffpos</span>);
         <span class="kw">let</span> (<span class="ident">t_e</span>, <span class="ident">t_c</span>) <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">alignment</span>::<span class="ident">align</span>(<span class="ident">err</span>, <span class="ident">raw</span>);
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">edit</span>, <span class="ident">t_e</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cigar</span>, <span class="ident">t_c</span>.<span class="ident">to_vec</span>());
+
+        <span class="kw">let</span> <span class="ident">raw2</span> <span class="op">=</span> <span class="string">b&quot;CACGAAACGGTATCAAAGGCCACAAAGCTGGCGAAGAGTTCACCATCGACGTGACCTTCCCGGAAGAATACCACGCAGAAAACCTGAAAGGTAAAGCAGCGAAATTCGTAACAG&quot;</span>;
+        <span class="kw">let</span> <span class="ident">err2</span> <span class="op">=</span> <span class="string">b&quot;CACGAAACGGTATCAAAAAGGCCACAAAGCTGGCGAAGAGTTCTACTATCGACGTGACCTTCCCGGAGAATACCACGCAAGAAAACCTGAAGGTAAAGCAGCGAAAATTCGTAACAG&quot;</span>;
+        <span class="ident">diffpos</span> <span class="op">=</span> <span class="ident">error</span>::<span class="ident">DiffPos</span> {
+            <span class="ident">raw</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="number">11</span>, <span class="number">18</span>, <span class="number">38</span>, <span class="number">50</span>, <span class="number">60</span>, <span class="number">67</span>, <span class="number">73</span>, <span class="number">80</span>, <span class="number">84</span>, <span class="number">96</span>, <span class="number">99</span>, <span class="number">106</span>],
+            <span class="ident">err</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="number">11</span>, <span class="number">20</span>, <span class="number">40</span>, <span class="number">53</span>, <span class="number">63</span>, <span class="number">69</span>, <span class="number">75</span>, <span class="number">83</span>, <span class="number">87</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">109</span>],
+        };
+
+        <span class="kw">let</span> (<span class="ident">edit</span>, <span class="ident">cigar</span>) <span class="op">=</span> <span class="ident">rebuild_cigar</span>(<span class="ident">raw2</span>, <span class="ident">err2</span>, <span class="ident">diffpos</span>);
+        <span class="kw">let</span> (<span class="ident">t_e</span>, <span class="ident">t_c</span>) <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">alignment</span>::<span class="ident">align</span>(<span class="ident">err2</span>, <span class="ident">raw2</span>);
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">edit</span>, <span class="ident">t_e</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cigar</span>, <span class="ident">t_c</span>.<span class="ident">to_vec</span>());
