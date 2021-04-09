@@ -149,6 +149,32 @@
 <span id="146">146</span>
 <span id="147">147</span>
 <span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Manage read description</span>
 
@@ -185,6 +211,28 @@
             <span class="ident">end</span>,
             <span class="ident">junk</span>,
             <span class="ident">random</span>,
+        }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">junk</span>(<span class="ident">length</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">Origin</span> {
+            <span class="ident">ref_id</span>: <span class="string">&quot;junk&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+            <span class="ident">start</span>: <span class="number">0</span>,
+            <span class="ident">end</span>: <span class="ident">length</span>,
+            <span class="ident">junk</span>: <span class="bool-val">true</span>,
+            <span class="ident">random</span>: <span class="bool-val">false</span>,
+        }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">random</span>(<span class="ident">length</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">Origin</span> {
+            <span class="ident">ref_id</span>: <span class="string">&quot;random&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+            <span class="ident">start</span>: <span class="number">0</span>,
+            <span class="ident">end</span>: <span class="ident">length</span>,
+            <span class="ident">junk</span>: <span class="bool-val">false</span>,
+            <span class="ident">random</span>: <span class="bool-val">true</span>,
         }
     }
 }
@@ -261,6 +309,10 @@
         <span class="ident">test</span>.<span class="ident">random</span> <span class="op">=</span> <span class="bool-val">true</span>;
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;random_seq&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">test</span>));
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;junk_seq&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">Origin</span>::<span class="ident">junk</span>(<span class="number">100</span>)));
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;random_seq&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">Origin</span>::<span class="ident">random</span>(<span class="number">100</span>)));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
