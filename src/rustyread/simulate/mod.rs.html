@@ -247,6 +247,11 @@
 <span id="244">244</span>
 <span id="245">245</span>
 <span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Simulate reads</span>
 
@@ -409,6 +414,11 @@
         <span class="ident">diffpos</span>,
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>,
     )<span class="question-mark">?</span>;
+
+    <span class="kw">if</span> <span class="ident">quality</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">err_fragment</span>.<span class="ident">len</span>() {
+        <span class="ident">log</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;read and quality string have different length, if you use seed please send all run information to author.&quot;</span>);
+        <span class="ident">quality</span>.<span class="ident">resize</span>(<span class="ident">err_fragment</span>.<span class="ident">len</span>(), <span class="string">b&#39;!&#39;</span>);
+    }
 
     <span class="kw">let</span> <span class="ident">ori</span> <span class="op">=</span> <span class="ident">Origin</span>::<span class="ident">new</span>(<span class="ident">id</span>.<span class="ident">clone</span>(), <span class="kw-2">*</span><span class="ident">strand</span>, <span class="ident">start_pos</span>, <span class="ident">end_pos</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>);
     <span class="kw">let</span> <span class="ident">des</span> <span class="op">=</span> <span class="ident">Description</span>::<span class="ident">new</span>(<span class="ident">ori</span>, <span class="prelude-val">None</span>, <span class="ident">length</span>, <span class="ident">real_id</span> <span class="op">*</span> <span class="number">100.0</span>);
