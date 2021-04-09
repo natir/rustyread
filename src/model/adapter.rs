@@ -91,6 +91,10 @@ impl Adapter {
             Vec::new()
         }
     }
+
+    pub fn max_len(&self) -> usize {
+        self.start.len() + self.end.len()
+    }
 }
 
 #[cfg(test)]
@@ -171,5 +175,20 @@ mod t {
             ],
             ends
         );
+    }
+
+    #[test]
+    fn max_len_() {
+        let model = Adapter::new(
+            b"CGATCACAAA".to_vec(),
+            b"CAACATATGT".to_vec(),
+            90.0,
+            60.0,
+            50.0,
+            20.0,
+        )
+        .unwrap();
+
+        assert_eq!(model.max_len(), 20);
     }
 }
