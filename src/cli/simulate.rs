@@ -215,7 +215,7 @@ pub struct Command {
         about = "This percentage of reads wil be low complexity junk",
         default_value = "1"
     )]
-    pub junk_reads: u64,
+    pub junk: f64,
 
     /// Random reads parameter
     #[clap(
@@ -223,7 +223,7 @@ pub struct Command {
         about = "This percentage of reads wil be random sequence",
         default_value = "1"
     )]
-    pub random_reads: u64,
+    pub random: f64,
 
     /// Chimera parameter
     #[clap(

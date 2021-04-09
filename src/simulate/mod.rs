@@ -99,6 +99,8 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     );
     log::info!("Target number of base {}", total_base);
 
+    let junk_rate = params.junk / 100.0;
+    let random_rate = params.random / 100.0;
     let chimera_rate = params.chimera / 100.0;
     log::info!("Start generate sequences");
     let sequences: Vec<(Description, Seq, Quality)> =
@@ -109,6 +111,8 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
                     &references,
                     (len, len2),
                     id,
+                    junk_rate,
+                    random_rate,
                     &adapter,
                     &error,
                     &qscore,
@@ -140,12 +144,15 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
 type Seq = Vec<u8>;
 type Quality = Vec<u8>;
 
+#[allow(clippy::too_many_arguments)]
 #[cfg(not(tarpaulin_include))]
 /// Function realy generate read
 fn generate_read(
     references: &References,
     length: (usize, Option<usize>),
     identity: f64,
+    junk_rate: f64,
+    random_rate: f64,
     adapter_model: &model::Adapter,
     error_model: &model::Error,
     qscore_model: &model::Quality,
@@ -164,7 +171,8 @@ fn generate_read(
     let start_adapter = adapter_model.get_start(&mut rng);
     raw_fragment.extend(&start_adapter);
 
-    let (ref_fragment, origin) = get_fragment(length.0, references, &mut rng);
+    let (ref_fragment, origin) =
+        get_fragment(length.0, junk_rate, random_rate, references, &mut rng);
     raw_fragment.extend(&ref_fragment);
 
     // Add chimeric part
@@ -176,7 +184,8 @@ fn generate_read(
             raw_fragment.extend(adapter_model.get_start(&mut rng));
         }
 
-        let (other_fragment, other_origin) = get_fragment(length2, references, &mut rng);
+        let (other_fragment, other_origin) =
+            get_fragment(length2, junk_rate, random_rate, references, &mut rng);
         raw_fragment.extend(other_fragment);
 
         Some(other_origin)
@@ -218,10 +227,31 @@ fn generate_read(
 
 fn get_fragment(
     length: usize,
+    junk_rate: f64,
+    random_rate: f64,
     references: &References,
     rng: &mut rand::rngs::StdRng,
 ) -> (Vec<u8>, Origin) {
-    get_ref_fragment(length, references, rng)
+    if rng.gen_bool(junk_rate) {
+        get_junk(length, rng)
+    } else if rng.gen_bool(random_rate) {
+        get_random(length, rng)
+    } else {
+        get_ref_fragment(length, references, rng)
+    }
+}
+
+fn get_junk(length: usize, rng: &mut rand::rngs::StdRng) -> (Vec<u8>, Origin) {
+    let small_seq = crate::random_seq(rng.gen_range(1..=5), rng);
+
+    (
+        small_seq.repeat(length / small_seq.len()),
+        Origin::junk(length),
+    )
+}
+
+fn get_random(length: usize, rng: &mut rand::rngs::StdRng) -> (Vec<u8>, Origin) {
+    (crate::random_seq(length, rng), Origin::random(length))
 }
 
 fn get_ref_fragment(

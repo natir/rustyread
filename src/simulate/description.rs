@@ -35,6 +35,28 @@ impl Origin {
             random,
         }
     }
+
+    pub fn junk(length: usize) -> Self {
+        Origin {
+            ref_id: "junk".to_string(),
+            strand: '+',
+            start: 0,
+            end: length,
+            junk: true,
+            random: false,
+        }
+    }
+
+    pub fn random(length: usize) -> Self {
+        Origin {
+            ref_id: "random".to_string(),
+            strand: '+',
+            start: 0,
+            end: length,
+            junk: false,
+            random: true,
+        }
+    }
 }
 
 impl std::fmt::Display for Origin {
@@ -109,6 +131,10 @@ mod t {
         test.random = true;
 
         assert_eq!("random_seq", format!("{}", test));
+
+        assert_eq!("junk_seq", format!("{}", Origin::junk(100)));
+
+        assert_eq!("random_seq", format!("{}", Origin::random(100)));
     }
 
     #[test]
