@@ -49,7 +49,6 @@ pub fn rebuild_cigar(raw: &[u8], err: &[u8], diffs: error::DiffPos) -> (usize, V
     let mut cigar = Vec::with_capacity(err.len());
     let mut prev_e = 0;
 
-    //crate::alignment::align(err, raw);
     for (r, e) in diffs.raw.chunks_exact(2).zip(diffs.err.chunks_exact(2)) {
         if e[0] > prev_e {
             cigar.extend((0..(e[0] - prev_e)).map(|_| b'='));
@@ -119,13 +118,26 @@ X;1;1:0.000076,2:0.00327,3:0.014147,4:0.034226,5:0.053392,6:0.066246,7:0.078339,
         let raw = b"TTTGTTCTGCCATCGGCCCTTACTGCGTGCCGGTGGTTAACCTCGAGGCGAACGTCGATCAACTGAACGTCAACATGGTCACCTGCGGCGGCCAGGCCACCATTCCACCATATT";
         let err = b"TTTGTTCTGGCCATCGGCCCTTACTGCGTGCCGGTGGTTAACCTCGAGGCGAACGTCGATCAACTGAACGTCACATGGTCACCTCGCGGCGGCCAGGCCACCATTCCACATATT";
 
-        let diffpos = error::DiffPos {
+        let mut diffpos = error::DiffPos {
             raw: vec![6, 13, 66, 73, 83, 90, 104, 111],
             err: vec![6, 14, 67, 73, 83, 91, 105, 111],
         };
 
         let (edit, cigar) = rebuild_cigar(raw, err, diffpos);
         let (t_e, t_c) = crate::alignment::align(err, raw);
+
+        assert_eq!(edit, t_e);
+        assert_eq!(cigar, t_c.to_vec());
+
+        let raw2 = b"CACGAAACGGTATCAAAGGCCACAAAGCTGGCGAAGAGTTCACCATCGACGTGACCTTCCCGGAAGAATACCACGCAGAAAACCTGAAAGGTAAAGCAGCGAAATTCGTAACAG";
+        let err2 = b"CACGAAACGGTATCAAAAAGGCCACAAAGCTGGCGAAGAGTTCTACTATCGACGTGACCTTCCCGGAGAATACCACGCAAGAAAACCTGAAGGTAAAGCAGCGAAAATTCGTAACAG";
+        diffpos = error::DiffPos {
+            raw: vec![11, 18, 38, 50, 60, 67, 73, 80, 84, 96, 99, 106],
+            err: vec![11, 20, 40, 53, 63, 69, 75, 83, 87, 98, 101, 109],
+        };
+
+        let (edit, cigar) = rebuild_cigar(raw2, err2, diffpos);
+        let (t_e, t_c) = crate::alignment::align(err2, raw2);
 
         assert_eq!(edit, t_e);
         assert_eq!(cigar, t_c.to_vec());

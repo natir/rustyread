@@ -55,42 +55,57 @@ pub fn generate_change(
     changes
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct AsmChange {
+    pub begin: usize,
+    pub end_raw: usize,
+    pub end_err: usize,
+    pub err_seq: Vec<u8>,
+}
+
+impl AsmChange {
+    pub fn new(begin: usize, k: usize, err_seq: &[u8]) -> Self {
+        Self {
+            begin,
+            end_raw: begin + k,
+            end_err: begin + err_seq.len(),
+            err_seq: err_seq.to_owned(),
+        }
+    }
+}
+
 /// Assemble overlapping change
-pub fn assemble_change(old: Vec<(usize, Vec<u8>)>, k: usize) -> Vec<(usize, usize, Vec<u8>)> {
+pub fn assemble_change(old: Vec<(usize, Vec<u8>)>, k: usize) -> Vec<AsmChange> {
     let mut changes = Vec::new();
 
-    log::debug!("RAW CHANGE {:?}", old);
-    let mut prev: Option<(usize, usize, Vec<u8>)> = None;
-    for change in old {
-        log::debug!("TOP CHANGE {:?} {:?}", change, prev);
+    log::trace!("RAW CHANGE {:?}", old);
+    let mut prev: Option<AsmChange> = None;
+    for change in old.iter().map(|x| AsmChange::new(x.0, k, &x.1)) {
+        log::trace!("TOP change {:?} prev {:?}", change, prev);
         if let Some(ref mut p) = prev {
-            if change.0 > (p.0 + p.2.len()) {
-                changes.push(p.clone());
-                p.0 = change.0;
-                p.1 = change.0 + 7;
-                p.2 = change.1.clone();
-                log::debug!("end of ovl {:?}", changes);
-            } else {
-                log::debug!("change {:?}, prev {:?}", change, p);
-                if change.0 + change.1.len() <= p.1 {
-                    continue;
-                } else {
-                    let ovl = p.0 + p.2.len() - change.0;
-                    log::debug!("p {:?} change {:?} ovl {}", p, change, ovl);
-                    if ovl < change.1.len() {
-                        p.2.extend(&change.1[ovl..]);
-                    }
+            if change.begin < p.end_err {
+                p.end_raw = change.begin + k;
 
-                    if ovl < 7 {
-                        p.1 += 7 - ovl;
-                    } else {
-                        p.1 += ovl - 7;
-                    }
+                let ovl = p.end_err - change.begin;
+                if change.err_seq.len() > ovl {
+                    p.err_seq.extend(&change.err_seq[ovl..]);
                 }
+                p.end_err = p.begin + p.err_seq.len();
+                log::trace!("OVL ERR {:?}", prev);
+            } else if change.begin < p.end_raw {
+                p.end_raw = change.begin + k;
+
+                p.err_seq.extend(change.err_seq);
+                p.end_err = p.begin + p.err_seq.len();
+                log::trace!("OVL RAW {:?}", prev)
+            } else {
+                changes.push(p.clone());
+                prev = Some(change);
+                log::trace!("NEW PREV {:?}", prev);
             }
         } else {
-            prev = Some((change.0, change.0 + k, change.1.clone()));
-            log::debug!("new prev {:?}", prev);
+            prev = Some(change);
+            log::trace!("new prev {:?}", prev);
         }
     }
 
@@ -108,26 +123,26 @@ pub struct DiffPos {
 }
 
 impl DiffPos {
-    pub fn from_change(changes: &[(usize, usize, Vec<u8>)]) -> Self {
+    pub fn from_change(changes: &[AsmChange]) -> Self {
         let mut raw = Vec::new();
         let mut err = Vec::new();
         let mut err_len = 0;
 
-        log::debug!("CHANGES {:?}", changes);
-        for (begin, end, change) in changes {
+        log::trace!("CHANGES {:?}", changes);
+        for change in changes {
             let match_dist = if !raw.is_empty() {
-                log::debug!("begin {} raw[-1] {}", begin, raw[raw.len() - 1]);
-                begin - raw[raw.len() - 1]
+                log::trace!("begin {} raw[-1] {}", change.begin, raw[raw.len() - 1]);
+                change.begin - raw[raw.len() - 1]
             } else {
-                *begin
+                change.begin
             };
 
-            raw.push(*begin);
-            raw.push(*end);
+            raw.push(change.begin);
+            raw.push(change.end_raw);
 
             err_len += match_dist;
             err.push(err_len);
-            err_len += change.len();
+            err_len += change.err_seq.len();
             err.push(err_len);
         }
 
@@ -136,14 +151,14 @@ impl DiffPos {
 }
 
 /// Apply changes on sequencs
-pub fn apply_changes(seq: &[u8], changes: &[(usize, usize, Vec<u8>)]) -> Seq {
+pub fn apply_changes(seq: &[u8], changes: &[AsmChange]) -> Seq {
     let mut err = Vec::with_capacity(seq.len());
     let mut pos_in_raw = 0;
 
     for change in changes {
-        err.extend(&seq[pos_in_raw..change.0]);
-        err.extend(&change.2);
-        pos_in_raw = change.1;
+        err.extend(&seq[pos_in_raw..change.begin]);
+        err.extend(&change.err_seq);
+        pos_in_raw = change.end_raw;
     }
     err.extend(&seq[pos_in_raw..]);
     err
@@ -211,7 +226,15 @@ mod t {
 
         let mut asm = assemble_change(changes, 7);
 
-        assert_eq!(vec![(1, 9, vec![65, 65, 84, 65, 65, 67, 67, 65, 84])], asm);
+        assert_eq!(
+            vec![AsmChange {
+                begin: 1,
+                end_raw: 10,
+                end_err: 10,
+                err_seq: vec![65, 65, 84, 65, 65, 67, 67, 65, 84]
+            }],
+            asm
+        );
 
         changes = vec![
             (5, vec![65, 71, 65, 65, 71, 71]),
@@ -223,7 +246,15 @@ mod t {
 
         asm = assemble_change(changes, 7);
 
-        assert_eq!(vec![(5, 15, vec![65, 71, 65, 65, 71, 71, 71, 67])], asm);
+        assert_eq!(
+            vec![AsmChange {
+                begin: 5,
+                end_raw: 14,
+                end_err: 13,
+                err_seq: vec![65, 71, 65, 65, 71, 71, 71, 67],
+            }],
+            asm
+        );
     }
 
     #[test]
@@ -241,12 +272,18 @@ mod t {
         ];
 
         let t_asm = vec![
-            (72, 84, vec![67, 71, 67, 84, 71, 71, 71, 67]),
-            (
-                83,
-                99,
-                vec![65, 65, 67, 84, 84, 67, 71, 67, 84, 84, 67, 67, 71, 71, 67],
-            ),
+            AsmChange {
+                begin: 72,
+                end_raw: 83,
+                end_err: 80,
+                err_seq: vec![67, 71, 67, 84, 71, 71, 71, 67],
+            },
+            AsmChange {
+                begin: 83,
+                end_raw: 99,
+                end_err: 98,
+                err_seq: vec![65, 65, 67, 84, 84, 67, 71, 67, 84, 84, 67, 67, 71, 71, 67],
+            },
         ];
 
         assert_eq!(t_asm, assemble_change(changes, 7));
@@ -318,14 +355,14 @@ mod t {
 
         match_pos = DiffPos::from_change(&assemble_change(changes, 7));
 
-        assert_eq!(vec![56, 68], match_pos.raw);
+        assert_eq!(vec![56, 67], match_pos.raw);
         assert_eq!(vec![56, 67], match_pos.err);
 
         changes = vec![(80, vec![71; 8]), (85, vec![71; 7])];
 
         match_pos = DiffPos::from_change(&assemble_change(changes, 7));
 
-        assert_eq!(vec![80, 91], match_pos.raw);
+        assert_eq!(vec![80, 92], match_pos.raw);
         assert_eq!(vec![80, 92], match_pos.err);
     }
 
@@ -340,7 +377,7 @@ mod t {
         ];
 
         let mut match_pos = DiffPos::from_change(&assemble_change(changes, 7));
-        assert_eq!(vec![1, 9], match_pos.raw);
+        assert_eq!(vec![1, 10], match_pos.raw);
         assert_eq!(vec![1, 10], match_pos.err);
 
         changes = vec![
@@ -352,7 +389,7 @@ mod t {
         ];
         match_pos = DiffPos::from_change(&assemble_change(changes, 7));
 
-        assert_eq!(vec![5, 15], match_pos.raw);
+        assert_eq!(vec![5, 14], match_pos.raw);
         assert_eq!(vec![5, 13], match_pos.err);
     }
 
@@ -384,6 +421,7 @@ mod t {
         ];
 
         let err = apply_changes(&raw, &assemble_change(changes, 7));
-        assert_eq!(b"TTAGATTATAGTACGGTATGAGAGTTTACCTATGTACCCCTAAGTGCGCCCGTTTGTGAGGAACCACTTGTATAACCAGGTATAGTCGGGACAGCATTGG".to_vec(), err);
+
+        assert_eq!(b"TTAGATTATAGTACGGTATGAGAGTTTACTATGTACCCCTAAGTGCGCCCGTTTGTGAGAAATCCACTTGTATAACCAGGTATAGTCGGGACAGCATTGCG".to_vec(), err);
     }
 }
