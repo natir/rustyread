@@ -14,6 +14,8 @@
 <span id="11">11</span>
 <span id="12">12</span>
 <span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Manage model</span>
 
@@ -22,12 +24,14 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">identity</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">length</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">quality</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">adapter</span>;
 
 <span class="comment">/* reexport for easiest use */</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">error</span>::<span class="ident">Error</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">identity</span>::<span class="ident">Identity</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">length</span>::<span class="ident">Length</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">quality</span>::<span class="ident">Quality</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">adapter</span>::<span class="ident">Adapter</span>;
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rustyread"></div>
     <script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
