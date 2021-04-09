@@ -146,27 +146,30 @@ mod t {
             starts
         );
 
-        assert_eq!(vec![
-            b"".to_vec(),
-            b"CAA".to_vec(),
-            b"CAACAT".to_vec(),
-            b"".to_vec(),
-            b"".to_vec(),
-            b"CA".to_vec(),
-            b"".to_vec(),
-            b"".to_vec(),
-            b"CAA".to_vec(),
-            b"CA".to_vec(),
-            b"CAACAT".to_vec(),
-            b"".to_vec(),
-            b"".to_vec(),
-            b"".to_vec(),
-            b"CAAC".to_vec(),
-            b"".to_vec(),
-            b"CAACAT".to_vec(),
-            b"".to_vec(),
-            b"".to_vec(),
-            b"CAACATAT".to_vec(),
-        ], ends);
+        assert_eq!(
+            vec![
+                b"".to_vec(),
+                b"CAA".to_vec(),
+                b"CAACAT".to_vec(),
+                b"".to_vec(),
+                b"".to_vec(),
+                b"CA".to_vec(),
+                b"".to_vec(),
+                b"".to_vec(),
+                b"CAA".to_vec(),
+                b"CA".to_vec(),
+                b"CAACAT".to_vec(),
+                b"".to_vec(),
+                b"".to_vec(),
+                b"".to_vec(),
+                b"CAAC".to_vec(),
+                b"".to_vec(),
+                b"CAACAT".to_vec(),
+                b"".to_vec(),
+                b"".to_vec(),
+                b"CAACATAT".to_vec(),
+            ],
+            ends
+        );
     }
 }

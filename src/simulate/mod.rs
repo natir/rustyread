@@ -57,14 +57,14 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
 
     log::info!("Start init adapter model");
     let adapter = model::Adapter::new(
-	params.start_adapter_seq.as_bytes().to_vec(),
-	params.end_adapter_seq.as_bytes().to_vec(),
-	params.start_adapter.0 as f64,
-	params.start_adapter.1 as f64,
-	params.end_adapter.0 as f64,
-	params.end_adapter.1 as f64,
+        params.start_adapter_seq.as_bytes().to_vec(),
+        params.end_adapter_seq.as_bytes().to_vec(),
+        params.start_adapter.0 as f64,
+        params.start_adapter.1 as f64,
+        params.end_adapter.0 as f64,
+        params.end_adapter.1 as f64,
     )?;
-    log::info!("End init adapter model");    
+    log::info!("End init adapter model");
 
     log::info!("Start read error model");
     let error = model::Error::from_stream(
@@ -85,7 +85,7 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
         .0,
     )?;
     log::info!("End read quality score model");
-    
+
     let total_base = params.quantity.number_of_base(
         references
             .sequences
@@ -97,14 +97,14 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
 
     log::info!("Start generate sequences");
     let sequences: Vec<(Description, Seq, Quality)> =
-        LenSeed::new(total_base, &mut main_rng, &length)
+        LenIdSeed::new(total_base, &length, &identity, &mut main_rng)
             .par_bridge()
-            .map(|(length, seed)| {
+            .map(|(len, id, seed)| {
                 generate_read(
                     &references,
-                    length as usize,
-                    &identity,
-		    &adapter,
+                    len as usize,
+                    id,
+                    &adapter,
                     &error,
                     &qscore,
                     rand::rngs::StdRng::seed_from_u64(seed),
@@ -140,7 +140,7 @@ type Quality = Vec<u8>;
 fn generate_read(
     references: &References,
     length: usize,
-    identity_model: &model::Identity,
+    identity: f64,
     adapter_model: &model::Adapter,
     error_model: &model::Error,
     qscore_model: &model::Quality,
@@ -148,25 +148,21 @@ fn generate_read(
 ) -> Result<(Description, Seq, Quality)> {
     let k = error_model.k();
 
-    let (id, local_ref, strand) = &references.get_reference(&mut rng);
-    let start_pos = rng.gen_range(0..local_ref.len()) as usize;
-    let identity = identity_model.get_identity(&mut rng);
-
-    let end_pos = if start_pos + length > local_ref.len() {
-        local_ref.len() - 1
-    } else {
-        start_pos + length
-    };
-
+    // Generate fragment
+    let (ref_fragment, origin) = get_fragment(length, references, &mut rng);
     let start_adapter = adapter_model.get_start(&mut rng);
     let end_adapter = adapter_model.get_end(&mut rng);
-    let mut raw_fragment = Vec::with_capacity(end_pos - start_pos + error_model.k() * 2 + start_adapter.len() + end_adapter.len());
+
+    let mut raw_fragment = Vec::with_capacity(
+        ref_fragment.len() + error_model.k() * 2 + start_adapter.len() + end_adapter.len(),
+    );
     raw_fragment.extend(crate::random_seq(k, &mut rng));
     raw_fragment.extend(&start_adapter);
-    raw_fragment.extend(&local_ref[start_pos..end_pos]);
+    raw_fragment.extend(&ref_fragment);
     raw_fragment.extend(&end_adapter);
     raw_fragment.extend(crate::random_seq(k, &mut rng));
 
+    // Add error in fragment and produce quality
     let (err_fragment, diffpos) = error::add_error(identity, error_model, &raw_fragment, &mut rng);
 
     let (real_id, mut quality) = quality::generate_quality(
@@ -182,40 +178,67 @@ fn generate_read(
         quality.resize(err_fragment.len(), b'!');
     }
 
-    let ori = Origin::new(id.clone(), *strand, start_pos, end_pos, false, false);
-    let des = Description::new(ori, None, length, real_id * 100.0);
-
-    // TODO remove that
-    assert_eq!(err_fragment.len(), quality.len());
-    quality.resize(err_fragment.len(), b'!');
+    // Generate information on read
+    let des = Description::new(origin, None, length, real_id * 100.0);
 
     Ok((des, err_fragment, quality))
 }
 
-/// An iterator produce a length and u64 seed, until sum of length not reach target
-struct LenSeed<'a> {
-    target: u64,
-    rng: &'a mut rand::rngs::StdRng,
-    length_model: &'a model::Length,
+fn get_fragment(
+    length: usize,
+    references: &References,
+    rng: &mut rand::rngs::StdRng,
+) -> (Vec<u8>, Origin) {
+    get_ref_fragment(length, references, rng)
 }
 
-impl<'a> LenSeed<'a> {
-    /// Create a new LenSeed
+fn get_ref_fragment(
+    length: usize,
+    references: &References,
+    rng: &mut rand::rngs::StdRng,
+) -> (Vec<u8>, Origin) {
+    let (id, local_ref, strand) = &references.get_reference(rng);
+    let start_pos = rng.gen_range(0..local_ref.len()) as usize;
+
+    let end_pos = if start_pos + length > local_ref.len() {
+        local_ref.len() - 1
+    } else {
+        start_pos + length
+    };
+
+    (
+        local_ref[start_pos..end_pos].to_vec(),
+        Origin::new(id.clone(), *strand, start_pos, end_pos, false, false),
+    )
+}
+
+/// An iterator produce a length and u64 seed, until sum of length not reach target
+struct LenIdSeed<'a> {
+    target: u64,
+    length_model: &'a model::Length,
+    identity_model: &'a model::Identity,
+    rng: &'a mut rand::rngs::StdRng,
+}
+
+impl<'a> LenIdSeed<'a> {
+    /// Create a new LenIdSeed
     pub fn new(
         target: u64,
-        rng: &'a mut rand::rngs::StdRng,
         length_model: &'a model::Length,
+        identity_model: &'a model::Identity,
+        rng: &'a mut rand::rngs::StdRng,
     ) -> Self {
         Self {
             target,
-            rng,
             length_model,
+            identity_model,
+            rng,
         }
     }
 }
 
-impl<'a> Iterator for LenSeed<'a> {
-    type Item = (u64, u64);
+impl<'a> Iterator for LenIdSeed<'a> {
+    type Item = (u64, f64, u64);
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.target == 0 {
@@ -230,7 +253,11 @@ impl<'a> Iterator for LenSeed<'a> {
             self.target -= length;
         }
 
-        Some((length, self.rng.next_u64()))
+        Some((
+            length,
+            self.identity_model.get_identity(self.rng),
+            self.rng.next_u64(),
+        ))
     }
 }
 
@@ -241,26 +268,26 @@ mod t {
 
     #[test]
     fn length_iterator() {
-        let model = model::Length::new(100.0, 5.0).unwrap();
+        let length = model::Length::new(100.0, 5.0).unwrap();
+        let identity = model::Identity::new(90.0, 100.0, 5.0).unwrap();
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
 
-        let it = LenSeed::new(1_000, &mut rng, &model);
+        let it = LenIdSeed::new(1_000, &length, &identity, &mut rng);
 
-        let lengths: Vec<(u64, u64)> = it.collect();
+        let lengths: Vec<(u64, f64, u64)> = it.collect();
 
         assert_eq!(
             vec![
-                (100, 11740708795755607249),
-                (99, 7654602743214997928),
-                (101, 2421668070752551774),
-                (88, 9336807752121363465),
-                (98, 9648369018563374588),
-                (96, 9578448464351515635),
-                (96, 15602080788219557311),
-                (100, 1079037894117179173),
-                (97, 14653814560646992085),
-                (97, 12075250104723286995),
-                (99, 17007309290515904425)
+                (100, 0.8766417197970516, 633513173585076202),
+                (99, 0.812764901371403, 59990589126097438),
+                (109, 0.915656282506864, 9648369018563374588),
+                (96, 0.8970375784344082, 11924907057293251871),
+                (104, 0.8990886407136385, 6475006809388010320),
+                (99, 0.9411813514218517, 12075250104723286995),
+                (99, 0.8741520990047399, 10644393278569127094),
+                (99, 0.9104462472912016, 11204491199501125651),
+                (99, 0.9485885683427931, 9064963017249372811),
+                (104, 0.8928093807556134, 14957698519116010673)
             ],
             lengths
         );
