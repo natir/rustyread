@@ -160,6 +160,11 @@ fn generate_read(
         &mut rng,
     )?;
 
+    if quality.len() != err_fragment.len() {
+        log::warn!("read and quality string have different length, if you use seed please send all run information to author.");
+        quality.resize(err_fragment.len(), b'!');
+    }
+
     let ori = Origin::new(id.clone(), *strand, start_pos, end_pos, false, false);
     let des = Description::new(ori, None, length, real_id * 100.0);
 
