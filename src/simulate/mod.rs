@@ -55,6 +55,17 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     )?;
     log::info!("End init length model");
 
+    log::info!("Start init adapter model");
+    let adapter = model::Adapter::new(
+	params.start_adapter_seq.as_bytes().to_vec(),
+	params.end_adapter_seq.as_bytes().to_vec(),
+	params.start_adapter.0 as f64,
+	params.start_adapter.1 as f64,
+	params.end_adapter.0 as f64,
+	params.end_adapter.1 as f64,
+    )?;
+    log::info!("End init adapter model");    
+
     log::info!("Start read error model");
     let error = model::Error::from_stream(
         niffler::get_reader(Box::new(std::io::BufReader::new(std::fs::File::open(
@@ -74,7 +85,7 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
         .0,
     )?;
     log::info!("End read quality score model");
-
+    
     let total_base = params.quantity.number_of_base(
         references
             .sequences
@@ -93,6 +104,7 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
                     &references,
                     length as usize,
                     &identity,
+		    &adapter,
                     &error,
                     &qscore,
                     rand::rngs::StdRng::seed_from_u64(seed),
@@ -129,6 +141,7 @@ fn generate_read(
     references: &References,
     length: usize,
     identity_model: &model::Identity,
+    adapter_model: &model::Adapter,
     error_model: &model::Error,
     qscore_model: &model::Quality,
     mut rng: rand::rngs::StdRng,
@@ -145,9 +158,13 @@ fn generate_read(
         start_pos + length
     };
 
-    let mut raw_fragment = Vec::with_capacity(end_pos - start_pos + error_model.k() * 2);
+    let start_adapter = adapter_model.get_start(&mut rng);
+    let end_adapter = adapter_model.get_end(&mut rng);
+    let mut raw_fragment = Vec::with_capacity(end_pos - start_pos + error_model.k() * 2 + start_adapter.len() + end_adapter.len());
     raw_fragment.extend(crate::random_seq(k, &mut rng));
+    raw_fragment.extend(&start_adapter);
     raw_fragment.extend(&local_ref[start_pos..end_pos]);
+    raw_fragment.extend(&end_adapter);
     raw_fragment.extend(crate::random_seq(k, &mut rng));
 
     let (err_fragment, diffpos) = error::add_error(identity, error_model, &raw_fragment, &mut rng);
