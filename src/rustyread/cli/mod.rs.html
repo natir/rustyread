@@ -89,7 +89,6 @@
 <span id="86">86</span>
 <span id="87">87</span>
 <span id="88">88</span>
-<span id="89">89</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! All stuff relate to command line</span>
 
@@ -99,12 +98,12 @@
 <span class="comment">// pub(crate) mod qscore_model;</span>
 <span class="comment">// pub(crate) mod plot;</span>
 
-<span class="doccomment">/// Struct use to parse argument from command line</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">clap</span>::<span class="ident">Clap</span>, <span class="ident">Debug</span>)]</span>
 <span class="attribute">#[<span class="ident">clap</span>(
+    <span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;rustyread&quot;</span>,
     <span class="ident">version</span> <span class="op">=</span> <span class="string">&quot;0.1&quot;</span>,
     <span class="ident">author</span> <span class="op">=</span> <span class="string">&quot;Pierre Marijon &lt;pierre.marijon@hhu.de&gt;&quot;</span>,
-    <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;A rust rewrite of Badread: a long read simulator that can imitate manytypes of read problems&quot;</span>
+    <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;A long read simulator&quot;</span>
 )]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Command</span> {
     <span class="doccomment">/// Subcommand call</span>
@@ -129,7 +128,6 @@
     <span class="kw">pub</span> <span class="ident">verbosity</span>: <span class="ident">i8</span>,
 }
 
-<span class="doccomment">/// Enum to manage subcommand polymorphism</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">clap</span>::<span class="ident">Clap</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SubCommand</span> {
     <span class="ident">Simulate</span>(<span class="ident">simulate</span>::<span class="ident">Command</span>),

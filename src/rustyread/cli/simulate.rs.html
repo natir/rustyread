@@ -351,6 +351,11 @@
 <span id="348">348</span>
 <span id="349">349</span>
 <span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! All stuff relate to simulate subcommand</span>
 
@@ -489,7 +494,12 @@
     <span class="kw">pub</span> <span class="ident">reference_path</span>: <span class="ident">String</span>,
 
     <span class="doccomment">/// Path to reference sequence in fasta format</span>
-    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;output&quot;</span>, <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Where read is write&quot;</span>, <span class="ident">required</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
+    <span class="attribute">#[<span class="ident">clap</span>(
+        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;output&quot;</span>,
+        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Where read is write&quot;</span>,
+        <span class="ident">required</span> <span class="op">=</span> <span class="bool-val">true</span>,
+        <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;/dev/stdout&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">output_path</span>: <span class="ident">String</span>,
 
     <span class="doccomment">/// Quantity of base rustyread have to generate</span>
