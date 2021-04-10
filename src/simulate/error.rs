@@ -205,6 +205,138 @@ mod t {
     }
 
     #[test]
+    fn nb_of_edit() {
+        assert_eq!(5.000000000000004, number_of_edit(0.95, 100));
+        assert_eq!(131.99999999999997, number_of_edit(0.89, 1200));
+    }
+
+    #[test]
+    fn get_glitches() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let model = model::Glitch::new(1_000.0, 25.0, 25.0).unwrap();
+
+        let glitches = generate_glitches(10_000, &model, &mut rng);
+
+        assert_eq!(
+            vec![
+                Change {
+                    begin: 381,
+                    end_raw: 391,
+                    end_err: 404,
+                    err_seq: vec![
+                        65, 84, 84, 65, 84, 65, 71, 84, 65, 67, 71, 71, 84, 65, 84, 65, 71, 84, 71,
+                        71, 84, 84, 65
+                    ]
+                },
+                Change {
+                    begin: 2553,
+                    end_raw: 2555,
+                    end_err: 2573,
+                    err_seq: vec![
+                        71, 67, 67, 84, 65, 65, 71, 84, 71, 71, 67, 71, 67, 67, 67, 71, 84, 84, 71,
+                        84
+                    ]
+                },
+                Change {
+                    begin: 2607,
+                    end_raw: 2670,
+                    end_err: 2634,
+                    err_seq: vec![
+                        65, 71, 71, 65, 65, 84, 67, 67, 65, 67, 84, 84, 65, 84, 65, 84, 65, 65, 67,
+                        65, 67, 65, 71, 71, 84, 65, 84
+                    ]
+                },
+                Change {
+                    begin: 2675,
+                    end_raw: 2733,
+                    end_err: 2676,
+                    err_seq: vec![67]
+                },
+                Change {
+                    begin: 2842,
+                    end_raw: 2897,
+                    end_err: 2877,
+                    err_seq: vec![
+                        71, 71, 67, 65, 84, 71, 67, 67, 84, 65, 84, 65, 84, 84, 67, 84, 65, 84, 71,
+                        65, 67, 65, 71, 67, 65, 71, 71, 65, 84, 84, 65, 84, 71, 71, 65
+                    ]
+                },
+                Change {
+                    begin: 3936,
+                    end_raw: 3938,
+                    end_err: 3940,
+                    err_seq: vec![71, 67, 84, 67]
+                },
+                Change {
+                    begin: 4324,
+                    end_raw: 4379,
+                    end_err: 4332,
+                    err_seq: vec![65, 67, 71, 84, 84, 84, 71, 71]
+                },
+                Change {
+                    begin: 5139,
+                    end_raw: 5196,
+                    end_err: 5160,
+                    err_seq: vec![
+                        67, 67, 67, 71, 84, 65, 71, 67, 65, 67, 71, 65, 67, 67, 71, 71, 67, 84, 65,
+                        84, 71
+                    ]
+                },
+                Change {
+                    begin: 5164,
+                    end_raw: 5168,
+                    end_err: 5189,
+                    err_seq: vec![
+                        84, 84, 84, 84, 67, 84, 84, 71, 71, 65, 67, 65, 84, 65, 71, 84, 84, 84, 67,
+                        71, 84, 67, 67, 65, 67
+                    ]
+                },
+                Change {
+                    begin: 5313,
+                    end_raw: 5358,
+                    end_err: 5370,
+                    err_seq: vec![
+                        84, 65, 67, 65, 65, 71, 71, 65, 67, 71, 67, 84, 84, 71, 71, 71, 65, 65, 84,
+                        65, 71, 71, 71, 67, 65, 71, 67, 71, 71, 65, 71, 84, 84, 65, 84, 67, 71, 84,
+                        71, 84, 65, 67, 67, 84, 67, 67, 84, 65, 71, 67, 84, 84, 84, 84, 65, 71, 84
+                    ]
+                },
+                Change {
+                    begin: 5912,
+                    end_raw: 5955,
+                    end_err: 5933,
+                    err_seq: vec![
+                        65, 67, 65, 71, 84, 71, 84, 65, 65, 67, 65, 84, 84, 71, 71, 71, 65, 67, 71,
+                        67, 84
+                    ]
+                },
+                Change {
+                    begin: 6209,
+                    end_raw: 6240,
+                    end_err: 6215,
+                    err_seq: vec![67, 71, 67, 67, 71, 71]
+                },
+                Change {
+                    begin: 6774,
+                    end_raw: 6777,
+                    end_err: 6806,
+                    err_seq: vec![
+                        84, 84, 67, 67, 84, 84, 71, 65, 67, 84, 65, 84, 65, 67, 67, 71, 65, 84, 67,
+                        71, 84, 71, 71, 65, 71, 84, 84, 67, 65, 84, 71, 67
+                    ]
+                },
+                Change {
+                    begin: 7774,
+                    end_raw: 7775,
+                    end_err: 7789,
+                    err_seq: vec![67, 67, 84, 67, 65, 71, 67, 71, 84, 84, 67, 84, 67, 71, 71]
+                }
+            ],
+            glitches
+        );
+    }
+
+    #[test]
     fn get_changes() {
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
         let seq = crate::random_seq(100, &mut rng);
