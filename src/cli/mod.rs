@@ -6,9 +6,9 @@ pub mod simulate;
 // pub(crate) mod qscore_model;
 // pub(crate) mod plot;
 
-/// Struct use to parse argument from command line
 #[derive(clap::Clap, Debug)]
 #[clap(
+    name = "rustyread",
     version = "0.1",
     author = "Pierre Marijon <pierre.marijon@hhu.de>",
     about = "A rust rewrite of Badread: a long read simulator that can imitate manytypes of read problems"
@@ -36,7 +36,6 @@ pub struct Command {
     pub verbosity: i8,
 }
 
-/// Enum to manage subcommand polymorphism
 #[derive(clap::Clap, Debug)]
 pub enum SubCommand {
     Simulate(simulate::Command),
