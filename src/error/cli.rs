@@ -17,4 +17,8 @@ pub enum Cli {
     /// Cant parse a trio of value
     #[error("We aren't able to parse a value you provide as argument for a parameter")]
     CantParseTrio,
+
+    /// Cant found model path
+    #[error("Can't found model path use qscore_model and error_model")]
+    CantFoundModelPath,
 }

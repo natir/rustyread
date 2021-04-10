@@ -79,9 +79,10 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     log::info!("End init glitches model");
 
     log::info!("Start read error model");
+    let error_path = crate::cli::simulate::found_model(params.error_model, "error".to_string())?;
     let error = model::Error::from_stream(
         niffler::get_reader(Box::new(std::io::BufReader::new(std::fs::File::open(
-            params.error_model,
+            error_path,
         )?)))?
         .0,
         &mut main_rng,
@@ -90,9 +91,10 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     log::info!("End read error model");
 
     log::info!("Start read quality score model");
+    let qscore_path = crate::cli::simulate::found_model(params.qscore_model, "qscore".to_string())?;
     let qscore = model::Quality::from_stream(
         niffler::get_reader(Box::new(std::io::BufReader::new(std::fs::File::open(
-            params.qscore_model,
+            qscore_path,
         )?)))?
         .0,
     )?;

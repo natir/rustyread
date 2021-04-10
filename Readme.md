@@ -41,7 +41,7 @@ But by default rustyread use all avaible core you can control it with option `th
 rustyread --theads {number of thread} simulate --reference {reference path} --quantity {quantity} > {reads}.fastq
 ```
 
-If you have `badread` install in your `PYTHON_PATH` rustyread can found error and quality model automaticly, but you can still use `--error-model` and `--qscore-model` option.
+If you have `badread` install in your python `sys.path` rustyread can found error and quality model automaticly, but you can still use `--error_model` and `--qscore_model` option.
 
 ### Full usage
 
@@ -162,3 +162,4 @@ Currently the minimum supported Rust version is 1.45.0.
 ## Difference with badread
 
 - option `small_plasmid_bias` is silently ignore but small plasmid is 'sequence'
+- option `random` and `ideal` model isn't support know

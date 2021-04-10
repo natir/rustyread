@@ -1,5 +1,7 @@
 //! All stuff relate to simulate subcommand
 
+use anyhow::Context;
+
 /// Store quantity as coverage of number of base
 #[derive(Debug, PartialEq)]
 pub struct Quantity {
@@ -122,6 +124,38 @@ impl std::str::FromStr for Trio {
     }
 }
 
+/// Found path to model file
+///
+/// If value is path to a file just return value else search in `python -c "import sys; print(','.join(sys.path))"`
+pub fn found_model(value: String, model_type: String) -> anyhow::Result<std::path::PathBuf> {
+    let path = std::path::PathBuf::from(&value);
+
+    if path.is_file() {
+        Ok(path)
+    } else {
+        let result = std::process::Command::new("python")
+            .args(&["-c", "import sys; print(','.join(sys.path))"])
+            .output()
+            .with_context(|| crate::error::Cli::CantFoundModelPath)?;
+
+        let paths = std::str::from_utf8(&result.stdout)
+            .with_context(|| crate::error::Cli::CantFoundModelPath)?;
+
+        for path in paths.split(',') {
+            let mut local_path = std::path::PathBuf::from(path);
+            local_path.push(format!("badread/{}_models/", model_type));
+            local_path.push(&value);
+            local_path.set_extension("gz");
+
+            if local_path.is_file() {
+                return Ok(local_path);
+            }
+        }
+
+        Err(anyhow::anyhow!(crate::error::Cli::CantFoundModelPath))
+    }
+}
+
 /// Struct use to parse simulate subcommand argument
 #[derive(clap::Clap, Debug)]
 #[clap(about = "Generate fake long read")]
@@ -168,11 +202,19 @@ pub struct Command {
     pub identity: Trio,
 
     /// Error model used
-    #[clap(long = "error_model", about = "Path to an error model file")]
+    #[clap(
+        long = "error_model",
+        about = "Path to an error model file",
+        default_value = "nanopore2020"
+    )]
     pub error_model: String,
 
     /// Qualtity score model used
-    #[clap(long = "qscore_model", about = "Path to an quality score model file")]
+    #[clap(
+        long = "qscore_model",
+        about = "Path to an quality score model file",
+        default_value = "nanopore2020"
+    )]
     pub qscore_model: String,
 
     /// Seed used
