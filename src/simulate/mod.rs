@@ -266,7 +266,7 @@ fn get_random(length: usize, rng: &mut rand::rngs::StdRng) -> (Vec<u8>, Origin) 
 }
 
 fn get_ref_fragment(
-    mut length: usize,
+    length: usize,
     references: &References,
     rng: &mut rand::rngs::StdRng,
 ) -> (Vec<u8>, Origin) {
@@ -280,18 +280,13 @@ fn get_ref_fragment(
     if *circular {
         seq.reserve(length);
         seq.extend(&local_ref[start_pos..]);
-        length -= start_pos;
-        while length as f64 / local_ref.len() as f64 > 1.0 {
-            seq.extend(&local_ref[..]);
-            length -= local_ref.len();
-            println!(
-                "{} {} {}",
-                length,
-                local_ref.len(),
-                length as f64 / local_ref.len() as f64
-            );
+
+        if length - start_pos > local_ref.len() {
+            end_pos = local_ref.len() - 1;
+        } else {
+            end_pos = length - start_pos;
         }
-        seq.extend(&local_ref[..length]);
+        seq.extend(&local_ref[..end_pos]);
     } else {
         if end_pos > local_ref.len() {
             end_pos = local_ref.len() - 1
@@ -555,12 +550,12 @@ TCCCGCTGTC
                     }
                 ),
                 (
-		    b"CGCTGAGTTCCGCTGAGTTCCGCTGAGTTCCGCTGAGTTCCGCTGAGTTCCGCTGAGTTCCGCTGAGTTCCGCTGAGTTCCGCTGAGTTCCGCT".to_vec(),
+                    b"CGCTGAGTTCC".to_vec(),
                     Origin {
                         ref_id: "random_seq_8".to_string(),
                         strand: '-',
                         start: 8,
-                        end: 108,
+                        end: 9,
                         junk: false,
                         random: false
                     }
