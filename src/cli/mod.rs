@@ -11,7 +11,7 @@ pub mod simulate;
     name = "rustyread",
     version = "0.1",
     author = "Pierre Marijon <pierre.marijon@hhu.de>",
-    about = "A rust rewrite of Badread: a long read simulator that can imitate manytypes of read problems"
+    about = "A long read simulator"
 )]
 pub struct Command {
     /// Subcommand call
