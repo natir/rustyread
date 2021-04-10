@@ -21,6 +21,10 @@
 <span id="18">18</span>
 <span id="19">19</span>
 <span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Command line interface error</span>
 
@@ -41,6 +45,10 @@
     <span class="doccomment">/// Cant parse a trio of value</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;We aren&#39;t able to parse a value you provide as argument for a parameter&quot;</span>)]</span>
     <span class="ident">CantParseTrio</span>,
+
+    <span class="doccomment">/// Cant found model path</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Can&#39;t found model path use qscore_model and error_model&quot;</span>)]</span>
+    <span class="ident">CantFoundModelPath</span>,
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rustyread"></div>
