@@ -292,11 +292,11 @@ fn get_ref_fragment(
         seq.extend(&local_ref[start_pos..]);
 
         if length - start_pos > local_ref.len() {
-            end_pos = local_ref.len() - 1;
+            end_pos = start_pos - 1;
         } else {
             end_pos = length - start_pos;
         }
-        seq.extend(&local_ref[..end_pos]);
+        seq.extend(&local_ref[..=end_pos]);
     } else {
         if end_pos >= local_ref.len() {
             end_pos = local_ref.len() - 1;
@@ -560,12 +560,12 @@ TCCCGCTGTC
                     }
                 ),
                 (
-                    b"CGCTGAGTTCC".to_vec(),
+                    b"CGCTGAGTTC".to_vec(),
                     Origin {
                         ref_id: "random_seq_8".to_string(),
                         strand: '-',
                         start: 8,
-                        end: 9,
+                        end: 7,
                         junk: false,
                         random: false
                     }
