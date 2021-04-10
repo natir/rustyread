@@ -277,6 +277,16 @@ fn get_ref_fragment(
 
     let mut seq = Vec::new();
 
+    if length > local_ref.len() && !circular {
+        seq.reserve(local_ref.len());
+        seq.extend(&local_ref[..]);
+
+        return (
+            seq,
+            Origin::new(id.clone(), *strand, 0, local_ref.len() - 1, false, false),
+        );
+    }
+
     if *circular {
         seq.reserve(length);
         seq.extend(&local_ref[start_pos..]);
@@ -288,11 +298,11 @@ fn get_ref_fragment(
         }
         seq.extend(&local_ref[..end_pos]);
     } else {
-        if end_pos > local_ref.len() {
-            end_pos = local_ref.len() - 1
+        if end_pos >= local_ref.len() {
+            end_pos = local_ref.len() - 1;
         }
         seq.reserve(end_pos - start_pos);
-        seq.extend(&local_ref[start_pos..end_pos]);
+        seq.extend(&local_ref[start_pos..=end_pos]);
     }
 
     (
@@ -451,51 +461,51 @@ TCCCGCTGTC
         assert_eq!(
             vec![
                 (
-                    vec![71, 84, 71],
+                    b"CGCTTTGTGA".to_vec(),
                     Origin {
                         ref_id: "random_seq_5".to_string(),
                         strand: '+',
-                        start: 6,
+                        start: 0,
                         end: 9,
                         junk: false,
                         random: false
                     }
                 ),
                 (
-                    vec![67],
+                    b"TGATCTTGCA".to_vec(),
                     Origin {
                         ref_id: "random_seq_3".to_string(),
                         strand: '-',
-                        start: 8,
+                        start: 0,
                         end: 9,
                         junk: false,
                         random: false
                     }
                 ),
                 (
-                    vec![],
+                    b"TCACGATTAC".to_vec(),
                     Origin {
                         ref_id: "random_seq_1".to_string(),
                         strand: '+',
-                        start: 9,
+                        start: 0,
                         end: 9,
                         junk: false,
                         random: false
                     }
                 ),
                 (
-                    vec![67],
+                    b"TCACAAAGCG".to_vec(),
                     Origin {
                         ref_id: "random_seq_5".to_string(),
                         strand: '-',
-                        start: 8,
+                        start: 0,
                         end: 9,
                         junk: false,
                         random: false
                     }
                 ),
                 (
-                    vec![65, 84, 67, 84, 65, 65, 84, 71, 67],
+                    vec![65, 84, 67, 84, 65, 65, 84, 71, 67, 71],
                     Origin {
                         ref_id: "random_seq_7".to_string(),
                         strand: '+',
@@ -506,18 +516,18 @@ TCCCGCTGTC
                     }
                 ),
                 (
-                    vec![71, 84, 71],
+                    b"CGCTTTGTGA".to_vec(),
                     Origin {
                         ref_id: "random_seq_5".to_string(),
                         strand: '+',
-                        start: 6,
+                        start: 0,
                         end: 9,
                         junk: false,
                         random: false
                     }
                 ),
                 (
-                    vec![67, 71, 67, 65, 84, 84, 65, 71, 65],
+                    vec![67, 71, 67, 65, 84, 84, 65, 71, 65, 84],
                     Origin {
                         ref_id: "random_seq_7".to_string(),
                         strand: '-',
@@ -528,22 +538,22 @@ TCCCGCTGTC
                     }
                 ),
                 (
-                    vec![71, 65, 84, 67],
+                    b"TGCAAGATCA".to_vec(),
                     Origin {
                         ref_id: "random_seq_3".to_string(),
                         strand: '+',
-                        start: 5,
+                        start: 0,
                         end: 9,
                         junk: false,
                         random: false
                     }
                 ),
                 (
-                    vec![84, 67, 71, 84, 71],
+                    b"GTAATCGTGA".to_vec(),
                     Origin {
                         ref_id: "random_seq_1".to_string(),
                         strand: '-',
-                        start: 4,
+                        start: 0,
                         end: 9,
                         junk: false,
                         random: false
@@ -556,6 +566,97 @@ TCCCGCTGTC
                         strand: '-',
                         start: 8,
                         end: 9,
+                        junk: false,
+                        random: false
+                    }
+                )
+            ],
+            frags
+        );
+    }
+
+    static FASTA_LARGE: &'static [u8] = b">random_seq_0
+TCCTAACGTG
+TCACGATTAC
+CCTATCCGAT
+TGCAAGATCA
+TAGCCGTGGT
+CGCTTTGTGA
+CACATGGGCG
+ATCTAATGCG
+CGGAACTCAG
+TCCCGCTGTC
+";
+
+    #[test]
+    fn read_larger_reference() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let refs = References::from_stream(std::io::Cursor::new(FASTA_LARGE)).unwrap();
+
+        let frags: Vec<(Vec<u8>, Origin)> = (0..5)
+            .map(|_| get_ref_fragment(18, &refs, &mut rng))
+            .collect();
+
+        println!("{:?}", frags);
+        assert_eq!(
+            vec![
+                (
+                    vec![67],
+                    Origin {
+                        ref_id: "random_seq_0".to_string(),
+                        strand: '+',
+                        start: 99,
+                        end: 99,
+                        junk: false,
+                        random: false
+                    }
+                ),
+                (
+                    vec![
+                        65, 71, 67, 67, 71, 84, 71, 71, 84, 67, 71, 67, 84, 84, 84, 71, 84, 71, 65
+                    ],
+                    Origin {
+                        ref_id: "random_seq_0".to_string(),
+                        strand: '+',
+                        start: 41,
+                        end: 59,
+                        junk: false,
+                        random: false
+                    }
+                ),
+                (
+                    vec![71, 65, 65, 67, 84, 67, 65, 71, 84, 67, 67, 67, 71, 67, 84, 71, 84, 67],
+                    Origin {
+                        ref_id: "random_seq_0".to_string(),
+                        strand: '+',
+                        start: 82,
+                        end: 99,
+                        junk: false,
+                        random: false
+                    }
+                ),
+                (
+                    vec![
+                        71, 84, 67, 65, 67, 65, 65, 65, 71, 67, 71, 65, 67, 67, 65, 67, 71, 71, 67
+                    ],
+                    Origin {
+                        ref_id: "random_seq_0".to_string(),
+                        strand: '-',
+                        start: 39,
+                        end: 57,
+                        junk: false,
+                        random: false
+                    }
+                ),
+                (
+                    vec![
+                        65, 67, 65, 71, 67, 71, 71, 71, 65, 67, 84, 71, 65, 71, 84, 84, 67, 67, 71
+                    ],
+                    Origin {
+                        ref_id: "random_seq_0".to_string(),
+                        strand: '-',
+                        start: 1,
+                        end: 19,
                         junk: false,
                         random: false
                     }
