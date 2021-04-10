@@ -7,7 +7,7 @@
 /* local use */
 
 /// Store information about origin of read
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Origin {
     pub ref_id: String,
     pub strand: char,

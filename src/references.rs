@@ -98,14 +98,14 @@ impl References {
     }
 
     /// Randomly get a reference and strand according to depth
-    pub fn get_reference<R>(&self, rng: &mut R) -> (String, &Text, char)
+    pub fn get_reference<R>(&self, rng: &mut R) -> (String, &Text, char, bool)
     where
         R: rand::Rng,
     {
         let seq = &self.sequences[self.dist.sample(rng)];
         match ['+', '-'][rng.gen_range(0..=1) as usize] {
-            '+' => (seq.id.clone(), &seq.seq, '+'),
-            '-' => (seq.id.clone(), &seq.revcomp, '-'),
+            '+' => (seq.id.clone(), &seq.seq, '+', seq.circular),
+            '-' => (seq.id.clone(), &seq.revcomp, '-', seq.circular),
             _ => unreachable!(),
         }
     }
@@ -214,7 +214,7 @@ TCCCGCTGTC
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
         let refs = References::from_stream(std::io::Cursor::new(FASTA)).unwrap();
 
-        let seqs: Vec<(String, &Text, char)> =
+        let seqs: Vec<(String, &Text, char, bool)> =
             (0..10).map(|_| refs.get_reference(&mut rng)).collect();
 
         assert_eq!(
@@ -222,52 +222,62 @@ TCCCGCTGTC
                 (
                     "random_seq_5".to_string(),
                     &vec![67, 71, 67, 84, 84, 84, 71, 84, 71, 65].into_boxed_slice(),
-                    '+'
+                    '+',
+                    false
                 ),
                 (
                     "random_seq_8".to_string(),
                     &vec![67, 84, 71, 65, 71, 84, 84, 67, 67, 71].into_boxed_slice(),
-                    '-'
+                    '-',
+                    true
                 ),
                 (
                     "random_seq_3".to_string(),
                     &vec![84, 71, 67, 65, 65, 71, 65, 84, 67, 65].into_boxed_slice(),
-                    '+'
+                    '+',
+                    false
                 ),
                 (
                     "random_seq_4".to_string(),
                     &vec![65, 67, 67, 65, 67, 71, 71, 67, 84, 65].into_boxed_slice(),
-                    '-'
+                    '-',
+                    false
                 ),
                 (
                     "random_seq_7".to_string(),
                     &vec![67, 71, 67, 65, 84, 84, 65, 71, 65, 84].into_boxed_slice(),
-                    '-'
+                    '-',
+                    false,
                 ),
                 (
                     "random_seq_4".to_string(),
                     &vec![84, 65, 71, 67, 67, 71, 84, 71, 71, 84].into_boxed_slice(),
-                    '+'
+                    '+',
+                    false
                 ),
                 (
                     "random_seq_9".to_string(),
                     &vec![71, 65, 67, 65, 71, 67, 71, 71, 71, 65].into_boxed_slice(),
-                    '-'
+                    '-',
+                    false
                 ),
                 (
                     "random_seq_8".to_string(),
                     &vec![67, 84, 71, 65, 71, 84, 84, 67, 67, 71].into_boxed_slice(),
-                    '-'
+                    '-',
+                    true
                 ),
                 (
                     "random_seq_7".to_string(),
                     &vec![67, 71, 67, 65, 84, 84, 65, 71, 65, 84].into_boxed_slice(),
-                    '-'
+                    '-',
+                    false
                 ),
                 (
                     "random_seq_1".to_string(),
                     &vec![71, 84, 65, 65, 84, 67, 71, 84, 71, 65].into_boxed_slice(),
-                    '-'
+                    '-',
+                    false
                 ),
             ],
             seqs
