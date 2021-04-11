@@ -395,9 +395,6 @@
 <span id="392">392</span>
 <span id="393">393</span>
 <span id="394">394</span>
-<span id="395">395</span>
-<span id="396">396</span>
-<span id="397">397</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! All stuff relate to simulate subcommand</span>
 
@@ -572,10 +569,7 @@
     <span class="kw">pub</span> <span class="ident">reference_path</span>: <span class="ident">String</span>,
 
     <span class="doccomment">/// Path to reference sequence in fasta format</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;output&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Where read is write&quot;</span>,
-    )]</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;output&quot;</span>, <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Where read is write&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">output_path</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
     <span class="doccomment">/// Quantity of base rustyread have to generate</span>
