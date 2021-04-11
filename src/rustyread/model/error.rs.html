@@ -218,6 +218,7 @@
 <span id="215">215</span>
 <span id="216">216</span>
 <span id="217">217</span>
+<span id="218">218</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Model to add error sequence</span>
 
@@ -234,11 +235,12 @@
 
 <span class="kw">type</span> <span class="ident">Kmer</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>;
 <span class="kw">type</span> <span class="ident">KmerEdit</span> <span class="op">=</span> (<span class="ident">Kmer</span>, <span class="ident">u64</span>);
+<span class="kw">type</span> <span class="ident">KmerEditWeight</span> <span class="op">=</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">KmerEdit</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>);
 
 <span class="doccomment">/// Struct to load and apply error model</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Error</span> {
     <span class="ident">length</span>: <span class="ident">usize</span>,
-    <span class="ident">kmer2alts_edit_prob</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">rustc_hash</span>::<span class="ident">FxHashMap</span><span class="op">&lt;</span><span class="ident">Kmer</span>, (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">KmerEdit</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">kmer2alts_edit_prob</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">rustc_hash</span>::<span class="ident">FxHashMap</span><span class="op">&lt;</span><span class="ident">Kmer</span>, <span class="ident">KmerEditWeight</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> {
