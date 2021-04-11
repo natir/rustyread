@@ -77,6 +77,7 @@ impl Error {
         })
     }
 
+    /// Setup a random error model
     pub fn random(k: usize) -> Self {
         Self {
             length: k,
@@ -91,7 +92,6 @@ impl Error {
     {
         if let Some(data) = &self.kmer2alts_edit_prob {
             if let Some(values) = data.get(kmer) {
-                //values -> (Vec<(kmer, edit_distance)>, Vec<weight>)
                 let dist = WeightedIndex::new(&values.1).unwrap();
                 values.0[dist.sample(rng)].clone()
             } else {

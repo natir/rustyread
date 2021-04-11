@@ -106,15 +106,25 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     log::info!("End read error model");
 
     log::info!("Start read quality score model");
-    let qscore_path = crate::cli::simulate::found_model(params.qscore_model, "qscore".to_string())
-        .with_context(|| "Get path of qscore model")?;
-    let qscore = model::Quality::from_stream(
-        niffler::get_reader(Box::new(std::io::BufReader::new(
-            std::fs::File::open(qscore_path).with_context(|| "Open qscore model")?,
-        )))
-        .with_context(|| "Open qscore model")?
-        .0,
-    )?;
+    let qscore = if params.qscore_model == *"ideal" {
+        log::info!("Use ideal quality score model");
+        model::Quality::ideal()
+    } else if params.qscore_model == *"random" {
+        log::info!("Use random quality score model");
+        model::Quality::random()
+    } else {
+        log::info!("Use file error model");
+        let qscore_path =
+            crate::cli::simulate::found_model(params.qscore_model, "qscore".to_string())
+                .with_context(|| "Get path of qscore model")?;
+        model::Quality::from_stream(
+            niffler::get_reader(Box::new(std::io::BufReader::new(
+                std::fs::File::open(qscore_path).with_context(|| "Open qscore model")?,
+            )))
+            .with_context(|| "Open qscore model")?
+            .0,
+        )?
+    };
     log::info!("End read quality score model");
 
     let total_base = params.quantity.number_of_base(

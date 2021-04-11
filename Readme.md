@@ -163,4 +163,3 @@ Currently the minimum supported Rust version is 1.45.0.
 ## Difference with badread
 
 - option `small_plasmid_bias` is silently ignore but small plasmid is 'sequence'
-- option `random` and `ideal` model isn't support know

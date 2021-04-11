@@ -76,6 +76,39 @@ impl Quality {
         }
     }
 
+    /// Build a random quality score model
+    pub fn random() -> Self {
+        let mut data = rustc_hash::FxHashMap::default();
+
+        data.insert(b"=".to_vec(), ((1..=20).collect(), vec![1.0; 20]));
+        data.insert(b"X".to_vec(), ((1..=20).collect(), vec![1.0; 20]));
+        data.insert(b"I".to_vec(), ((1..=20).collect(), vec![1.0; 20]));
+
+        Self {
+            max_k: 1,
+            cigar2score_weight: data,
+        }
+    }
+
+    /// Build an ideal quality score model
+    pub fn ideal() -> Self {
+        let mut data = rustc_hash::FxHashMap::default();
+
+        data.insert(b"X".to_vec(), ((1..=3).collect(), vec![1.0; 3]));
+        data.insert(b"I".to_vec(), ((1..=3).collect(), vec![1.0; 3]));
+
+        data.insert(b"=".to_vec(), ((4..=7).collect(), vec![1.0; 4]));
+        data.insert(b"===".to_vec(), ((8..=20).collect(), vec![1.0; 13]));
+        data.insert(b"=====".to_vec(), ((21..=30).collect(), vec![1.0; 10]));
+        data.insert(b"=======".to_vec(), ((31..=40).collect(), vec![1.0; 10]));
+        data.insert(b"=========".to_vec(), ((41..=50).collect(), vec![1.0; 10]));
+
+        Self {
+            max_k: 9,
+            cigar2score_weight: data,
+        }
+    }
+
     /// Generate error associate to a cigar string with odd length
     pub fn get_qscore<R>(&self, cigar: &[u8], rng: &mut R) -> Result<u8>
     where
@@ -160,6 +193,118 @@ X;1;1:0.000076,2:0.00327,3:0.014147,4:0.034226,5:0.053392,6:0.066246,7:0.078339,
                 44, 44, 42, 51, 45, 46, 43, 46, 51, 42, 44, 47, 55, 40, 40, 39, 40, 45, 47, 48, 39,
                 39, 43, 46, 41, 47, 39, 47, 43, 42, 50, 54, 41, 57, 40, 38, 48, 51, 37, 39, 43, 45,
                 45, 38, 44, 48, 47, 46, 50, 42, 47, 37, 40, 42, 38, 50, 51, 37
+            ]
+        );
+
+        assert!(model.get_qscore(b"==", &mut rng).is_err());
+        assert!(model.get_qscore(b"===", &mut rng).is_ok());
+        assert!(model.get_qscore(b"=I=", &mut rng).is_ok());
+        assert!(model.get_qscore(b"=X=", &mut rng).is_ok());
+
+        assert!(model.get_qscore(b"", &mut rng).is_err());
+        assert!(model.get_qscore(b"bepo", &mut rng).is_err());
+    }
+
+    #[test]
+    fn random() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let model = Quality::random();
+
+        let m: Vec<u8> = (0..100)
+            .map(|_| model.get_qscore(b"=", &mut rng).unwrap())
+            .collect();
+        assert_eq!(
+            m,
+            vec![
+                44, 44, 46, 42, 34, 42, 48, 50, 36, 34, 52, 44, 41, 36, 44, 38, 34, 44, 35, 46, 50,
+                43, 44, 35, 41, 42, 49, 38, 42, 47, 42, 51, 52, 51, 46, 38, 45, 41, 35, 42, 53, 46,
+                43, 34, 37, 41, 43, 53, 51, 44, 49, 50, 45, 38, 41, 41, 38, 38, 46, 43, 53, 37, 43,
+                44, 36, 40, 38, 45, 47, 35, 43, 46, 51, 45, 43, 42, 52, 34, 43, 49, 40, 40, 41, 48,
+                47, 45, 35, 41, 48, 52, 35, 50, 45, 49, 49, 40, 37, 49, 51, 40
+            ]
+        );
+
+        let i: Vec<u8> = (0..100)
+            .map(|_| model.get_qscore(b"I", &mut rng).unwrap())
+            .collect();
+        assert_eq!(
+            i,
+            vec![
+                36, 39, 52, 48, 39, 36, 50, 37, 42, 41, 45, 51, 36, 45, 43, 49, 44, 51, 36, 50, 37,
+                53, 53, 36, 53, 51, 38, 43, 35, 47, 49, 36, 41, 43, 50, 38, 35, 35, 44, 36, 39, 47,
+                40, 36, 37, 48, 43, 39, 45, 45, 42, 51, 43, 34, 46, 34, 47, 36, 44, 34, 38, 47, 52,
+                43, 42, 35, 47, 39, 35, 52, 40, 37, 34, 43, 38, 51, 51, 42, 41, 53, 46, 44, 35, 43,
+                48, 53, 44, 48, 37, 35, 34, 48, 46, 39, 48, 39, 48, 53, 49, 53
+            ]
+        );
+
+        let x: Vec<u8> = (0..100)
+            .map(|_| model.get_qscore(b"X", &mut rng).unwrap())
+            .collect();
+        assert_eq!(
+            x,
+            vec![
+                50, 48, 35, 36, 47, 51, 38, 40, 43, 50, 49, 39, 42, 35, 45, 49, 47, 39, 51, 51, 48,
+                40, 36, 36, 47, 47, 48, 50, 51, 39, 35, 42, 45, 51, 39, 41, 40, 45, 41, 34, 44, 34,
+                44, 45, 41, 51, 46, 47, 43, 46, 51, 41, 44, 48, 53, 37, 38, 36, 38, 46, 48, 49, 36,
+                36, 43, 47, 40, 48, 36, 48, 43, 41, 51, 52, 39, 53, 38, 35, 49, 51, 34, 36, 43, 45,
+                46, 35, 44, 49, 48, 47, 51, 41, 48, 34, 38, 41, 35, 51, 51, 34
+            ]
+        );
+
+        assert!(model.get_qscore(b"==", &mut rng).is_err());
+        assert!(model.get_qscore(b"===", &mut rng).is_ok());
+        assert!(model.get_qscore(b"=I=", &mut rng).is_ok());
+        assert!(model.get_qscore(b"=X=", &mut rng).is_ok());
+
+        assert!(model.get_qscore(b"", &mut rng).is_err());
+        assert!(model.get_qscore(b"bepo", &mut rng).is_err());
+    }
+
+    #[test]
+    fn ideal() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let model = Quality::ideal();
+
+        let m: Vec<u8> = (0..100)
+            .map(|_| model.get_qscore(b"=", &mut rng).unwrap())
+            .collect();
+        assert_eq!(
+            m,
+            vec![
+                39, 39, 39, 38, 37, 38, 39, 40, 37, 37, 40, 39, 38, 37, 39, 37, 37, 39, 37, 39, 40,
+                38, 39, 37, 38, 38, 40, 37, 38, 39, 38, 40, 40, 40, 39, 37, 39, 38, 37, 38, 40, 39,
+                38, 37, 37, 38, 38, 40, 40, 39, 40, 40, 39, 37, 38, 38, 37, 37, 39, 38, 40, 37, 38,
+                39, 37, 38, 37, 39, 39, 37, 38, 39, 40, 39, 38, 38, 40, 37, 38, 40, 38, 38, 38, 39,
+                39, 39, 37, 38, 39, 40, 37, 40, 39, 40, 40, 38, 37, 40, 40, 38
+            ]
+        );
+
+        let i: Vec<u8> = (0..100)
+            .map(|_| model.get_qscore(b"I", &mut rng).unwrap())
+            .collect();
+        assert_eq!(
+            i,
+            vec![
+                34, 34, 36, 36, 34, 34, 36, 34, 35, 35, 35, 36, 34, 35, 35, 36, 35, 36, 34, 36, 34,
+                36, 36, 34, 36, 36, 34, 35, 34, 35, 36, 34, 35, 35, 36, 34, 34, 34, 35, 34, 34, 36,
+                34, 34, 34, 36, 35, 34, 35, 35, 35, 36, 35, 34, 35, 34, 35, 34, 35, 34, 34, 36, 36,
+                35, 35, 34, 36, 34, 34, 36, 34, 34, 34, 35, 34, 36, 36, 35, 35, 36, 35, 35, 34, 35,
+                36, 36, 35, 36, 34, 34, 34, 36, 35, 34, 36, 34, 36, 36, 36, 36
+            ]
+        );
+
+        let x: Vec<u8> = (0..100)
+            .map(|_| model.get_qscore(b"X", &mut rng).unwrap())
+            .collect();
+        assert_eq!(
+            x,
+            vec![
+                36, 36, 34, 34, 36, 36, 34, 35, 35, 36, 36, 34, 35, 34, 35, 36, 35, 34, 36, 36, 36,
+                34, 34, 34, 36, 36, 36, 36, 36, 34, 34, 35, 35, 36, 34, 35, 34, 35, 35, 34, 35, 34,
+                35, 35, 35, 36, 35, 36, 35, 35, 36, 35, 35, 36, 36, 34, 34, 34, 34, 35, 36, 36, 34,
+                34, 35, 36, 34, 36, 34, 36, 35, 35, 36, 36, 34, 36, 34, 34, 36, 36, 34, 34, 35, 35,
+                35, 34, 35, 36, 36, 36, 36, 35, 36, 34, 34, 35, 34, 36, 36, 34
             ]
         );
 
