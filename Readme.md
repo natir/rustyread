@@ -10,7 +10,7 @@
 Rustyread is a drop in replacement of `badread simulate`. Rustyread is very heavily inspired by [badread](https://github.com/rrwick/Badread), it reuses the same error and quality model file. But Rustyreads is multi-threaded and benefits from other optimizations.
 
 - [Usage](#usage)
-- [Instalation](#instalation)
+- [Installation](#installation)
 - [Minimum supported Rust version](#minimum-supported-rust-version)
 - [Difference with badread](#difference-with-badread)
 
@@ -23,7 +23,7 @@ Rustyread is a drop in replacement of `badread simulate`. Rustyread is very heav
 
 ## Usage
 
-If previously you call badread like this:
+If previously you called badread like this:
 
 ```
 badread simulate --reference {reference path} --quantity {quantity} > {reads}.fastq
@@ -41,7 +41,7 @@ But by default rustyread use all avaible core you can control it with option `th
 rustyread --theads {number of thread} simulate --reference {reference path} --quantity {quantity} > {reads}.fastq
 ```
 
-If you have `badread` install in your python `sys.path` rustyread can found error and quality model automaticly, but you can still use `--error_model` and `--qscore_model` option.
+If you have `badread` install in your python `sys.path` rustyread can found error and quality model automaticlly, but you can still use `--error_model` and `--qscore_model` option.
 
 ### Full usage
 
@@ -126,7 +126,7 @@ OPTIONS:
             Adapter parameters for read starts [default: AATGTACTTCGTTCAGTTACGTATTGCT]```
 ```
 
-## Instalation
+## Installation
 
 ### Bioconda
 
