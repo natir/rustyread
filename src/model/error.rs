@@ -13,11 +13,12 @@ use crate::error::Model;
 
 type Kmer = Vec<u8>;
 type KmerEdit = (Kmer, u64);
+type KmerEditWeight = (Vec<KmerEdit>, Vec<f64>);
 
 /// Struct to load and apply error model
 pub struct Error {
     length: usize,
-    kmer2alts_edit_prob: rustc_hash::FxHashMap<Kmer, (Vec<KmerEdit>, Vec<f64>)>,
+    kmer2alts_edit_prob: Option<rustc_hash::FxHashMap<Kmer, KmerEditWeight>>,
 }
 
 impl Error {
@@ -72,8 +73,15 @@ impl Error {
 
         Ok(Self {
             length: kmer_length,
-            kmer2alts_edit_prob: data,
+            kmer2alts_edit_prob: Some(data),
         })
+    }
+
+    pub fn random(k: usize) -> Self {
+        Self {
+            length: k,
+            kmer2alts_edit_prob: None,
+        }
     }
 
     /// Add error to a kmer
@@ -81,12 +89,16 @@ impl Error {
     where
         R: rand::Rng,
     {
-        if let Some(values) = self.kmer2alts_edit_prob.get(kmer) {
-            //values -> (Vec<(kmer, edit_distance)>, Vec<weight>)
-            let dist = WeightedIndex::new(&values.1).unwrap();
-            values.0[dist.sample(rng)].clone()
+        if let Some(data) = &self.kmer2alts_edit_prob {
+            if let Some(values) = data.get(kmer) {
+                //values -> (Vec<(kmer, edit_distance)>, Vec<weight>)
+                let dist = WeightedIndex::new(&values.1).unwrap();
+                values.0[dist.sample(rng)].clone()
+            } else {
+                (random_error(kmer, rng), 1)
+            }
         } else {
-            (kmer.to_vec(), 0)
+            (random_error(kmer, rng), 1)
         }
     }
 
@@ -175,6 +187,32 @@ mod t {
         assert_eq!(
             model.add_errors_to_kmer(b"ACAGTTG", &mut rng),
             (b"ACAGG".to_vec(), 2)
+        );
+    }
+
+    #[test]
+    fn random() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let model = Error::random(7);
+
+        let kmers: Vec<(Vec<u8>, u64)> = (0..10)
+            .map(|_| model.add_errors_to_kmer(b"ACAGTTG", &mut rng))
+            .collect();
+
+        assert_eq!(
+            vec![
+                (b"ACATTTG".to_vec(), 1),
+                (b"ACGTTG".to_vec(), 1),
+                (b"CAGTTG".to_vec(), 1),
+                (b"ACAGTTTG".to_vec(), 1),
+                (b"ATAGTTG".to_vec(), 1),
+                (b"CAGTTG".to_vec(), 1),
+                (b"ACAAGTTG".to_vec(), 1),
+                (b"ACGAGTTG".to_vec(), 1),
+                (b"AGCAGTTG".to_vec(), 1),
+                (b"AAGTTG".to_vec(), 1)
+            ],
+            kmers
         );
     }
 }

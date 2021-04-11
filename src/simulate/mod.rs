@@ -85,17 +85,23 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     log::info!("End init glitches model");
 
     log::info!("Start read error model");
-    let error_path = crate::cli::simulate::found_model(params.error_model, "error".to_string())
-        .with_context(|| "Get path of error model")?;
-    let error = model::Error::from_stream(
-        niffler::get_reader(Box::new(std::io::BufReader::new(
-            std::fs::File::open(error_path).with_context(|| "Open error model")?,
-        )))
-        .with_context(|| "Open error model")?
-        .0,
-        &mut main_rng,
-    )
-    .with_context(|| "Init error model")?;
+    let error = if params.error_model == *"random" {
+        log::info!("Use random error model");
+        model::Error::random(7)
+    } else {
+        log::info!("Use file error model");
+        let error_path = crate::cli::simulate::found_model(params.error_model, "error".to_string())
+            .with_context(|| "Get path of error model")?;
+        model::Error::from_stream(
+            niffler::get_reader(Box::new(std::io::BufReader::new(
+                std::fs::File::open(error_path).with_context(|| "Open error model")?,
+            )))
+            .with_context(|| "Open error model")?
+            .0,
+            &mut main_rng,
+        )
+        .with_context(|| "Init error model")?
+    };
     let k = error.k();
     log::info!("End read error model");
 

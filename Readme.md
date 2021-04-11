@@ -151,6 +151,7 @@ cargo install --git https://github.com/natir/rustyread.git
 ```
 git clone https://github.com/natir/rustyread.git
 cd rustyread
+git checkout 0.1
 cargo install --path .
 ```
 
