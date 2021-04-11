@@ -5,7 +5,7 @@
 [![Documentation](https://github.com/natir/rustyread/workflows/Documentation/badge.svg)](https://natir.github.io/rustyread/rustyread)
 [![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/natir/rustyread/blob/master/LICENSE)
 
-# Rustyread, a long-read simulator 🧬 💻
+<p align="center"><img src="images/logo.svg" alt="Rustyread" width="75%"></p>
 
 Rustyread is a drop in replacement of `badread simulate`. Rustyread is very heavily inspired by [badread](https://github.com/rrwick/Badread), it reuses the same error and quality model file. But Rustyreads is multi-threaded and benefits from other optimizations.
 
