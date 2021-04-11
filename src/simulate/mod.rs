@@ -33,7 +33,8 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     } else {
         rand::rngs::StdRng::seed_from_u64(
             std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)?
+                .duration_since(std::time::UNIX_EPOCH)
+                .with_context(|| "Get seed for rng")?
                 .as_secs(),
         )
     };
@@ -49,7 +50,8 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     log::info!("End read reference");
 
     log::info!("Start init lenght model");
-    let length = model::Length::new(params.length.0 as f64, params.length.1 as f64)?;
+    let length = model::Length::new(params.length.0 as f64, params.length.1 as f64)
+        .with_context(|| "Init length model")?;
     log::info!("End init lenght model");
 
     log::info!("Start init identity model");
@@ -57,7 +59,8 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
         params.identity.0 as f64,
         params.identity.1 as f64,
         params.identity.2 as f64,
-    )?;
+    )
+    .with_context(|| "Init identity model")?;
     log::info!("End init length model");
 
     log::info!("Start init adapter model");
@@ -68,7 +71,8 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
         params.start_adapter.1 as f64,
         params.end_adapter.0 as f64,
         params.end_adapter.1 as f64,
-    )?;
+    )
+    .with_context(|| "Init adapter model")?;
     log::info!("End init adapter model");
 
     log::info!("Start init glitches model");
@@ -76,27 +80,33 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
         params.glitches.0 as f64,
         params.glitches.1 as f64,
         params.glitches.2 as f64,
-    )?;
+    )
+    .with_context(|| "Init glitches model")?;
     log::info!("End init glitches model");
 
     log::info!("Start read error model");
-    let error_path = crate::cli::simulate::found_model(params.error_model, "error".to_string())?;
+    let error_path = crate::cli::simulate::found_model(params.error_model, "error".to_string())
+        .with_context(|| "Get path of error model")?;
     let error = model::Error::from_stream(
-        niffler::get_reader(Box::new(std::io::BufReader::new(std::fs::File::open(
-            error_path,
-        )?)))?
+        niffler::get_reader(Box::new(std::io::BufReader::new(
+            std::fs::File::open(error_path).with_context(|| "Open error model")?,
+        )))
+        .with_context(|| "Open error model")?
         .0,
         &mut main_rng,
-    )?;
+    )
+    .with_context(|| "Init error model")?;
     let k = error.k();
     log::info!("End read error model");
 
     log::info!("Start read quality score model");
-    let qscore_path = crate::cli::simulate::found_model(params.qscore_model, "qscore".to_string())?;
+    let qscore_path = crate::cli::simulate::found_model(params.qscore_model, "qscore".to_string())
+        .with_context(|| "Get path of qscore model")?;
     let qscore = model::Quality::from_stream(
-        niffler::get_reader(Box::new(std::io::BufReader::new(std::fs::File::open(
-            qscore_path,
-        )?)))?
+        niffler::get_reader(Box::new(std::io::BufReader::new(
+            std::fs::File::open(qscore_path).with_context(|| "Open qscore model")?,
+        )))
+        .with_context(|| "Open qscore model")?
         .0,
     )?;
     log::info!("End read quality score model");
@@ -136,7 +146,9 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     log::info!("End generate sequences");
 
     log::info!("Start write sequences");
-    let mut output = std::io::BufWriter::new(std::fs::File::create(params.output_path)?);
+    let mut output = std::io::BufWriter::new(
+        std::fs::File::create(params.output_path).with_context(|| "Open output file")?,
+    );
 
     for (comment, seq, qual) in sequences {
         writeln!(
@@ -148,9 +160,12 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
             )
             .to_hyphenated(),
             comment,
-            std::str::from_utf8(&seq[k..(seq.len() - k)])?, // begin and end of fragment is just random base
-            std::str::from_utf8(&qual[k..seq.len() - k])?
-        )?;
+            std::str::from_utf8(&seq[k..(seq.len() - k)])
+                .with_context(|| "Write read in output file")?, // begin and end of fragment is just random base
+            std::str::from_utf8(&qual[k..seq.len() - k])
+                .with_context(|| "Write read in output file")?
+        )
+        .with_context(|| "Write read in output file")?;
     }
     log::info!("End write sequences");
 
@@ -461,10 +476,6 @@ TCCCGCTGTC
             .map(|_| get_ref_fragment(100, &refs, &mut rng))
             .collect();
 
-        println!(
-            "{}",
-            std::str::from_utf8(&frags[frags.len() - 1].0).unwrap()
-        );
         assert_eq!(
             vec![
                 (
@@ -604,7 +615,6 @@ TCCCGCTGTC
             .map(|_| get_ref_fragment(18, &refs, &mut rng))
             .collect();
 
-        println!("{:?}", frags);
         assert_eq!(
             vec![
                 (

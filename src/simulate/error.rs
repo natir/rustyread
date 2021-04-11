@@ -106,10 +106,8 @@ impl Change {
 pub fn assemble_change(old: Vec<Change>, k: usize) -> Vec<Change> {
     let mut changes = Vec::new();
 
-    log::trace!("RAW CHANGE {:?}", old);
     let mut prev: Option<Change> = None;
     for change in old.iter() {
-        log::trace!("TOP change {:?} prev {:?}", change, prev);
         if let Some(ref mut p) = prev {
             if change.begin < p.end_err {
                 p.end_raw = change.begin + k;
@@ -119,21 +117,17 @@ pub fn assemble_change(old: Vec<Change>, k: usize) -> Vec<Change> {
                     p.err_seq.extend(&change.err_seq[ovl..]);
                 }
                 p.end_err = p.begin + p.err_seq.len();
-                log::trace!("OVL ERR {:?}", prev);
             } else if change.begin < p.end_raw {
                 p.end_raw = change.begin + k;
 
                 p.err_seq.extend(&change.err_seq);
                 p.end_err = p.begin + p.err_seq.len();
-                log::trace!("OVL RAW {:?}", prev)
             } else {
                 changes.push(p.clone());
                 prev = Some(change.clone());
-                log::trace!("NEW PREV {:?}", prev);
             }
         } else {
             prev = Some(change.clone());
-            log::trace!("new prev {:?}", prev);
         }
     }
 
@@ -156,10 +150,8 @@ impl DiffPos {
         let mut err = Vec::new();
         let mut err_len = 0;
 
-        log::trace!("CHANGES {:?}", changes);
         for change in changes {
             let match_dist = if !raw.is_empty() {
-                log::trace!("begin {} raw[-1] {}", change.begin, raw[raw.len() - 1]);
                 change.begin - raw[raw.len() - 1]
             } else {
                 change.begin

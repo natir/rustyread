@@ -131,6 +131,7 @@ pub fn found_model(value: String, model_type: String) -> anyhow::Result<std::pat
     let path = std::path::PathBuf::from(&value);
 
     if path.is_file() {
+        log::info!("Model parameter is a file");
         Ok(path)
     } else {
         let result = std::process::Command::new("python")
@@ -148,6 +149,7 @@ pub fn found_model(value: String, model_type: String) -> anyhow::Result<std::pat
             local_path.set_extension("gz");
 
             if local_path.is_file() {
+                log::info!("Model found in python sys.path");
                 return Ok(local_path);
             }
         }

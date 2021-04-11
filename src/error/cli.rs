@@ -19,6 +19,6 @@ pub enum Cli {
     CantParseTrio,
 
     /// Cant found model path
-    #[error("Can't found model path use qscore_model and error_model")]
+    #[error("Can't found model path use qscore_model and error_model with file")]
     CantFoundModelPath,
 }
