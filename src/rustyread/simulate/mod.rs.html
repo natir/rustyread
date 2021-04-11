@@ -686,6 +686,14 @@
 <span id="683">683</span>
 <span id="684">684</span>
 <span id="685">685</span>
+<span id="686">686</span>
+<span id="687">687</span>
+<span id="688">688</span>
+<span id="689">689</span>
+<span id="690">690</span>
+<span id="691">691</span>
+<span id="692">692</span>
+<span id="693">693</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Simulate reads</span>
 
@@ -835,9 +843,17 @@
     <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;End generate sequences&quot;</span>);
 
     <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Start write sequences&quot;</span>);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">BufWriter</span>::<span class="ident">new</span>(
-        <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>::<span class="ident">create</span>(<span class="ident">params</span>.<span class="ident">output_path</span>).<span class="ident">with_context</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;Open output file&quot;</span>)<span class="question-mark">?</span>,
-    );
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">BufWriter</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">output_path</span>) <span class="op">=</span> <span class="ident">params</span>.<span class="ident">output_path</span> {
+	<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">BufWriter</span>::<span class="ident">new</span>(
+	    <span class="ident">Box</span>::<span class="ident">new</span>(
+		<span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>::<span class="ident">create</span>(<span class="ident">output_path</span>).<span class="ident">with_context</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;Open output file&quot;</span>)<span class="question-mark">?</span>,
+	    )
+	)
+    } <span class="kw">else</span> {
+	<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">BufWriter</span>::<span class="ident">new</span>(
+            <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">stdout</span>())
+	)
+    };
 
     <span class="kw">for</span> (<span class="ident">comment</span>, <span class="ident">seq</span>, <span class="ident">qual</span>) <span class="kw">in</span> <span class="ident">sequences</span> {
         <span class="macro">writeln</span><span class="macro">!</span>(
