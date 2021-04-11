@@ -697,6 +697,16 @@
 <span id="694">694</span>
 <span id="695">695</span>
 <span id="696">696</span>
+<span id="697">697</span>
+<span id="698">698</span>
+<span id="699">699</span>
+<span id="700">700</span>
+<span id="701">701</span>
+<span id="702">702</span>
+<span id="703">703</span>
+<span id="704">704</span>
+<span id="705">705</span>
+<span id="706">706</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Simulate reads</span>
 
@@ -806,15 +816,25 @@
     <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;End read error model&quot;</span>);
 
     <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Start read quality score model&quot;</span>);
-    <span class="kw">let</span> <span class="ident">qscore_path</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">cli</span>::<span class="ident">simulate</span>::<span class="ident">found_model</span>(<span class="ident">params</span>.<span class="ident">qscore_model</span>, <span class="string">&quot;qscore&quot;</span>.<span class="ident">to_string</span>())
-        .<span class="ident">with_context</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;Get path of qscore model&quot;</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">qscore</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Quality</span>::<span class="ident">from_stream</span>(
-        <span class="ident">niffler</span>::<span class="ident">get_reader</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">BufReader</span>::<span class="ident">new</span>(
-            <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">qscore_path</span>).<span class="ident">with_context</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;Open qscore model&quot;</span>)<span class="question-mark">?</span>,
-        )))
-        .<span class="ident">with_context</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;Open qscore model&quot;</span>)<span class="question-mark">?</span>
-        .<span class="number">0</span>,
-    )<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">qscore</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">params</span>.<span class="ident">qscore_model</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">*</span><span class="string">&quot;ideal&quot;</span> {
+        <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Use ideal quality score model&quot;</span>);
+        <span class="ident">model</span>::<span class="ident">Quality</span>::<span class="ident">ideal</span>()
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">params</span>.<span class="ident">qscore_model</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">*</span><span class="string">&quot;random&quot;</span> {
+        <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Use random quality score model&quot;</span>);
+        <span class="ident">model</span>::<span class="ident">Quality</span>::<span class="ident">random</span>()
+    } <span class="kw">else</span> {
+        <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Use file error model&quot;</span>);
+        <span class="kw">let</span> <span class="ident">qscore_path</span> <span class="op">=</span>
+            <span class="kw">crate</span>::<span class="ident">cli</span>::<span class="ident">simulate</span>::<span class="ident">found_model</span>(<span class="ident">params</span>.<span class="ident">qscore_model</span>, <span class="string">&quot;qscore&quot;</span>.<span class="ident">to_string</span>())
+                .<span class="ident">with_context</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;Get path of qscore model&quot;</span>)<span class="question-mark">?</span>;
+        <span class="ident">model</span>::<span class="ident">Quality</span>::<span class="ident">from_stream</span>(
+            <span class="ident">niffler</span>::<span class="ident">get_reader</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">BufReader</span>::<span class="ident">new</span>(
+                <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">qscore_path</span>).<span class="ident">with_context</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;Open qscore model&quot;</span>)<span class="question-mark">?</span>,
+            )))
+            .<span class="ident">with_context</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;Open qscore model&quot;</span>)<span class="question-mark">?</span>
+            .<span class="number">0</span>,
+        )<span class="question-mark">?</span>
+    };
     <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;End read quality score model&quot;</span>);
 
     <span class="kw">let</span> <span class="ident">total_base</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">quantity</span>.<span class="ident">number_of_base</span>(
