@@ -146,9 +146,14 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     log::info!("End generate sequences");
 
     log::info!("Start write sequences");
-    let mut output = std::io::BufWriter::new(
-        std::fs::File::create(params.output_path).with_context(|| "Open output file")?,
-    );
+    let mut output: std::io::BufWriter<Box<dyn std::io::Write>> =
+        if let Some(output_path) = params.output_path {
+            std::io::BufWriter::new(Box::new(
+                std::fs::File::create(output_path).with_context(|| "Open output file")?,
+            ))
+        } else {
+            std::io::BufWriter::new(Box::new(std::io::stdout()))
+        };
 
     for (comment, seq, qual) in sequences {
         writeln!(

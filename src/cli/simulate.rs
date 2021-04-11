@@ -171,13 +171,8 @@ pub struct Command {
     pub reference_path: String,
 
     /// Path to reference sequence in fasta format
-    #[clap(
-        long = "output",
-        about = "Where read is write",
-        required = true,
-        default_value = "/dev/stdout"
-    )]
-    pub output_path: String,
+    #[clap(long = "output", about = "Where read is write")]
+    pub output_path: Option<String>,
 
     /// Quantity of base rustyread have to generate
     #[clap(
