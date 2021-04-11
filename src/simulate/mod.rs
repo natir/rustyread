@@ -9,7 +9,7 @@ mod quality;
 use std::io::Write;
 
 /* crate use */
-use anyhow::Result;
+use anyhow::{Context, Result};
 use rand::Rng;
 use rand::RngCore;
 use rand::SeedableRng;
@@ -40,9 +40,10 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
 
     log::info!("Start read reference");
     let references = References::from_stream(
-        niffler::get_reader(Box::new(std::io::BufReader::new(std::fs::File::open(
-            params.reference_path,
-        )?)))?
+        niffler::get_reader(Box::new(std::io::BufReader::new(
+            std::fs::File::open(params.reference_path).with_context(|| "Read reference file")?,
+        )))
+        .with_context(|| "Read reference file niffler")?
         .0,
     )?;
     log::info!("End read reference");
@@ -141,7 +142,11 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
         writeln!(
             output,
             "@{} {}\n{}\n+\n{}",
-            uuid::Uuid::new_v4().to_hyphenated(),
+            uuid::Uuid::new_v3(
+                &uuid::Uuid::NAMESPACE_X500,
+                &main_rng.gen::<u128>().to_be_bytes()
+            )
+            .to_hyphenated(),
             comment,
             std::str::from_utf8(&seq[k..(seq.len() - k)])?, // begin and end of fragment is just random base
             std::str::from_utf8(&qual[k..seq.len() - k])?
