@@ -138,7 +138,7 @@ pub fn assemble_change(old: Vec<Change>, k: usize) -> Vec<Change> {
     changes
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct DiffPos {
     pub raw: Vec<usize>,
     pub err: Vec<usize>,
@@ -200,6 +200,37 @@ mod t {
     fn nb_of_edit() {
         assert_eq!(5.000000000000004, number_of_edit(0.95, 100));
         assert_eq!(131.99999999999997, number_of_edit(0.89, 1200));
+    }
+
+    #[test]
+    fn add_error_() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let error_model = model::Error::from_stream(ERROR, &mut rng).unwrap();
+        let glitch_model = model::Glitch::new(100.0, 25.0, 25.0).unwrap();
+
+        let raw = crate::random_seq(500, &mut rng);
+
+        let (seq, diffpos) = add_error(0.90, &raw, &error_model, &glitch_model, &mut rng);
+
+        println!("{:?}", diffpos);
+        assert_eq!(b"CCGATCAGGTGATCAGACCACCTTCAGCATGCGCTCATCTAGTCATGGAGGAAGAATCCCTTGGCGAACACTCGACCGGAGGCCCGCACAAGTGCCAGAGGCTGGGTCGAAGGGGTATGCTACCAGCTCAATGGCTTAGCGGCGCACGTCCTCGTCCCCCAACGATTCGCCGTTGACCAGGTTGTATCCAGCATTGGAAGAACGCACCCGGGGGGAGCACAGATCCTAGCAGTACACGCTCTGGGTCCTCTACTGTGTGACCGTTCCCTTCTATTCACGTCGATTGGAGGAGGGAGCGAATAAAGATAGACGAGGTTTAACTGTCTTCCATCTTCTAATCATCGCGAGTTAGCCACGGTCTTCTCGTTTTTGCAGTGCATCTTGACTCAACTGCGGATGAGACCCTGAGCGTTTAAGAAAAGGTGGTGTACCTGGCGGCTCGAGTGAAAGATTCGTACCACGCATCTACAGCTTTCGTCTTTAGGGGGTCACGGGTCTCGAATGGCC".to_vec(), seq);
+        assert_eq!(
+            DiffPos {
+                raw: vec![
+                    4, 11, 33, 41, 42, 49, 51, 58, 74, 81, 84, 93, 104, 112, 112, 123, 149, 156,
+                    171, 248, 257, 264, 265, 272, 273, 281, 281, 288, 302, 309, 322, 329, 331, 352,
+                    355, 362, 371, 382, 383, 390, 391, 398, 399, 406, 410, 419, 427, 434, 436, 443,
+                    446, 453, 457, 464, 473, 483
+                ],
+                err: vec![
+                    4, 10, 32, 41, 42, 48, 50, 58, 74, 81, 84, 92, 103, 111, 111, 123, 149, 157,
+                    172, 251, 260, 268, 269, 277, 278, 286, 286, 293, 307, 315, 328, 336, 338, 360,
+                    363, 370, 379, 390, 391, 397, 398, 404, 405, 412, 416, 425, 433, 440, 442, 449,
+                    452, 458, 462, 470, 479, 490
+                ]
+            },
+            diffpos
+        );
     }
 
     #[test]
