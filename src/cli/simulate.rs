@@ -295,10 +295,9 @@ pub struct Command {
     /// Limit memory usage
     #[clap(
         long = "number_base_store",
-        about = "Number of base, rustyread can store in ram before write in output",
-        default_value = "8G"
+        about = "Number of base, rustyread can store in ram before write in output in absolute value (e.g. 250M) or a relative depth (e.g. 25x)"
     )]
-    pub nb_base_store: Quantity,
+    pub nb_base_store: Option<Quantity>,
 }
 
 #[cfg(test)]

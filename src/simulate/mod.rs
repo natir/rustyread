@@ -133,7 +133,11 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
         .map(|x| x.seq.len() as u64)
         .sum();
     let total_base = params.quantity.number_of_base(len_ref);
-    let base_limit = params.nb_base_store.number_of_base(len_ref);
+    let base_limit = if let Some(limit) = params.nb_base_store {
+        limit.number_of_base(len_ref)
+    } else {
+        total_base
+    };
     let mut base_produce = 0;
     log::info!("Target number of base {}", total_base);
 

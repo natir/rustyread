@@ -43,6 +43,10 @@ rustyread --theads {number of thread} simulate --reference {reference path} --qu
 
 If you have `badread` installed in your python `sys.path` rustyread can found error and quality model automatically, but you can still use `--error_model` and `--qscore_model` option.
 
+### Control memory usage
+
+Rustyread memory usage could be estimated with formula: `2 * reference base + 2 * targeted base`, to limit memory impact of Rustyread you can use parameter `number_base_store` it's take an absolute value or a relative depth, if this option is set memory usage became `2 * reference base + 2 number_base_store`.
+
 ### Full usage
 
 ```
