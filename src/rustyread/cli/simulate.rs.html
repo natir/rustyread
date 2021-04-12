@@ -418,9 +418,9 @@
                         <span class="ident">coverage</span>: <span class="ident">n</span>,
                         <span class="ident">base</span>: <span class="prelude-val">None</span>,
                     }),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParssQuantity</span>),
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
                 },
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParssQuantity</span>),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
             },
             <span class="kw-2">&amp;</span>[<span class="ident">rest</span> @ .., <span class="string">b&#39;G&#39;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">rest</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">number</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">number</span>) {
@@ -428,9 +428,9 @@
                         <span class="ident">coverage</span>: <span class="number">0</span>,
                         <span class="ident">base</span>: <span class="prelude-val">Some</span>(<span class="ident">n</span> <span class="op">*</span> <span class="number">1_000_000_000</span>),
                     }),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParssQuantity</span>),
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
                 },
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParssQuantity</span>),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
             },
             <span class="kw-2">&amp;</span>[<span class="ident">rest</span> @ .., <span class="string">b&#39;M&#39;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">rest</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">number</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">number</span>) {
@@ -438,9 +438,9 @@
                         <span class="ident">coverage</span>: <span class="number">0</span>,
                         <span class="ident">base</span>: <span class="prelude-val">Some</span>(<span class="ident">n</span> <span class="op">*</span> <span class="number">1_000_000</span>),
                     }),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParssQuantity</span>),
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
                 },
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParssQuantity</span>),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
             },
             <span class="kw-2">&amp;</span>[<span class="ident">rest</span> @ .., <span class="string">b&#39;K&#39;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">rest</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">number</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">number</span>) {
@@ -448,9 +448,9 @@
                         <span class="ident">coverage</span>: <span class="number">0</span>,
                         <span class="ident">base</span>: <span class="prelude-val">Some</span>(<span class="ident">n</span> <span class="op">*</span> <span class="number">1_000</span>),
                     }),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParssQuantity</span>),
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
                 },
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParssQuantity</span>),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
             },
             <span class="ident">rest</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">rest</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">number</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">number</span>) {
@@ -458,9 +458,9 @@
                         <span class="ident">coverage</span>: <span class="number">0</span>,
                         <span class="ident">base</span>: <span class="prelude-val">Some</span>(<span class="ident">n</span>),
                     }),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParssQuantity</span>),
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
                 },
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParssQuantity</span>),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
             },
         }
     }
