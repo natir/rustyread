@@ -20,9 +20,9 @@ impl std::str::FromStr for Quantity {
                         coverage: n,
                         base: None,
                     }),
-                    Err(_) => Err(crate::error::Cli::CantParssQuantity),
+                    Err(_) => Err(crate::error::Cli::CantParseQuantity),
                 },
-                Err(_) => Err(crate::error::Cli::CantParssQuantity),
+                Err(_) => Err(crate::error::Cli::CantParseQuantity),
             },
             &[rest @ .., b'G'] => match std::str::from_utf8(rest) {
                 Ok(number) => match u64::from_str(number) {
@@ -30,9 +30,9 @@ impl std::str::FromStr for Quantity {
                         coverage: 0,
                         base: Some(n * 1_000_000_000),
                     }),
-                    Err(_) => Err(crate::error::Cli::CantParssQuantity),
+                    Err(_) => Err(crate::error::Cli::CantParseQuantity),
                 },
-                Err(_) => Err(crate::error::Cli::CantParssQuantity),
+                Err(_) => Err(crate::error::Cli::CantParseQuantity),
             },
             &[rest @ .., b'M'] => match std::str::from_utf8(rest) {
                 Ok(number) => match u64::from_str(number) {
@@ -40,9 +40,9 @@ impl std::str::FromStr for Quantity {
                         coverage: 0,
                         base: Some(n * 1_000_000),
                     }),
-                    Err(_) => Err(crate::error::Cli::CantParssQuantity),
+                    Err(_) => Err(crate::error::Cli::CantParseQuantity),
                 },
-                Err(_) => Err(crate::error::Cli::CantParssQuantity),
+                Err(_) => Err(crate::error::Cli::CantParseQuantity),
             },
             &[rest @ .., b'K'] => match std::str::from_utf8(rest) {
                 Ok(number) => match u64::from_str(number) {
@@ -50,9 +50,9 @@ impl std::str::FromStr for Quantity {
                         coverage: 0,
                         base: Some(n * 1_000),
                     }),
-                    Err(_) => Err(crate::error::Cli::CantParssQuantity),
+                    Err(_) => Err(crate::error::Cli::CantParseQuantity),
                 },
-                Err(_) => Err(crate::error::Cli::CantParssQuantity),
+                Err(_) => Err(crate::error::Cli::CantParseQuantity),
             },
             rest => match std::str::from_utf8(rest) {
                 Ok(number) => match u64::from_str(number) {
@@ -60,9 +60,9 @@ impl std::str::FromStr for Quantity {
                         coverage: 0,
                         base: Some(n),
                     }),
-                    Err(_) => Err(crate::error::Cli::CantParssQuantity),
+                    Err(_) => Err(crate::error::Cli::CantParseQuantity),
                 },
-                Err(_) => Err(crate::error::Cli::CantParssQuantity),
+                Err(_) => Err(crate::error::Cli::CantParseQuantity),
             },
         }
     }
