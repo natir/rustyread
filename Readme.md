@@ -46,10 +46,9 @@ If you have `badread` install in your python `sys.path` rustyread can found erro
 ### Full usage
 
 ```
-> rustyread --help
-rustyread 0.1
+rustyread 0.2 Electabuzz
 Pierre Marijon <pierre.marijon@hhu.de>
-A rust rewrite of Badread: a long read simulator that can imitate manytypes of read problems
+A long read simulator based on badread idea
 
 USAGE:
     rustyread [FLAGS] [OPTIONS] <SUBCOMMAND>
@@ -70,11 +69,11 @@ SUBCOMMANDS:
 ```
 
 ```
-> rustyread simulate --help
+rustyread-simulate
 Generate fake long read
 
 USAGE:
-    rustyread simulate [FLAGS] [OPTIONS] --reference <reference-path> --output <output-path> --quantity <quantity> --error_model <error-model> --qscore_model <qscore-model>
+    rustyread simulate [FLAGS] [OPTIONS] --reference <reference-path> --quantity <quantity>
 
 FLAGS:
     -h, --help                  Prints help information
@@ -93,7 +92,9 @@ OPTIONS:
         --end_adapter_seq <end-adapter-seq>
             Adapter parameters for read ends [default: GCAATACGTAACTGAACGAAGT]
 
-        --error_model <error-model>                Path to an error model file
+        --error_model <error-model>
+            Path to an error model file [default: nanopore2020]
+
         --glitches <glitches>
             Read glitch parameters (rate, size and skip) [default: 10000,25,25]
 
@@ -106,8 +107,10 @@ OPTIONS:
         --length <length>
             Fragment length distribution (mean and stdev) [default: 15000,13000]
 
-        --output <output-path>                     Where read is write [default: /dev/stdout]
-        --qscore_model <qscore-model>              Path to an quality score model file
+        --output <output-path>                     Where read is write
+        --qscore_model <qscore-model>
+            Path to an quality score model file [default: nanopore2020]
+
         --quantity <quantity>
             Either an absolute value (e.g. 250M) or a relative depth (e.g. 25x)
 
@@ -123,7 +126,7 @@ OPTIONS:
             Adapter parameters for read starts (rate and amount) [default: 90,60]
 
         --start_adapter_seq <start-adapter-seq>
-            Adapter parameters for read starts [default: AATGTACTTCGTTCAGTTACGTATTGCT]```
+            Adapter parameters for read starts [default: AATGTACTTCGTTCAGTTACGTATTGCT]
 ```
 
 ## Installation
@@ -151,7 +154,7 @@ cargo install --git https://github.com/natir/rustyread.git
 ```
 git clone https://github.com/natir/rustyread.git
 cd rustyread
-git checkout 0.1
+git checkout 0.2
 cargo install --path .
 ```
 

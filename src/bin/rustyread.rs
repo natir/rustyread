@@ -7,7 +7,7 @@ use rustyread::*;
 
 #[cfg(not(tarpaulin_include))]
 fn main() -> Result<()> {
-    let params = cli::Command::try_parse()?;
+    let params = cli::Command::parse();
 
     if let Some(level) = cli::i82level(params.verbosity) {
         env_logger::builder()

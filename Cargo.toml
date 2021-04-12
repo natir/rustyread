@@ -1,6 +1,6 @@
 [package]
 name = "rustyread"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Pierre Marijon <pierre.marijon@hhu.de>"]
 edition = "2018"
 description = "A long read generator based on badread method"
