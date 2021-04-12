@@ -402,7 +402,6 @@
 <span id="399">399</span>
 <span id="400">400</span>
 <span id="401">401</span>
-<span id="402">402</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! All stuff relate to simulate subcommand</span>
 
@@ -701,10 +700,9 @@
     <span class="doccomment">/// Limit memory usage</span>
     <span class="attribute">#[<span class="ident">clap</span>(
         <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;number_base_store&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Number of base, rustyread can store in ram before write in output&quot;</span>,
-        <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;8G&quot;</span>
+        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Number of base, rustyread can store in ram before write in output in absolute value (e.g. 250M) or a relative depth (e.g. 25x)&quot;</span>
     )]</span>
-    <span class="kw">pub</span> <span class="ident">nb_base_store</span>: <span class="ident">Quantity</span>,
+    <span class="kw">pub</span> <span class="ident">nb_base_store</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Quantity</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
