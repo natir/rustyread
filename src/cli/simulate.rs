@@ -291,6 +291,14 @@ pub struct Command {
         about = "If set, then small circular plasmids are lost when the fragment length is too high (default: small plasmids are included regardless of fragment length)"
     )]
     pub small_plasmid_bias: bool,
+
+    /// Limit memory usage
+    #[clap(
+        long = "number_base_store",
+        about = "Number of base, rustyread can store in ram before write in output",
+        default_value = "8G"
+    )]
+    pub nb_base_store: Quantity,
 }
 
 #[cfg(test)]

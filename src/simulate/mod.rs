@@ -127,41 +127,20 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     };
     log::info!("End read quality score model");
 
-    let total_base = params.quantity.number_of_base(
-        references
-            .sequences
-            .iter()
-            .map(|x| x.seq.len() as u64)
-            .sum(),
-    );
+    let len_ref = references
+        .sequences
+        .iter()
+        .map(|x| x.seq.len() as u64)
+        .sum();
+    let total_base = params.quantity.number_of_base(len_ref);
+    let base_limit = params.nb_base_store.number_of_base(len_ref);
+    let mut base_produce = 0;
     log::info!("Target number of base {}", total_base);
 
     let junk_rate = params.junk / 100.0;
     let random_rate = params.random / 100.0;
     let chimera_rate = params.chimera / 100.0;
-    log::info!("Start generate sequences");
-    let sequences: Vec<(Description, Seq, Quality)> =
-        LenIdSeed::new(total_base, chimera_rate, &length, &identity, &mut main_rng)
-            .par_bridge()
-            .map(|(len, len2, id, seed)| {
-                generate_read(
-                    &references,
-                    (len, len2),
-                    id,
-                    junk_rate,
-                    random_rate,
-                    &adapter,
-                    &error,
-                    &glitches,
-                    &qscore,
-                    rand::rngs::StdRng::seed_from_u64(seed),
-                )
-                .unwrap()
-            })
-            .collect();
-    log::info!("End generate sequences");
 
-    log::info!("Start write sequences");
     let mut output: std::io::BufWriter<Box<dyn std::io::Write>> =
         if let Some(output_path) = params.output_path {
             std::io::BufWriter::new(Box::new(
@@ -171,25 +150,57 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
             std::io::BufWriter::new(Box::new(std::io::stdout()))
         };
 
-    for (comment, seq, qual) in sequences {
-        writeln!(
-            output,
-            "@{} {}\n{}\n+\n{}",
-            uuid::Uuid::new_v3(
-                &uuid::Uuid::NAMESPACE_X500,
-                &main_rng.gen::<u128>().to_be_bytes()
-            )
-            .to_hyphenated(),
-            comment,
-            std::str::from_utf8(&seq[k..(seq.len() - k)])
-                .with_context(|| "Write read in output file")?, // begin and end of fragment is just random base
-            std::str::from_utf8(&qual[k..seq.len() - k])
-                .with_context(|| "Write read in output file")?
-        )
-        .with_context(|| "Write read in output file")?;
-    }
-    log::info!("End write sequences");
+    while base_produce < total_base {
+        let base_loop = if base_limit > total_base - base_produce {
+            total_base - base_produce
+        } else {
+            base_limit
+        };
 
+        base_produce += base_loop;
+
+        log::info!("Start generate {} bases", base_loop);
+        let sequences: Vec<(Description, Seq, Quality)> =
+            LenIdSeed::new(base_loop, chimera_rate, &length, &identity, &mut main_rng)
+                .par_bridge()
+                .map(|(len, len2, id, seed)| {
+                    generate_read(
+                        &references,
+                        (len, len2),
+                        id,
+                        junk_rate,
+                        random_rate,
+                        &adapter,
+                        &error,
+                        &glitches,
+                        &qscore,
+                        rand::rngs::StdRng::seed_from_u64(seed),
+                    )
+                    .unwrap()
+                })
+                .collect();
+        log::info!("End generate sequences");
+
+        log::info!("Start write {} bases", base_loop);
+        for (comment, seq, qual) in sequences {
+            writeln!(
+                output,
+                "@{} {}\n{}\n+\n{}",
+                uuid::Uuid::new_v3(
+                    &uuid::Uuid::NAMESPACE_X500,
+                    &main_rng.gen::<u128>().to_be_bytes()
+                )
+                .to_hyphenated(),
+                comment,
+                std::str::from_utf8(&seq[k..(seq.len() - k)])
+                    .with_context(|| "Write read in output file")?, // begin and end of fragment is just random base
+                std::str::from_utf8(&qual[k..seq.len() - k])
+                    .with_context(|| "Write read in output file")?
+            )
+            .with_context(|| "Write read in output file")?;
+        }
+        log::info!("End write sequences");
+    }
     Ok(())
 }
 
