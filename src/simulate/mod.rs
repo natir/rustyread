@@ -187,6 +187,10 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
 
         log::info!("Start write {} bases", base_loop);
         for (comment, seq, qual) in sequences {
+            if seq.len() <= 14 {
+                continue;
+            }
+
             writeln!(
                 output,
                 "@{} {}\n{}\n+\n{}",
@@ -267,16 +271,10 @@ fn generate_read(
     raw_fragment.extend(crate::random_seq(k, &mut rng));
 
     // Add error in fragment and produce quality
-    let (err_fragment, diffpos) =
+    let (err_fragment, cigar, real_id) =
         error::add_error(identity, &raw_fragment, error_model, glitch_model, &mut rng);
 
-    let (real_id, mut quality) = quality::generate_quality(
-        &raw_fragment,
-        &err_fragment,
-        qscore_model,
-        diffpos,
-        &mut rng,
-    )?;
+    let mut quality = quality::generate_quality(&cigar, qscore_model, &mut rng)?;
 
     if quality.len() != err_fragment.len() {
         log::warn!("read and quality string have different length, if you use seed please send all run information to author.");
@@ -291,6 +289,7 @@ fn generate_read(
         real_id * 100.0,
     );
 
+    //println!("target {} real {}", identity, real_id);
     Ok((des, err_fragment, quality))
 }
 
