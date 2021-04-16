@@ -25,8 +25,8 @@ pub fn align(query: &[u8], target: &[u8]) -> (usize, Box<[u8]>) {
 
     for op in alignment.operations {
         match op {
-            bio::alignment::AlignmentOperation::Xclip(len) => cigar.extend(vec![b'X'; len]),
-            bio::alignment::AlignmentOperation::Yclip(len) => cigar.extend(vec![b'X'; len]),
+            bio::alignment::AlignmentOperation::Xclip(len) => cigar.extend(vec![b'I'; len]),
+            bio::alignment::AlignmentOperation::Yclip(len) => cigar.extend(vec![b'I'; len]),
             bio::alignment::AlignmentOperation::Subst => cigar.push(b'X'),
             bio::alignment::AlignmentOperation::Ins => cigar.push(b'I'),
             bio::alignment::AlignmentOperation::Del => cigar.push(b'D'),
@@ -38,4 +38,51 @@ pub fn align(query: &[u8], target: &[u8]) -> (usize, Box<[u8]>) {
         cigar.iter().filter(|x| **x != b'=').count(),
         cigar.into_boxed_slice(),
     )
+}
+
+#[cfg(test)]
+mod t {
+    use super::*;
+
+    #[test]
+    fn compute_edit() {
+        assert_eq!(edit_distance(b"GCCTACGCAA", b"GCCTACCCAA"), 1);
+        assert_eq!(edit_distance(b"GTACTGTCGG", b"GTACTCGG"), 2);
+        assert_eq!(edit_distance(b"TGTGCAAGCG", b"TGTGAAAACG"), 2);
+        assert_eq!(edit_distance(b"CTTGTACTAT", b"CTTGAACTAT"), 1);
+        assert_eq!(edit_distance(b"TATCCCCTAA", b"TATGGGGTAA"), 4);
+    }
+
+    #[test]
+    fn align_edit() {
+        assert_eq!(
+            align(b"GCCTACGCAA", b"GCCTACCCAA"),
+            (1, b"======X===".to_vec().into_boxed_slice())
+        );
+
+        assert_eq!(
+            align(b"GTACTGTCGG", b"GTACTCGG"),
+            (2, b"====II====".to_vec().into_boxed_slice())
+        );
+
+        assert_eq!(
+            align(b"TGTGCAAGCG", b"TGTGAAAACG"),
+            (2, b"====X==X==".to_vec().into_boxed_slice())
+        );
+
+        assert_eq!(
+            align(b"CTTGTACTAT", b"CTTGACTAT"),
+            (1, b"====I=====".to_vec().into_boxed_slice())
+        );
+
+        assert_eq!(
+            align(b"TATTAA", b"TATCCCCTAA"),
+            (4, b"===DDDD===".to_vec().into_boxed_slice())
+        );
+
+        assert_eq!(
+            align(b"CAAG", b"CAGCAAGGCC"),
+            (6, b"DDD===D=DD".to_vec().into_boxed_slice())
+        );
+    }
 }
