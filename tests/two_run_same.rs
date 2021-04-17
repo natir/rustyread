@@ -9,6 +9,13 @@ use bio::io::fastq::Reader;
 mod tests {
     use super::*;
 
+    fn init() {
+        let _ = env_logger::builder()
+            .filter_level(log::LevelFilter::Trace)
+            .is_test(true)
+            .try_init();
+    }
+
     fn diff_unorder(first: &str, second: &str) {
         let first_file = Reader::new(std::io::BufReader::new(
             std::fs::File::open(first).expect(&format!("Impossible to open {}", first)),
@@ -73,9 +80,12 @@ mod tests {
 
     #[test]
     fn two_run_same_result() {
+        init();
+
         run_process(
             "./target/debug/rustyread",
             &[
+                "-vvvvv",
                 "--threads",
                 "2",
                 "simulate",
@@ -86,9 +96,9 @@ mod tests {
                 "--seed",
                 "42",
                 "--error_model",
-                "./tests/model/fake_error.csv",
+                "random",
                 "--qscore_model",
-                "./tests/model/fake_qscore.csv",
+                "random",
                 "--output",
                 "./tests/run1.fastq",
             ],
@@ -97,6 +107,7 @@ mod tests {
         run_process(
             "./target/debug/rustyread",
             &[
+                "-vvvvv",
                 "--threads",
                 "2",
                 "simulate",
@@ -107,9 +118,9 @@ mod tests {
                 "--seed",
                 "42",
                 "--error_model",
-                "./tests/model/fake_error.csv",
+                "random",
                 "--qscore_model",
-                "./tests/model/fake_qscore.csv",
+                "random",
                 "--output",
                 "./tests/run2.fastq",
             ],
