@@ -1,9 +1,9 @@
 //! Simulate reads
 
 /* mod declaration */
-mod description;
-mod error;
-mod quality;
+pub mod description;
+pub mod error;
+pub mod quality;
 
 /* standard use */
 use std::io::Write;
