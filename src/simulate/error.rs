@@ -11,7 +11,7 @@ use crate::model;
 pub type Seq = Vec<u8>;
 pub type Cigar = Vec<u8>;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 /// A struct to represent a change in a sequence
 pub struct Change {
     begin: usize,
@@ -130,6 +130,7 @@ impl Change {
     }
 }
 
+#[derive(Debug, Clone)]
 /// A struct to store Key parameter of change
 pub struct ChangeKey {
     begin: usize,
@@ -141,13 +142,21 @@ impl Eq for ChangeKey {}
 
 impl std::cmp::PartialOrd for ChangeKey {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        self.begin.partial_cmp(&other.begin)
+        if self.eq(other) {
+            Some(std::cmp::Ordering::Equal)
+        } else {
+            self.begin.partial_cmp(&other.begin)
+        }
     }
 }
 
 impl std::cmp::Ord for ChangeKey {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.begin.cmp(&other.begin)
+        if self.eq(other) {
+            std::cmp::Ordering::Equal
+        } else {
+            self.begin.cmp(&other.begin)
+        }
     }
 }
 
@@ -161,7 +170,7 @@ impl std::cmp::PartialEq for ChangeKey {
             (&other, &self)
         };
 
-        first.begin < second.end_err || first.begin < second.end_raw
+        second.begin < first.end_err || second.begin < first.end_raw
     }
 }
 
@@ -183,16 +192,8 @@ pub fn add_error(
     let k = error_model.k();
     let target = number_of_edit(identity, seq.len());
 
-    let (mut raw_changes, mut real_edit) = get_glitches(seq, glitch_model, rng);
-    get_error(
-        k,
-        target,
-        seq,
-        &mut real_edit,
-        &mut raw_changes,
-        error_model,
-        rng,
-    );
+    let mut raw_changes = get_glitches(seq, glitch_model, rng);
+    get_error(k, target, seq, &mut raw_changes, error_model, rng);
     let (changes, real_edit) = asm_change(raw_changes, seq);
 
     let mut pos_in_raw = 0;
@@ -214,22 +215,34 @@ pub fn add_error(
         pos_in_raw = change.end_raw();
     }
 
+    err.extend(&seq[pos_in_raw..]);
+    cig.extend(std::iter::repeat(b'=').take(seq.len() - pos_in_raw));
+
     (err, cig, (1.0 - (real_edit / seq.len() as f64)))
 }
 
-pub fn asm_change(inputs: Changes, seq: &[u8]) -> (Changes, f64) {
+/// Merge changes they share overlap
+pub fn asm_change(mut inputs: Changes, seq: &[u8]) -> (Changes, f64) {
     let mut real_edit = 0.0;
     let mut changes = Changes::new();
     let mut prev_wrapp: Option<Change> = None;
-    for change in inputs.values() {
+
+    for change in inputs.values_mut() {
         if let Some(ref mut prev) = prev_wrapp {
             if prev.contain(change) {
                 continue;
             }
-            if prev.merge(change, &seq).is_none() {
-                real_edit += prev.edit() as f64;
-                changes.insert(prev.key(), prev.clone());
-                prev_wrapp = Some(change.clone());
+
+            let (first, second) = if prev.begin() < change.begin() {
+                (prev, change)
+            } else {
+                (change, prev)
+            };
+
+            if first.merge(second, &seq).is_none() {
+                real_edit += first.edit() as f64;
+                changes.insert(first.key(), first.clone());
+                prev_wrapp = Some(second.clone());
             }
         } else {
             prev_wrapp = Some(change.clone());
@@ -243,13 +256,9 @@ pub fn asm_change(inputs: Changes, seq: &[u8]) -> (Changes, f64) {
     (changes, real_edit)
 }
 
-pub fn get_glitches(
-    raw: &[u8],
-    model: &model::Glitch,
-    rng: &mut rand::rngs::StdRng,
-) -> (Changes, f64) {
+/// Create Change correspond to glitches
+pub fn get_glitches(raw: &[u8], model: &model::Glitch, rng: &mut rand::rngs::StdRng) -> Changes {
     let mut changes = Changes::new();
-    let mut sum_of_edit = 0.0;
     let mut position = 0;
 
     while let Some((begin, end, seq)) = model.get_glitch(rng) {
@@ -259,23 +268,24 @@ pub fn get_glitches(
         }
 
         let change = Change::from_seq(position + begin, position + end, seq, raw);
-        sum_of_edit += change.edit() as f64;
         changes.insert(change.key(), change);
     }
 
-    (changes, sum_of_edit)
+    changes
 }
 
+/// Add Change correspond to error in changes
 pub fn get_error(
     k: usize,
     target: f64,
     seq: &[u8],
-    sum_of_edit: &mut f64,
     changes: &mut Changes,
     error_model: &model::Error,
     rng: &mut rand::rngs::StdRng,
 ) {
-    while *sum_of_edit < target {
+    let mut sum_of_edit = 0.0;
+
+    while sum_of_edit < target {
         let pos = rng.gen_range(0..(seq.len() - k));
 
         let (kmer, edit) = error_model.add_errors_to_kmer(&seq[pos..pos + k], rng);
@@ -294,12 +304,11 @@ pub fn get_error(
             };
 
             if let Some(edit_change) = first.merge(second, seq) {
-                *sum_of_edit += edit_change as f64;
+                sum_of_edit += edit_change as f64;
             }
-
             changes.insert(first.key(), first.clone());
         } else {
-            *sum_of_edit += new_change.edit() as f64;
+            sum_of_edit += new_change.edit() as f64;
             changes.insert(new_change.key(), new_change);
         }
     }
@@ -308,6 +317,7 @@ pub fn get_error(
 #[cfg(test)]
 mod t {
     use super::*;
+    use rand::SeedableRng;
 
     fn init() {
         let _ = env_logger::builder()
@@ -452,5 +462,389 @@ mod t {
         assert_eq!(change.seq(), &b"TATGCGTC".to_vec());
         assert_eq!(change.cigar(), &b"===I====".to_vec());
         assert_eq!(change.edit(), 1);
+    }
+
+    #[test]
+    fn key() {
+        let ray = b"TTTGCACTTGTTGCCACAGG";
+        let first = Change::from_seq(2, 9, b"TGCCCTT".to_vec(), ray);
+        let second = Change::from_seq(11, 18, b"TGCCTA".to_vec(), ray);
+
+        assert_eq!(
+            first.key(),
+            ChangeKey {
+                begin: 2,
+                end_raw: 9,
+                end_err: 9
+            }
+        );
+        assert_eq!(
+            second.key(),
+            ChangeKey {
+                begin: 11,
+                end_raw: 18,
+                end_err: 17
+            }
+        );
+    }
+
+    #[test]
+    fn key_cmp() {
+        let raw = b"TCAGGAAGATCCACA";
+        let first = Change::from_seq(3, 10, b"GGCCGAT".to_vec(), raw);
+        let second = Change::from_seq(6, 13, b"AGACCA".to_vec(), raw);
+
+        assert!(first.key() == second.key());
+
+        let rax = b"GTGACCGTTTCTC";
+        let first = Change::from_seq(2, 9, b"GATT".to_vec(), rax);
+        let second = Change::from_seq(6, 13, b"GTAACTC".to_vec(), rax);
+
+        assert!(first.key() == second.key());
+
+        let ray = b"TTTGCACTTGTTGCCACAGG";
+        let first = Change::from_seq(2, 9, b"TGCCCTT".to_vec(), ray);
+        let second = Change::from_seq(11, 18, b"TGCCTCA".to_vec(), ray);
+
+        assert!(first.key() < second.key());
+        assert!(first.key() != second.key());
+    }
+
+    #[test]
+    fn identity2edit() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+
+        let edits: Vec<f64> = (0..10).map(|_| number_of_edit(rng.gen(), 100)).collect();
+
+        assert_eq!(
+            edits,
+            [
+                47.34425909972262,
+                45.72747900968561,
+                36.35349008561051,
+                59.409824176922335,
+                96.56571820450438,
+                58.50431538146399,
+                26.257557227560657,
+                15.074839555058372,
+                86.87211108325653,
+                99.67479036470401
+            ]
+        );
+    }
+
+    #[test]
+    fn glitches() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let model = model::Glitch::new(1_000.0, 25.0, 25.0).unwrap();
+
+        let glitches = get_glitches(&crate::random_seq(10_000, &mut rng), &model, &mut rng);
+
+        assert_eq!(
+            vec![
+                ChangeKey {
+                    begin: 1560,
+                    end_raw: 1561,
+                    end_err: 1613
+                },
+                ChangeKey {
+                    begin: 2320,
+                    end_raw: 2339,
+                    end_err: 2389
+                },
+                ChangeKey {
+                    begin: 4040,
+                    end_raw: 4043,
+                    end_err: 4047
+                },
+                ChangeKey {
+                    begin: 4550,
+                    end_raw: 4558,
+                    end_err: 4550
+                },
+                ChangeKey {
+                    begin: 5155,
+                    end_raw: 5179,
+                    end_err: 5190
+                },
+                ChangeKey {
+                    begin: 5269,
+                    end_raw: 5274,
+                    end_err: 5297
+                },
+                ChangeKey {
+                    begin: 6193,
+                    end_raw: 6244,
+                    end_err: 6215
+                }
+            ],
+            glitches.keys().cloned().collect::<Vec<ChangeKey>>()
+        );
+
+        assert_eq!(
+            vec![
+                Change {
+                    begin: 1560,
+                    end: 1561,
+                    seq: b"GTTACATGCGATACACCATGTGATGCGGTTGCCTCCAATCCCGGTAATATAAC".to_vec(),
+                    cigar: b"IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII=I".to_vec(),
+                    edit_distance: 52
+                },
+                Change {
+                    begin: 2320,
+                    end: 2339,
+                    seq: b"TGCAACTATTACACGTTTGATTTGACCACCCCACTCCGCCGCTCCCAATTGTAACTTCGATCCTCGTAC"
+                        .to_vec(),
+                    cigar: b"I=IIIIIIIIII=IIIII=IIII=IIIIII==I==IIIIIII=III==IIII===I==I=IIIIII=I="
+                        .to_vec(),
+                    edit_distance: 50
+                },
+                Change {
+                    begin: 4040,
+                    end: 4043,
+                    seq: b"ATCATCG".to_vec(),
+                    cigar: b"III==I=".to_vec(),
+                    edit_distance: 4
+                },
+                Change {
+                    begin: 4550,
+                    end: 4558,
+                    seq: b"".to_vec(),
+                    cigar: b"DDDDDDDD".to_vec(),
+                    edit_distance: 8
+                },
+                Change {
+                    begin: 5155,
+                    end: 5179,
+                    seq: b"GCCCGGGCACCGCCACTACCTATCGTCGCTCGGGT".to_vec(),
+                    cigar: b"IIIIIIIX=IX=II=DDX==D==D==I=I=III=X=D==I".to_vec(),
+                    edit_distance: 25
+                },
+                Change {
+                    begin: 5269,
+                    end: 5274,
+                    seq: b"ATCATCGACGATGAGAGATAAGGGCACG".to_vec(),
+                    cigar: b"IIII=IIIII==IIIIII=IIIIIII=I".to_vec(),
+                    edit_distance: 23
+                },
+                Change {
+                    begin: 6193,
+                    end: 6244,
+                    seq: b"ACGACGCAGTCAGAGTCCTCGC".to_vec(),
+                    cigar: b"I=DD==DDD==D=DX=DDDDD=DDD=DDDDDDX=D==D==D=DD=D=DDD=X".to_vec(),
+                    edit_distance: 34
+                }
+            ],
+            glitches.values().cloned().collect::<Vec<Change>>()
+        );
+    }
+
+    #[test]
+    fn errors() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let model = model::Error::random(7);
+
+        let mut errors = Changes::new();
+        get_error(
+            7,
+            20.0,
+            &crate::random_seq(100, &mut rng),
+            &mut errors,
+            &model,
+            &mut rng,
+        );
+
+        assert_eq!(
+            vec![
+                ChangeKey {
+                    begin: 4,
+                    end_raw: 17,
+                    end_err: 20
+                },
+                ChangeKey {
+                    begin: 21,
+                    end_raw: 39,
+                    end_err: 38
+                },
+                ChangeKey {
+                    begin: 41,
+                    end_raw: 48,
+                    end_err: 48
+                },
+                ChangeKey {
+                    begin: 52,
+                    end_raw: 60,
+                    end_err: 59
+                },
+                ChangeKey {
+                    begin: 65,
+                    end_raw: 73,
+                    end_err: 73
+                },
+                ChangeKey {
+                    begin: 75,
+                    end_raw: 86,
+                    end_err: 87
+                },
+                ChangeKey {
+                    begin: 88,
+                    end_raw: 98,
+                    end_err: 99
+                }
+            ],
+            errors.keys().cloned().collect::<Vec<ChangeKey>>()
+        );
+
+        assert_eq!(
+            vec![
+                Change {
+                    begin: 4,
+                    end: 17,
+                    seq: b"ATTATGAGTACGTAAT".to_vec(),
+                    cigar: b"=====I======IIX=".to_vec(),
+                    edit_distance: 4
+                },
+                Change {
+                    begin: 21,
+                    end: 39,
+                    seq: b"TGTTACACTATGTCCTA".to_vec(),
+                    cigar: b"=D===II=======DD====".to_vec(),
+                    edit_distance: 5
+                },
+                Change {
+                    begin: 41,
+                    end: 48,
+                    seq: b"TGGTGCC".to_vec(),
+                    cigar: b"===X===".to_vec(),
+                    edit_distance: 1
+                },
+                Change {
+                    begin: 52,
+                    end: 60,
+                    seq: b"GTGGAGG".to_vec(),
+                    cigar: b"==X====D".to_vec(),
+                    edit_distance: 2
+                },
+                Change {
+                    begin: 65,
+                    end: 73,
+                    seq: b"CTTATATT".to_vec(),
+                    cigar: b"=======X".to_vec(),
+                    edit_distance: 1
+                },
+                Change {
+                    begin: 75,
+                    end: 86,
+                    seq: b"ACGGGTAATAAT".to_vec(),
+                    cigar: b"==X===I=====".to_vec(),
+                    edit_distance: 2
+                },
+                Change {
+                    begin: 88,
+                    end: 98,
+                    seq: b"GGAGGGCCATG".to_vec(),
+                    cigar: b"===X==I====".to_vec(),
+                    edit_distance: 2
+                }
+            ],
+            errors.values().cloned().collect::<Vec<Change>>()
+        );
+    }
+
+    #[test]
+    fn assemble_change() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(6);
+        let raw = crate::random_seq(100, &mut rng);
+        let e_model = model::Error::random(7);
+
+        let mut changes = Changes::new();
+        get_error(7, 25.0, &raw, &mut changes, &e_model, &mut rng);
+
+        let (asm, edit) = asm_change(changes, &raw);
+
+        assert_eq!(
+            vec![
+                ChangeKey {
+                    begin: 1,
+                    end_raw: 12,
+                    end_err: 11
+                },
+                ChangeKey {
+                    begin: 20,
+                    end_raw: 34,
+                    end_err: 34
+                },
+                ChangeKey {
+                    begin: 34,
+                    end_raw: 46,
+                    end_err: 45
+                },
+                ChangeKey {
+                    begin: 70,
+                    end_raw: 86,
+                    end_err: 86
+                }
+            ],
+            asm.keys().cloned().collect::<Vec<ChangeKey>>()
+        );
+
+        assert_eq!(
+            vec![
+                Change {
+                    begin: 1,
+                    end: 12,
+                    seq: vec![67, 71, 67, 84, 84, 71, 71, 67, 67, 67],
+                    cigar: vec![88, 61, 61, 61, 61, 61, 61, 68, 61, 61, 88],
+                    edit_distance: 3
+                },
+                Change {
+                    begin: 20,
+                    end: 34,
+                    seq: vec![65, 67, 67, 67, 67, 84, 65, 67, 65, 65, 65, 84, 67, 84],
+                    cigar: vec![61, 61, 61, 61, 61, 61, 88, 61, 73, 61, 61, 61, 61, 61, 68],
+                    edit_distance: 3
+                },
+                Change {
+                    begin: 34,
+                    end: 46,
+                    seq: vec![65, 71, 71, 67, 84, 71, 71, 84, 65, 67, 84],
+                    cigar: vec![68, 61, 61, 61, 61, 61, 73, 61, 61, 61, 61, 61, 68],
+                    edit_distance: 3
+                },
+                Change {
+                    begin: 70,
+                    end: 86,
+                    seq: vec![84, 84, 67, 67, 67, 67, 71, 65, 65, 67, 84, 65, 71, 84, 67, 84],
+                    cigar: vec![61, 61, 61, 61, 88, 61, 61, 61, 61, 73, 61, 61, 61, 61, 61, 68, 61],
+                    edit_distance: 3
+                }
+            ],
+            asm.values().cloned().collect::<Vec<Change>>()
+        );
+
+        assert_eq!(12.0, edit);
+    }
+
+    #[test]
+    fn all() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let e_model = model::Error::random(7);
+        let g_model = model::Glitch::new(40.0, 5.0, 5.0).unwrap();
+
+        let raw = crate::random_seq(100, &mut rng);
+
+        let (err, cigar, edit) = add_error(0.95, &raw, &e_model, &g_model, &mut rng);
+
+        assert_eq!(b"TTAGATTATAGTACGGTATAGTGGTTCTCTAGTAGCCTCCCGTTGTAGAGGAATCCACTTAATATAACACAGGTATAATCAGGACGGCATTCG".to_vec(), err);
+        assert_eq!(b"==========================D==X=I======DDDD=DDDD======================I===================X=========X==".to_vec(), cigar);
+        assert_eq!(0.86, edit);
+
+        let raw = crate::random_seq(100, &mut rng);
+
+        let (err, cigar, edit) = add_error(0.75, &raw, &e_model, &g_model, &mut rng);
+
+        assert_eq!(b"TCTGGAAAGATGGTGCTCTAGTACGTTTGGGGCACCCCGTAGGCACACCGGCATGTGGTTTTCCTCGAACAATTTCGTCCCGATTATATACAGGGGACGC".to_vec(), err);
+        assert_eq!(b"=X===I===============D=============X======I====D======D====I=====I==X=X===D=D========D===I========IX======".to_vec(), cigar);
+        assert_eq!(0.8, edit);
     }
 }
