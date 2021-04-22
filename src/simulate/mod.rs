@@ -272,7 +272,7 @@ fn generate_read(
 
     // Add error in fragment and produce quality
     let (err_fragment, cigar, real_id) =
-        error::add_error(identity, &raw_fragment, error_model, glitch_model, &mut rng);
+        error::sequence(identity, &raw_fragment, error_model, glitch_model, &mut rng);
 
     let mut quality = quality::generate_quality(&cigar, qscore_model, &mut rng)?;
 
