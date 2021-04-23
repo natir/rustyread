@@ -9,9 +9,9 @@ pub mod simulate;
 #[derive(clap::Clap, Debug)]
 #[clap(
     name = "rustyread",
-    version = "0.2 Electabuzz",
+    version = "0.3 Arcanine",
     author = "Pierre Marijon <pierre.marijon@hhu.de>",
-    about = "A long read simulator based on badread idea"
+    about = "A long read simulator based on badread idea and model"
 )]
 pub struct Command {
     /// Subcommand call

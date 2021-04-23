@@ -1,6 +1,6 @@
 [package]
 name = "rustyread"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Pierre Marijon <pierre.marijon@hhu.de>"]
 edition = "2018"
 description = "A long read generator based on badread method"
@@ -24,7 +24,6 @@ uuid           = { version = "0.8", features = ["v3"] }
 rayon          = "1"
 
 # input output management
-term_size      = "0.3"
 niffler	       = { version = "2", features = ["bz2", "lzma", "gz"] }
 
 # CLI management

@@ -50,9 +50,9 @@ Rustyread memory usage could be estimated with formula: `2 * reference base + 2 
 ### Full usage
 
 ```
-rustyread 0.2 Electabuzz
+rustyread 0.3 Arcanine
 Pierre Marijon <pierre.marijon@hhu.de>
-A long read simulator based on badread idea
+A long read simulator based on badread idea and model
 
 USAGE:
     rustyread [FLAGS] [OPTIONS] <SUBCOMMAND>
@@ -111,6 +111,10 @@ OPTIONS:
         --length <length>
             Fragment length distribution (mean and stdev) [default: 15000,13000]
 
+        --number_base_store <nb-base-store>
+            Number of base, rustyread can store in ram before write in output in absolute value
+            (e.g. 250M) or a relative depth (e.g. 25x)
+
         --output <output-path>                     Where read is write
         --qscore_model <qscore-model>
             Path to an quality score model file [default: nanopore2020]
@@ -158,7 +162,7 @@ cargo install --git https://github.com/natir/rustyread.git
 ```
 git clone https://github.com/natir/rustyread.git
 cd rustyread
-git checkout 0.2
+git checkout 0.3
 cargo install --path .
 ```
 
