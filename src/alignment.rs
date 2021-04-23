@@ -10,7 +10,7 @@ pub fn edit_distance(seq1: &[u8], seq2: &[u8]) -> u64 {
     bio::alignment::distance::levenshtein(seq1, seq2) as u64
 }
 
-pub fn align(query: &[u8], target: &[u8]) -> (usize, Box<[u8]>) {
+pub fn align(query: &[u8], target: &[u8]) -> (u64, Box<[u8]>) {
     let mut aligner = bio::alignment::pairwise::Aligner::with_capacity(
         target.len(),
         query.len(),
@@ -35,7 +35,7 @@ pub fn align(query: &[u8], target: &[u8]) -> (usize, Box<[u8]>) {
     }
 
     (
-        cigar.iter().filter(|x| **x != b'=').count(),
+        cigar.iter().filter(|x| **x != b'=').count() as u64,
         cigar.into_boxed_slice(),
     )
 }
