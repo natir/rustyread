@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["simulate","main simulate function"]]});
+initSidebarItems({"fn":[["simulate","main simulate function"]],"mod":[["description","Manage read description"],["error","Add error on reads"],["quality","Generate quality for simulate"]]});
