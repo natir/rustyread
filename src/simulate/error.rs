@@ -103,9 +103,9 @@ impl Change {
     ///
     /// Return an None if self and other Change can't be merge
     /// Return Some(i64) change in edit distance
-    pub fn merge(&mut self, other: &Change, original: &[u8]) -> Option<i64> {
+    pub fn merge(&mut self, other: &Change, original: &[u8]) -> f64 {
         if !self.overlap(other) {
-            return None;
+            return 0.0;
         }
 
         if other.begin() < self.end_err() {
@@ -124,7 +124,7 @@ impl Change {
         let prev_ed = self.edit();
         self.update_align(original);
 
-        Some(self.edit() as i64 - prev_ed as i64)
+        self.edit() - prev_ed
     }
 
     /// Update alignment info of error
@@ -143,80 +143,92 @@ impl Change {
 pub type Changes = Vec<Change>;
 
 trait AbsChanges {
-    fn add_change(&mut self, change: Change, raw: &[u8]);
+    fn add_change(&mut self, change: Change, raw: &[u8]) -> f64;
 
-    fn insert_change(&mut self, change: Change, idx: usize);
+    fn insert_change(&mut self, change: Change, idx: usize) -> f64;
 }
 
 impl AbsChanges for Changes {
-    fn add_change(&mut self, mut change: Change, raw: &[u8]) {
-        //println!("{:?}", change);
-
+    fn add_change(&mut self, mut change: Change, raw: &[u8]) -> f64 {
         if self.is_empty() {
+            change.update_align(&raw);
+            let ret = change.edit();
             self.push(change);
-            return;
-        }
+            ret
+        } else {
+            let mut edit_change = 0.0;
 
-        match self.binary_search_by_key(&change.begin(), |x| x.begin()) {
-            Ok(idx) => {
-                if self[idx].overlap(&change) {
-                    self[idx].merge(&change, raw);
-                    if idx + 1 < self.len() && self[idx].overlap(&self[idx + 1]) {
-                        let next = self.remove(idx + 1);
-                        self[idx].merge(&next, raw);
+            match self.binary_search_by_key(&change.begin(), |x| x.begin()) {
+                Ok(idx) => {
+                    if self[idx].overlap(&change) {
+                        edit_change += self[idx].merge(&change, raw);
+                        if idx + 1 < self.len() && self[idx].overlap(&self[idx + 1]) {
+                            let next = self.remove(idx + 1);
+                            edit_change -= next.edit();
+                            edit_change += self[idx].merge(&next, raw);
+                        }
                     }
                 }
-            }
-            Err(idx) => {
-                //println!("ERR idx {} len {}", idx, self.len());
-                if idx == 0 {
-                    if idx + 1 < self.len() {
-                        if self[idx + 1].overlap(&change) {
-                            self[idx + 1].merge(&change, raw);
-                        } else if change.overlap(&self[idx]) {
-                            change.merge(&self[idx], raw);
-                            self[idx] = change;
+                Err(idx) => {
+                    if idx == 0 {
+                        if idx + 1 < self.len() {
+                            if self[idx + 1].overlap(&change) {
+                                edit_change += self[idx + 1].merge(&change, raw);
+                            } else if change.overlap(&self[idx]) {
+                                let prev = self[idx].edit();
+                                change.merge(&self[idx], raw);
+                                self[idx] = change;
+                                edit_change += self[idx].edit() - prev;
+                            } else {
+                                change.update_align(&raw);
+                                edit_change += self.insert_change(change, idx);
+                            }
                         } else {
                             change.update_align(&raw);
-                            self.insert_change(change, idx);
+                            edit_change += self.insert_change(change, idx);
+                        }
+                    } else if idx > 0
+                        && self[idx - 1].begin() <= change.begin()
+                        && self[idx - 1].contain(&change)
+                    {
+                        edit_change += 0.0;
+                    } else if idx > 0 && self[idx - 1].overlap(&change) {
+                        edit_change += self[idx - 1].merge(&change, raw);
+                        if idx < self.len() && self[idx - 1].overlap(&self[idx]) {
+                            let next = self.remove(idx);
+                            edit_change -= next.edit();
+                            edit_change += self[idx - 1].merge(&next, raw);
+                        }
+                    } else if idx < self.len()
+                        && change.begin() <= self[idx].begin()
+                        && change.contain(&self[idx])
+                    {
+                        edit_change += 0.0;
+                    } else if idx < self.len() && change.overlap(&self[idx]) {
+                        let prev = self[idx].edit();
+                        change.merge(&self[idx], raw);
+                        self[idx] = change;
+                        edit_change += self[idx].edit() - prev;
+                        if idx > 0 && self[idx - 1].overlap(&self[idx]) {
+                            let prev = self.remove(idx);
+                            edit_change -= prev.edit();
+                            edit_change += self[idx - 1].merge(&prev, raw);
                         }
                     } else {
                         change.update_align(&raw);
-                        self.insert_change(change, idx);
+                        edit_change += self.insert_change(change, idx);
                     }
-                } else if idx > 0
-                    && self[idx - 1].begin() <= change.begin()
-                    && self[idx - 1].contain(&change)
-                {
-                    //println!("contain");
-                } else if idx > 0 && self[idx - 1].overlap(&change) {
-                    self[idx - 1].merge(&change, raw);
-                    if idx < self.len() && self[idx - 1].overlap(&self[idx]) {
-                        let next = self.remove(idx);
-                        self[idx - 1].merge(&next, raw);
-                    }
-                } else if idx < self.len()
-                    && change.begin() <= self[idx].begin()
-                    && change.contain(&self[idx])
-                {
-                    //println!("contain");
-                } else if idx < self.len() && change.overlap(&self[idx]) {
-                    change.merge(&self[idx], raw);
-                    self[idx] = change;
-                    if self[idx].overlap(&self[idx]) {
-                        let next = self.remove(idx);
-                        self[idx].merge(&next, raw);
-                    }
-                } else {
-                    change.update_align(&raw);
-                    self.insert_change(change, idx);
                 }
             }
+
+            edit_change
         }
     }
 
-    fn insert_change(&mut self, change: Change, idx: usize) {
+    fn insert_change(&mut self, change: Change, idx: usize) -> f64 {
+        let ret = change.edit();
         self.insert(idx, change);
+        ret
     }
 }
 
@@ -268,11 +280,6 @@ pub fn sequence(
         cig.extend(std::iter::repeat(b'=').take(seq.len() - pos_in_raw));
     }
 
-    log::debug!(
-        "identtity {} real {}",
-        identity,
-        1.0 - (real_edit / seq.len() as f64)
-    );
     (err, cig, (1.0 - (real_edit / seq.len() as f64)))
 }
 
@@ -309,9 +316,13 @@ pub fn add_error(
     error_model: &model::Error,
     rng: &mut rand::rngs::StdRng,
 ) {
+    let mut loop_count = 0;
     let mut sum_of_edit = 0.0;
 
-    while sum_of_edit < target {
+    // Add error until we reach target or we loop raw length
+    while sum_of_edit < target && loop_count < raw.len() {
+        loop_count += 1;
+
         let pos = rng.gen_range(0..(raw.len() - k));
 
         let (kmer, edit) = error_model.add_errors_to_kmer(&raw[pos..pos + k], rng);
@@ -319,8 +330,7 @@ pub fn add_error(
             continue;
         }
 
-        changes.add_change(Change::new(pos, pos + k, kmer), raw);
-        sum_of_edit = changes.iter().map(|x| x.edit()).sum();
+        sum_of_edit += changes.add_change(Change::new(pos, pos + k, kmer), raw);
     }
 }
 
@@ -593,9 +603,16 @@ mod t {
         ];
         let mut changes = Changes::new();
 
-        for change in input.drain(..) {
-            changes.add_change(change, &raw);
-        }
+        let edit = input
+            .drain(..)
+            .map(|change| changes.add_change(change, &raw))
+            .collect::<Vec<f64>>();
+
+        assert_eq!(
+            vec![13.0, 10.0, 20.0, 10.0, 5.0, 2.0, 0.0, 15.0, 5.0, 10.0, 5.0],
+            edit
+        );
+        assert_eq!(95.0, edit.iter().sum());
 
         assert_eq!(
             vec![
@@ -800,16 +817,16 @@ mod t {
 
         let (err, cigar, edit) = sequence(0.95, &raw, &e_model, &g_model, &mut rng);
 
-        assert_eq!(b"TTAGATTATAGTACGGTACTGGTTCTTATGTAGCCTAAGTGGCGCCCGTTGTAGAGGAATCCACTTATATAACACAGGTATAATCAGGACGGCATGCG".to_vec(), err);
-        assert_eq!(b"==================DDX=====D=I===========================================================X============".to_vec(), cigar);
-        assert_eq!(0.94, edit);
+        assert_eq!(b"TTAGATTATAGTACGGTACTGGTTCTACCTAGTACCTAAGTGGCGCCCGTTGGTAGAGGAATCACTTAATATATAACCAGGTAGAATCCGGACGGCATTCG".to_vec(), err);
+        assert_eq!(b"==================DDX=====D===II=I===D=================I==========D===I=II========D======X==============X==".to_vec(), cigar);
+        assert_eq!(0.84, edit);
 
         let raw = crate::random_seq(100, &mut rng);
 
-        let (err, cigar, edit) = sequence(0.75, &raw, &e_model, &g_model, &mut rng);
+        let (err, cigar, edit) = sequence(0.85, &raw, &e_model, &g_model, &mut rng);
 
-        assert_eq!(b"GCAGGGATTAGAGAAGTGGTCTCCTTAGATACGTTTGGGCATACCTTAAAACGACCCCGGCTAGTGGTTTTTTTGTGACATACTTCGCGTCTCACGATTAACA".to_vec(), err);
-        assert_eq!(b"===I======D=I====D====D==I=I===========D=====I=D==X==XX====II=======D==I=====X===I======X==IX====I======D==D===".to_vec(), cigar);
-        assert_eq!(0.75, edit);
+        assert_eq!(b"ACCAGACCCACCTTCACCATGTCCTCAAAGTCCATGAGTGAGAACCCTTTGGCGATACTCGAACCGAAGGCCCGGCTCAGGTGCCAGAGGCCTGGGTCGAAA".to_vec(), err);
+        assert_eq!(b"=X====I=========X====I=D=====D========D==I=D=======I======D=X=======I==X======I====D============I==I========".to_vec(), cigar);
+        assert_eq!(0.8200000000000001, edit);
     }
 }
