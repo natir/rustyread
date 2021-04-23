@@ -1,0 +1,120 @@
+rule train_badread:
+    input:
+        ref = "data/reference.fasta",
+        reads = "data/real_reads.fastq"
+
+    output:
+        alignment = "data/badread/alignments.paf",
+        error = "data/badread/error.csv",
+        quality = "data/badread/quality.csv",
+        
+    log:
+        "logs/compare/train_badread.txt"
+
+    benchmark:
+        "benchmarks/compare/train_badread.tsv"
+        
+    conda:
+        "../envs/badread.yaml"
+
+    threads:
+        config["max_threads"]
+        
+    shell:
+        """
+        minimap2 -t {threads} -c -x map-ont {input.ref} {input.reads} > {output.alignment}
+        badread error_model --reference {input.ref} --reads {input.reads} --alignment {output.alignment} > {output.error}
+        badread qscore_model --reference {input.ref} --reads {input.reads} --alignment {output.alignment} > {output.quality}
+        """
+
+        
+rule compare_rustyread:
+    input:
+        ref = "data/reference.fasta",
+        error = "data/badread/error.csv",
+        quality = "data/badread/quality.csv",
+        
+    output:
+        "data/compare/rustyread.fastq"
+        
+    log:
+        "logs/compare/rustyread.txt"
+
+    benchmark:
+        "benchmarks/compare/rustyread.tsv"
+        
+    conda:
+        "../envs/rustyread.yaml"
+
+    threads:
+        config["max_threads"]
+        
+    shell:
+        "rustyread -vvv -t {threads} simulate --reference {input.ref} --error_model {input.error} --qscore_model {input.quality} --output {output} --quantity 55x --length 8100,4850 --seed 42 2> {log}"
+
+
+rule compare_badread:
+    input:
+        ref = "data/reference.fasta",
+        error = "data/badread/error.csv",
+        quality = "data/badread/quality.csv",
+        
+    output:
+        "data/compare/badread.fastq"
+        
+    log:
+        "logs/compare/badread.txt"
+
+    benchmark:
+        "benchmarks/compare/badread.tsv"
+        
+    conda:
+        "../envs/badread.yaml"
+
+    threads:
+        config["max_threads"]
+        
+    shell:
+        "badread simulate --reference {input.ref} --error_model {input.error} --qscore_model {input.quality} --quantity 55x --seed 42  --length 8100,4850 2> {log} > {output}"
+
+
+rule map_read:
+    input:
+        ref = "data/reference.fasta",
+        reads = "data/compare/{origin}.fastq"
+
+    output:
+        "data/compare/{origin}.paf"
+
+    benchmark:
+        "benchmarks/compare/map_{origin}.tsv"
+
+    conda:
+        "../envs/minimap2.yaml"
+
+    threads:
+        config["max_threads"]
+
+    shell:
+        "minimap2 -t {threads} -c -x map-ont {input.ref} {input.reads} > {output}"
+
+
+rule map_real_read:
+    input:
+        ref = "data/reference.fasta",
+        reads = "data/real_reads.fastq"
+
+    output:
+        "data/real_reads.paf"
+
+    benchmark:
+        "benchmarks/compare/map_real_read.tsv"
+
+    conda:
+        "../envs/minimap2.yaml"
+
+    threads:
+        config["max_threads"]
+
+    shell:
+        "minimap2 -t {threads} -c -x map-ont {input.ref} {input.reads} > {output}"

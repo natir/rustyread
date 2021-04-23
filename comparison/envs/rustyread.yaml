@@ -1,0 +1,10 @@
+name: rustyread
+
+channels:
+  - bioconda
+  - defaults
+
+dependencies:
+  - rustyread = 0.3
+  - pip:
+      - badread>=0.2

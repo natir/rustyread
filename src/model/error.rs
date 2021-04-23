@@ -67,6 +67,7 @@ impl Error {
                 alts.push((random_error(&alts[0].0, rng), 1));
                 prob.push(1.0 - sum_of_prob);
             }
+
             kmer_length = alts[0].0.len();
             data.insert(alts[0].0.clone(), (alts, prob));
         }

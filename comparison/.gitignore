@@ -1,0 +1,5 @@
+benchmarks/
+data/
+logs/
+.ipynb_checkpoints/
+.snakemake/

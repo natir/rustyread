@@ -1,0 +1,26 @@
+rule reference:
+    output:
+        "data/reference.fasta",
+        
+    log:
+        "logs/data/reference.txt"
+        
+    conda:
+        "../envs/seqtk.yaml"
+        
+    shell:
+        "curl ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.fna.gz 2> {log} | seqtk seq -A - 2>> {log} > {output}"
+
+
+rule reads:
+    output:
+        "data/real_reads.fastq",
+
+    log:
+        "logs/data/real_reads.txt"
+
+    conda:
+        "../envs/seqtk.yaml"
+
+    shell:
+        "curl ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR692/007/SRR6928157/SRR6928157_1.fastq.gz 2> {log} | seqtk seq - 2>> {log} > {output}"

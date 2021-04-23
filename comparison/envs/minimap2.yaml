@@ -1,0 +1,9 @@
+name: rustyread
+
+channels:
+  - bioconda
+  - defaults
+
+dependencies:
+  - minimap2 = v2.18
+

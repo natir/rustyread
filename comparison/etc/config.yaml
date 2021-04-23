@@ -1,0 +1,5 @@
+max_threads: 8
+
+
+# multithread scalability
+ms_step_params: [1, 9, 1] # begin, end (exclude), step
