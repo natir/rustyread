@@ -1,4 +1,4 @@
-name: MRV
+name: MSRV
 
 on:
   push:

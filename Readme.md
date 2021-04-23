@@ -1,6 +1,6 @@
 ![Test](https://github.com/natir/rustyread/workflows/Test/badge.svg)
 ![Lints](https://github.com/natir/rustyread/workflows/Lints/badge.svg)
-![MRV](https://github.com/natir/rustyread/workflows/MRV/badge.svg)
+![MSRV](https://github.com/natir/rustyread/workflows/MSRV/badge.svg)
 [![CodeCov](https://codecov.io/gh/natir/rustyread/branch/master/graph/badge.svg)](https://codecov.io/gh/natir/rustyread)
 [![Documentation](https://github.com/natir/rustyread/workflows/Documentation/badge.svg)](https://natir.github.io/rustyread/rustyread)
 [![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/natir/rustyread/blob/master/LICENSE)
@@ -45,7 +45,7 @@ If you have `badread` installed in your python `sys.path` rustyread can found er
 
 ### Control memory usage
 
-Rustyread memory usage could be estimated with formula: `2 * reference base + 2 * targeted base`, to limit memory impact of Rustyread you can use parameter `number_base_store` it's take an absolute value or a relative depth, if this option is set memory usage became `2 * reference base + 2 number_base_store`.
+Rustyread memory usage could be estimated with formula: `2 * reference base + 2 * targeted base + epsilon`, to limit memory impact of Rustyread you can use parameter `number_base_store` it's take an absolute value or a relative depth, if this option is set memory usage became `2 * reference base + 2 number_base_store + epsilon`.
 
 ### Full usage
 

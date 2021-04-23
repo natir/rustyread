@@ -5,6 +5,18 @@ authors = ["Pierre Marijon <pierre.marijon@hhu.de>"]
 edition = "2018"
 description = "A long read generator based on badread method"
 
+homepage = "https://github.com/natir/rustyread"
+repository = "https://github.com/natir/rustyread"
+documentation = "https://natir.github.io/rustyread/rustyread"
+
+readme = "Readme.md"
+license-file = "LICENSE"
+
+keywords = ["bioinformatics", "longread"]
+
+publish = false # this crate haven't his place in crates.io
+
+default-run = "rustyread"
 
 [lib]
 name = "rustyread"
