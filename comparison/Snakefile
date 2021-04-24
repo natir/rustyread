@@ -1,7 +1,7 @@
 configfile: "etc/config.yaml"
 
 include: "rules/data.snk"
-include: "rules/multithread_scalability.snk"
+include: "rules/params_effect.snk"
 include: "rules/compare_to_other.snk"
 
 wildcard_constraints:

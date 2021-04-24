@@ -5,6 +5,5 @@ channels:
   - defaults
 
 dependencies:
-  - minimap2 = v2.18
-  - pip:
-      - badread>=0.2
+  - minimap2 = 2.18
+  - badread = 0.2

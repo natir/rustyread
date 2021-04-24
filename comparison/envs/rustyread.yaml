@@ -6,5 +6,4 @@ channels:
 
 dependencies:
   - rustyread = 0.3
-  - pip:
-      - badread>=0.2
+  - badread = 0.2

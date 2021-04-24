@@ -1,5 +1,7 @@
 max_threads: 8
 
 
-# multithread scalability
-ms_step_params: [1, 9, 1] # begin, end (exclude), step
+# evaluate effect of parametr
+pe_thread_step: [1, 9, 1] # begin, end (exclude), step
+pe_quantity_step: [10, 55, 5] # begin, end (exclude), step
+pe_identity_step: [85, 100, 1] # begin, end (exclude), step

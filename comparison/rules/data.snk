@@ -9,7 +9,7 @@ rule reference:
         "../envs/seqtk.yaml"
         
     shell:
-        "curl ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.fna.gz 2> {log} | seqtk seq -A - 2>> {log} > {output}"
+        "curl ftp://ftp.ebi.ac.uk/pub/databases/ena/wgs/public/qwf/QWFT01.fasta.gz 2> {log} | seqtk seq -A - 2>> {log} > {output}"
 
 
 rule reads:
@@ -23,4 +23,4 @@ rule reads:
         "../envs/seqtk.yaml"
 
     shell:
-        "curl ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR692/007/SRR6928157/SRR6928157_1.fastq.gz 2> {log} | seqtk seq - 2>> {log} > {output}"
+        "curl ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR617/002/SRR6175472/SRR6175472_1.fastq.gz 2> {log} | seqtk seq - 2>> {log} > {output}"

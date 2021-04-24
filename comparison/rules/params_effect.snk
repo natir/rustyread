@@ -1,0 +1,82 @@
+rule pe_thread_run:
+    input:
+        "data/reference.fasta"
+
+    output:
+        "data/pe/thread_{thread}.fastq"
+        
+    log:
+        "logs/pe/thread_{thread}.txt"
+
+    benchmark:
+        repeat("benchmarks/pe/thread_{thread}.tsv", 10)
+        
+    conda:
+        "../envs/rustyread.yaml"
+
+    shell:
+        """
+        rustyread -vvv -t {wildcards.thread} simulate --reference {input} --output /dev/null --quantity 20x --identity 90,100,5 2> {log}
+        touch {output}
+        """
+
+        
+rule pe_thread:
+    input:
+        [f"data/pe/thread_{thread}.fastq" for thread in range(*config["pe_thread_step"])]
+
+
+rule pe_quantity_run:
+    input:
+        "data/reference.fasta"
+
+    output:
+        "data/pe/quantity_{quantity}.fastq"
+
+    log:
+        "logs/pe/quantity_{quantity}.txt"
+
+    benchmark:
+        repeat("benchmarks/pe/quantity_{quantity}.tsv", 10)
+        
+    conda:
+        "../envs/rustyread.yaml"
+
+    shell:
+        """
+        rustyread -vvv -t 6 simulate --reference {input} --output /dev/null --quantity {wildcards.quantity}x --identity 90,100,5 2> {log}
+        touch {output}
+        """
+
+        
+rule pe_quantity:
+    input:
+        [f"data/pe/quantity_{quantity}.fastq" for quantity in range(*config["pe_quantity_step"])]
+
+        
+rule pe_identity_run:
+    input:
+        "data/reference.fasta"
+
+    output:
+        "data/pe/identity_{identity}.fastq"
+
+    log:
+        "logs/pe/quantity_{identity}.txt"
+
+    benchmark:
+        repeat("benchmarks/pe/identity_{identity}.tsv", 10)
+        
+    conda:
+        "../envs/rustyread.yaml"
+
+    shell:
+        """
+        rustyread -vvv -t 6 simulate --reference {input} --output /dev/null --quantity 20x --identity {wildcards.identity},100,5 2> {log}
+        touch {output}
+        """
+
+        
+rule pe_identity:
+    input:
+        [f"data/pe/identity_{identity}.fastq" for identity in range(*config["pe_identity_step"])]
