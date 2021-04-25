@@ -322,22 +322,22 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">des</span> <span class="op">=</span> <span class="ident">Description</span>::<span class="ident">new</span>(<span class="ident">ori</span>.<span class="ident">clone</span>(), <span class="prelude-val">None</span>, <span class="number">301</span>, <span class="number">99.99</span>);
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="string">&quot;bépo,+strand,100-400 length=301 error-free_length=300 read_identity=99.99%&quot;</span>,
+            <span class="string">&quot;bépo,+strand,100-400 length=300 error-free_length=301 read_identity=99.99%&quot;</span>,
             <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">des</span>)
         );
 
         <span class="ident">des</span>.<span class="ident">chimera</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ori</span>);
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;bépo,+strand,100-400 chimera bépo,+strand,100-400 length=301 error-free_length=300 read_identity=99.99%&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">des</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;bépo,+strand,100-400 chimera bépo,+strand,100-400 length=300 error-free_length=301 read_identity=99.99%&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">des</span>));
 
         <span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">junk</span> <span class="op">=</span> <span class="bool-val">true</span>;
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;junk_seq chimera bépo,+strand,100-400 length=301 error-free_length=300 read_identity=99.99%&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">des</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;junk_seq chimera bépo,+strand,100-400 length=300 error-free_length=301 read_identity=99.99%&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">des</span>));
 
         <span class="ident">des</span>.<span class="ident">chimera</span> <span class="op">=</span> <span class="prelude-val">None</span>;
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="string">&quot;junk_seq length=301 error-free_length=300 read_identity=99.99%&quot;</span>,
+            <span class="string">&quot;junk_seq length=300 error-free_length=301 read_identity=99.99%&quot;</span>,
             <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">des</span>)
         );
 
@@ -345,7 +345,7 @@
         <span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">random</span> <span class="op">=</span> <span class="bool-val">true</span>;
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="string">&quot;random_seq length=301 error-free_length=300 read_identity=99.99%&quot;</span>,
+            <span class="string">&quot;random_seq length=300 error-free_length=301 read_identity=99.99%&quot;</span>,
             <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">des</span>)
         );
     }
