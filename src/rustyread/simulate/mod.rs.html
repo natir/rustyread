@@ -1064,7 +1064,7 @@
 
         <span class="kw">return</span> (
             <span class="ident">seq</span>,
-            <span class="ident">Origin</span>::<span class="ident">new</span>(<span class="ident">id</span>.<span class="ident">clone</span>(), <span class="kw-2">*</span><span class="ident">strand</span>, <span class="number">0</span>, <span class="ident">local_ref</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>),
+            <span class="ident">Origin</span>::<span class="ident">reference</span>(<span class="ident">id</span>.<span class="ident">clone</span>(), <span class="kw-2">*</span><span class="ident">strand</span>, <span class="number">0</span>, <span class="ident">local_ref</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>),
         );
     }
 
@@ -1088,7 +1088,7 @@
 
     (
         <span class="ident">seq</span>,
-        <span class="ident">Origin</span>::<span class="ident">new</span>(<span class="ident">id</span>.<span class="ident">clone</span>(), <span class="kw-2">*</span><span class="ident">strand</span>, <span class="ident">start_pos</span>, <span class="ident">end_pos</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>),
+        <span class="ident">Origin</span>::<span class="ident">reference</span>(<span class="ident">id</span>.<span class="ident">clone</span>(), <span class="kw-2">*</span><span class="ident">strand</span>, <span class="ident">start_pos</span>, <span class="ident">end_pos</span>),
     )
 }
 
