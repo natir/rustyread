@@ -289,7 +289,6 @@ fn generate_read(
         real_id * 100.0,
     );
 
-    //println!("target {} real {}", identity, real_id);
     Ok((des, err_fragment, quality))
 }
 

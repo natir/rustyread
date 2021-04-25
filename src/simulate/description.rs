@@ -106,8 +106,8 @@ impl std::fmt::Display for Description {
         write!(
             f,
             "length={} error-free_length={} read_identity={}%",
-            self.length,
             self.origin.end - self.origin.start,
+            self.length,
             self.identity
         )
     }

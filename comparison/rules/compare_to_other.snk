@@ -75,7 +75,7 @@ rule compare_badread:
         config["max_threads"]
         
     shell:
-        "badread simulate --reference {input.ref} --error_model {input.error} --qscore_model {input.quality} --quantity 55x --length 18200,15550 --seed 42 2> {log} > {output}"
+        "badread simulate --reference {input.ref} --error_model {input.error} --qscore_model {input.quality} --quantity 220x --length 18200,15550 --seed 42 2> {log} > {output}"
 
 
 rule map_read:
