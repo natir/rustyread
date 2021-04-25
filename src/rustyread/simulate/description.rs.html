@@ -175,6 +175,21 @@
 <span id="172">172</span>
 <span id="173">173</span>
 <span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Manage read description</span>
 
@@ -211,6 +226,17 @@
             <span class="ident">end</span>,
             <span class="ident">junk</span>,
             <span class="ident">random</span>,
+        }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reference</span>(<span class="ident">ref_id</span>: <span class="ident">String</span>, <span class="ident">strand</span>: <span class="ident">char</span>, <span class="ident">start</span>: <span class="ident">usize</span>, <span class="ident">end</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">Origin</span> {
+            <span class="ident">ref_id</span>,
+            <span class="ident">strand</span>,
+            <span class="ident">start</span>,
+            <span class="ident">end</span>,
+            <span class="ident">junk</span>: <span class="bool-val">false</span>,
+            <span class="ident">random</span>: <span class="bool-val">false</span>,
         }
     }
 
@@ -300,6 +326,10 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">test</span> <span class="op">=</span> <span class="ident">Origin</span>::<span class="ident">new</span>(<span class="string">&quot;bépo&quot;</span>.<span class="ident">to_string</span>(), <span class="string">&#39;+&#39;</span>, <span class="number">100</span>, <span class="number">400</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>);
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;bépo,+strand,100-400&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">test</span>));
+
+        <span class="ident">test</span> <span class="op">=</span> <span class="ident">Origin</span>::<span class="ident">reference</span>(<span class="string">&quot;bépo&quot;</span>.<span class="ident">to_string</span>(), <span class="string">&#39;+&#39;</span>, <span class="number">500</span>, <span class="number">900</span>);
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;bépo,+strand,500-900&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">test</span>));
 
         <span class="ident">test</span>.<span class="ident">junk</span> <span class="op">=</span> <span class="bool-val">true</span>;
 
