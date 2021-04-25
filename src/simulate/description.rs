@@ -18,21 +18,14 @@ pub struct Origin {
 }
 
 impl Origin {
-    pub fn new(
-        ref_id: String,
-        strand: char,
-        start: usize,
-        end: usize,
-        junk: bool,
-        random: bool,
-    ) -> Self {
+    pub fn reference(ref_id: String, strand: char, start: usize, end: usize) -> Self {
         Origin {
             ref_id,
             strand,
             start,
             end,
-            junk,
-            random,
+            junk: false,
+            random: false,
         }
     }
 
@@ -119,7 +112,7 @@ mod t {
 
     #[test]
     fn origin() {
-        let mut test = Origin::new("bépo".to_string(), '+', 100, 400, false, false);
+        let mut test = Origin::reference("bépo".to_string(), '+', 100, 400);
 
         assert_eq!("bépo,+strand,100-400", format!("{}", test));
 
@@ -139,7 +132,7 @@ mod t {
 
     #[test]
     fn description() {
-        let ori = Origin::new("bépo".to_string(), '+', 100, 400, false, false);
+        let ori = Origin::reference("bépo".to_string(), '+', 100, 400);
 
         let mut des = Description::new(ori.clone(), None, 301, 99.99);
 

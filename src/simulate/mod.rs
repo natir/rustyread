@@ -340,7 +340,7 @@ fn get_ref_fragment(
 
         return (
             seq,
-            Origin::new(id.clone(), *strand, 0, local_ref.len() - 1, false, false),
+            Origin::reference(id.clone(), *strand, 0, local_ref.len() - 1),
         );
     }
 
@@ -364,7 +364,7 @@ fn get_ref_fragment(
 
     (
         seq,
-        Origin::new(id.clone(), *strand, start_pos, end_pos, false, false),
+        Origin::reference(id.clone(), *strand, start_pos, end_pos),
     )
 }
 
