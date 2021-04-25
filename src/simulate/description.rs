@@ -144,22 +144,22 @@ mod t {
         let mut des = Description::new(ori.clone(), None, 301, 99.99);
 
         assert_eq!(
-            "bépo,+strand,100-400 length=301 error-free_length=300 read_identity=99.99%",
+            "bépo,+strand,100-400 length=300 error-free_length=301 read_identity=99.99%",
             format!("{}", des)
         );
 
         des.chimera = Some(ori);
 
-        assert_eq!("bépo,+strand,100-400 chimera bépo,+strand,100-400 length=301 error-free_length=300 read_identity=99.99%", format!("{}", des));
+        assert_eq!("bépo,+strand,100-400 chimera bépo,+strand,100-400 length=300 error-free_length=301 read_identity=99.99%", format!("{}", des));
 
         des.origin.junk = true;
 
-        assert_eq!("junk_seq chimera bépo,+strand,100-400 length=301 error-free_length=300 read_identity=99.99%", format!("{}", des));
+        assert_eq!("junk_seq chimera bépo,+strand,100-400 length=300 error-free_length=301 read_identity=99.99%", format!("{}", des));
 
         des.chimera = None;
 
         assert_eq!(
-            "junk_seq length=301 error-free_length=300 read_identity=99.99%",
+            "junk_seq length=300 error-free_length=301 read_identity=99.99%",
             format!("{}", des)
         );
 
@@ -167,7 +167,7 @@ mod t {
         des.origin.random = true;
 
         assert_eq!(
-            "random_seq length=301 error-free_length=300 read_identity=99.99%",
+            "random_seq length=300 error-free_length=301 read_identity=99.99%",
             format!("{}", des)
         );
     }

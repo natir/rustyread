@@ -193,7 +193,7 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
 
             writeln!(
                 output,
-                "@{} {}\n{}\n+\n{}",
+                "@{} {}\n{}\n+ {}\n{}",
                 uuid::Uuid::new_v3(
                     &uuid::Uuid::NAMESPACE_X500,
                     &main_rng.gen::<u128>().to_be_bytes()
@@ -202,6 +202,7 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
                 comment,
                 std::str::from_utf8(&seq[k..(seq.len() - k)])
                     .with_context(|| "Write read in output file")?, // begin and end of fragment is just random base
+                comment,
                 std::str::from_utf8(&qual[k..seq.len() - k])
                     .with_context(|| "Write read in output file")?
             )
