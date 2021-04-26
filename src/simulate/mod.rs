@@ -520,8 +520,7 @@ TCCCGCTGTC
                         strand: '+',
                         start: 0,
                         end: 9,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 ),
                 (
@@ -531,8 +530,7 @@ TCCCGCTGTC
                         strand: '-',
                         start: 0,
                         end: 9,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 ),
                 (
@@ -542,8 +540,7 @@ TCCCGCTGTC
                         strand: '+',
                         start: 0,
                         end: 9,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 ),
                 (
@@ -553,8 +550,7 @@ TCCCGCTGTC
                         strand: '-',
                         start: 0,
                         end: 9,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 ),
                 (
@@ -564,8 +560,7 @@ TCCCGCTGTC
                         strand: '+',
                         start: 0,
                         end: 9,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 ),
                 (
@@ -575,8 +570,7 @@ TCCCGCTGTC
                         strand: '+',
                         start: 0,
                         end: 9,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 ),
                 (
@@ -586,8 +580,7 @@ TCCCGCTGTC
                         strand: '-',
                         start: 0,
                         end: 9,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 ),
                 (
@@ -597,8 +590,7 @@ TCCCGCTGTC
                         strand: '+',
                         start: 0,
                         end: 9,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 ),
                 (
@@ -608,8 +600,7 @@ TCCCGCTGTC
                         strand: '-',
                         start: 0,
                         end: 9,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 ),
                 (
@@ -619,8 +610,7 @@ TCCCGCTGTC
                         strand: '-',
                         start: 8,
                         end: 7,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 )
             ],
@@ -659,8 +649,7 @@ TCCCGCTGTC
                         strand: '+',
                         start: 99,
                         end: 99,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 ),
                 (
@@ -672,8 +661,8 @@ TCCCGCTGTC
                         strand: '+',
                         start: 41,
                         end: 59,
-                        junk: false,
-                        random: false
+
+                        read_type: description::ReadType::Real,
                     }
                 ),
                 (
@@ -683,8 +672,7 @@ TCCCGCTGTC
                         strand: '+',
                         start: 82,
                         end: 99,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 ),
                 (
@@ -696,8 +684,7 @@ TCCCGCTGTC
                         strand: '-',
                         start: 39,
                         end: 57,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 ),
                 (
@@ -709,8 +696,7 @@ TCCCGCTGTC
                         strand: '-',
                         start: 1,
                         end: 19,
-                        junk: false,
-                        random: false
+                        read_type: description::ReadType::Real,
                     }
                 )
             ],

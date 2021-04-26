@@ -6,6 +6,14 @@
 
 /* local use */
 
+/// An enum to represent type of read
+#[derive(Debug, Clone, PartialEq)]
+pub enum ReadType {
+    Real,
+    Junk,
+    Random,
+}
+
 /// Store information about origin of read
 #[derive(Debug, Clone, PartialEq)]
 pub struct Origin {
@@ -13,8 +21,7 @@ pub struct Origin {
     pub strand: char,
     pub start: usize,
     pub end: usize,
-    pub junk: bool,
-    pub random: bool,
+    pub read_type: ReadType,
 }
 
 impl Origin {
@@ -24,46 +31,41 @@ impl Origin {
             strand,
             start,
             end,
-            junk: false,
-            random: false,
+            read_type: ReadType::Real,
         }
     }
 
     pub fn junk(length: usize) -> Self {
         Origin {
-            ref_id: "junk".to_string(),
-            strand: '+',
+            ref_id: "".to_string(),
+            strand: '*',
             start: 0,
             end: length,
-            junk: true,
-            random: false,
+            read_type: ReadType::Junk,
         }
     }
 
     pub fn random(length: usize) -> Self {
         Origin {
-            ref_id: "random".to_string(),
-            strand: '+',
+            ref_id: "".to_string(),
+            strand: '*',
             start: 0,
             end: length,
-            junk: false,
-            random: true,
+            read_type: ReadType::Random,
         }
     }
 }
 
 impl std::fmt::Display for Origin {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        if self.junk {
-            write!(f, "junk_seq")
-        } else if self.random {
-            write!(f, "random_seq")
-        } else {
-            write!(
+        match self.read_type {
+            ReadType::Junk => write!(f, "junk_seq"),
+            ReadType::Random => write!(f, "random_seq"),
+            ReadType::Real => write!(
                 f,
                 "{},{}strand,{}-{}",
                 self.ref_id, self.strand, self.start, self.end
-            )
+            ),
         }
     }
 }
@@ -116,12 +118,11 @@ mod t {
 
         assert_eq!("bépo,+strand,100-400", format!("{}", test));
 
-        test.junk = true;
+        test.read_type = ReadType::Junk;
 
         assert_eq!("junk_seq", format!("{}", test));
 
-        test.junk = false;
-        test.random = true;
+        test.read_type = ReadType::Random;
 
         assert_eq!("random_seq", format!("{}", test));
 
@@ -145,7 +146,7 @@ mod t {
 
         assert_eq!("bépo,+strand,100-400 chimera bépo,+strand,100-400 length=300 error-free_length=301 read_identity=99.99%", format!("{}", des));
 
-        des.origin.junk = true;
+        des.origin.read_type = ReadType::Junk;
 
         assert_eq!("junk_seq chimera bépo,+strand,100-400 length=300 error-free_length=301 read_identity=99.99%", format!("{}", des));
 
@@ -156,8 +157,7 @@ mod t {
             format!("{}", des)
         );
 
-        des.origin.junk = false;
-        des.origin.random = true;
+        des.origin.read_type = ReadType::Random;
 
         assert_eq!(
             "random_seq length=300 error-free_length=301 read_identity=99.99%",
