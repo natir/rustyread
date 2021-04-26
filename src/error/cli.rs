@@ -21,4 +21,8 @@ pub enum Cli {
     /// Cant found model path
     #[error("Can't found model path use qscore_model and error_model with file")]
     CantFoundModelPath,
+
+    /// Small plasmid bias
+    #[error("Error: fragment length distribution incompatible with reference lengths - try running with --small_plasmid_bias to avoid this error")]
+    SmallPlasmidBias,
 }

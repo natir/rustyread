@@ -8,6 +8,7 @@ use anyhow::Result;
 use rand::distributions::Distribution;
 
 /* local use */
+use crate::model;
 
 type Text = Box<[u8]>;
 
@@ -49,6 +50,87 @@ impl References {
     where
         R: std::io::Read,
     {
+        let (seqs, prob) = References::read_reference(input)?;
+
+        Ok(Self {
+            sequences: seqs,
+            dist: rand::distributions::WeightedIndex::new(prob)?,
+        })
+    }
+
+    /// Same as from_stream but small sequence have increase weighted to fix bias.
+    pub fn from_stream_adjusted_weigth<R>(
+        input: R,
+        small_plasmid_bias: bool,
+        length_model: &model::Length,
+        rng: &mut rand::rngs::StdRng,
+    ) -> Result<Self>
+    where
+        R: std::io::Read,
+    {
+        let (seqs, mut prob) = References::read_reference(input)?;
+        prob = References::adjust_depth(&seqs, prob, small_plasmid_bias, length_model, rng)?;
+
+        Ok(Self {
+            sequences: seqs,
+            dist: rand::distributions::WeightedIndex::new(prob)?,
+        })
+    }
+
+    /// Randomly get a reference index and strand according to depth
+    pub fn choose_reference<R>(&self, rng: &mut R) -> (usize, char)
+    where
+        R: rand::Rng,
+    {
+        match ['+', '-'][rng.gen_range(0..=1) as usize] {
+            '+' => (self.dist.sample(rng), '+'),
+            '-' => (self.dist.sample(rng), '-'),
+            _ => unreachable!(),
+        }
+    }
+
+    /// Adjust depth of reference to fix bias in small sequence representation
+    fn adjust_depth(
+        sequences: &[Reference],
+        mut weight: Vec<f64>,
+        small_plasmid_bias: bool,
+        model: &model::Length,
+        rng: &mut rand::rngs::StdRng,
+    ) -> Result<Vec<f64>> {
+        let lengths: Vec<u64> = (0..100_000).map(|_| model.get_length(rng)).collect();
+        let total: u64 = lengths.iter().sum();
+
+        for (i, reference) in sequences.iter().enumerate() {
+            if !small_plasmid_bias && reference.circular {
+                let passing: u64 = lengths
+                    .iter()
+                    .filter(|x| x <= &&(reference.seq.len() as u64))
+                    .sum();
+                if passing == 0 {
+                    anyhow::bail!(crate::error::Cli::SmallPlasmidBias);
+                }
+
+                weight[i] *= total as f64 / passing as f64;
+            }
+
+            if !reference.circular {
+                let passing: u64 = lengths
+                    .iter()
+                    .map(|x| u64::min(*x, reference.seq.len() as u64))
+                    .sum();
+
+                weight[i] *= total as f64 / passing as f64;
+            }
+        }
+
+        Ok(weight)
+    }
+
+    /// Read reference from stream
+    fn read_reference<R>(input: R) -> Result<(Vec<Reference>, Vec<f64>)>
+    where
+        R: std::io::Read,
+    {
         let mut me_seq = Vec::new();
         let mut me_pro = Vec::new();
         let mut records = bio::io::fasta::Reader::new(input).records();
@@ -80,22 +162,7 @@ impl References {
             me_pro.push(weight);
         }
 
-        Ok(Self {
-            sequences: me_seq,
-            dist: rand::distributions::WeightedIndex::new(me_pro)?,
-        })
-    }
-
-    /// Randomly get a reference index and strand according to depth
-    pub fn choose_reference<R>(&self, rng: &mut R) -> (usize, char)
-    where
-        R: rand::Rng,
-    {
-        match ['+', '-'][rng.gen_range(0..=1) as usize] {
-            '+' => (self.dist.sample(rng), '+'),
-            '-' => (self.dist.sample(rng), '-'),
-            _ => unreachable!(),
-        }
+        Ok((me_seq, me_pro))
     }
 }
 
@@ -216,6 +283,37 @@ TCCCGCTGTC
                 (7, '-'),
                 (1, '-'),
                 (1, '-')
+            ],
+            seqs
+        );
+    }
+
+    #[test]
+    fn read_reference_adjust() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let length = model::Length::new(10.0, 8.0).unwrap();
+        let refs = References::from_stream_adjusted_weigth(
+            std::io::Cursor::new(FASTA),
+            false,
+            &length,
+            &mut rng,
+        )
+        .unwrap();
+
+        let seqs: Vec<(usize, char)> = (0..10).map(|_| refs.choose_reference(&mut rng)).collect();
+
+        assert_eq!(
+            vec![
+                (6, '+'),
+                (9, '+'),
+                (2, '+'),
+                (3, '-'),
+                (1, '+'),
+                (4, '-'),
+                (6, '+'),
+                (6, '+'),
+                (1, '+'),
+                (7, '+')
             ],
             seqs
         );

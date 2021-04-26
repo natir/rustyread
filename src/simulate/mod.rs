@@ -36,20 +36,23 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
         )
     };
 
+    log::info!("Start init lenght model");
+    let length = model::Length::new(params.length.0 as f64, params.length.1 as f64)
+        .with_context(|| "Init length model")?;
+    log::info!("End init lenght model");
+
     log::info!("Start read reference");
-    let references = References::from_stream(
+    let references = References::from_stream_adjusted_weigth(
         niffler::get_reader(Box::new(std::io::BufReader::new(
             std::fs::File::open(params.reference_path).with_context(|| "Read reference file")?,
         )))
         .with_context(|| "Read reference file niffler")?
         .0,
+        params.small_plasmid_bias,
+        &length,
+        &mut main_rng,
     )?;
     log::info!("End read reference");
-
-    log::info!("Start init lenght model");
-    let length = model::Length::new(params.length.0 as f64, params.length.1 as f64)
-        .with_context(|| "Init length model")?;
-    log::info!("End init lenght model");
 
     log::info!("Start init identity model");
     let identity = model::Identity::new(
