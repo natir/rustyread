@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Fragments","An iterator produce fragment, a description and a seed"]]});

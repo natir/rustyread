@@ -242,7 +242,7 @@
 }
 
 <span class="doccomment">/// Store information about read</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Description</span> {
     <span class="kw">pub</span> <span class="ident">origin</span>: <span class="ident">Origin</span>,
     <span class="kw">pub</span> <span class="ident">chimera</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Origin</span><span class="op">&gt;</span>,
