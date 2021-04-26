@@ -25,6 +25,10 @@
 <span id="22">22</span>
 <span id="23">23</span>
 <span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Command line interface error</span>
 
@@ -49,6 +53,10 @@
     <span class="doccomment">/// Cant found model path</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Can&#39;t found model path use qscore_model and error_model with file&quot;</span>)]</span>
     <span class="ident">CantFoundModelPath</span>,
+
+    <span class="doccomment">/// Small plasmid bias</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Error: fragment length distribution incompatible with reference lengths - try running with --small_plasmid_bias to avoid this error&quot;</span>)]</span>
+    <span class="ident">SmallPlasmidBias</span>,
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rustyread"></div>
