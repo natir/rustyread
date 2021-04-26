@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Description","Store information about read"],["Origin","Store information about origin of read"]]});
+initSidebarItems({"enum":[["ReadType","An enum to represent type of read"]],"struct":[["Description","Store information about read"],["Origin","Store information about origin of read"]]});

@@ -177,6 +177,14 @@
 
 <span class="comment">/* local use */</span>
 
+<span class="doccomment">/// An enum to represent type of read</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ReadType</span> {
+    <span class="ident">Real</span>,
+    <span class="ident">Junk</span>,
+    <span class="ident">Random</span>
+}
+
 <span class="doccomment">/// Store information about origin of read</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Origin</span> {
@@ -184,8 +192,7 @@
     <span class="kw">pub</span> <span class="ident">strand</span>: <span class="ident">char</span>,
     <span class="kw">pub</span> <span class="ident">start</span>: <span class="ident">usize</span>,
     <span class="kw">pub</span> <span class="ident">end</span>: <span class="ident">usize</span>,
-    <span class="kw">pub</span> <span class="ident">junk</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">random</span>: <span class="ident">bool</span>,
+    <span class="kw">pub</span> <span class="ident">read_type</span>: <span class="ident">ReadType</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Origin</span> {
@@ -195,47 +202,42 @@
             <span class="ident">strand</span>,
             <span class="ident">start</span>,
             <span class="ident">end</span>,
-            <span class="ident">junk</span>: <span class="bool-val">false</span>,
-            <span class="ident">random</span>: <span class="bool-val">false</span>,
+	    <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>,
         }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">junk</span>(<span class="ident">length</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">Origin</span> {
-            <span class="ident">ref_id</span>: <span class="string">&quot;junk&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+            <span class="ident">ref_id</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
             <span class="ident">start</span>: <span class="number">0</span>,
             <span class="ident">end</span>: <span class="ident">length</span>,
-            <span class="ident">junk</span>: <span class="bool-val">true</span>,
-            <span class="ident">random</span>: <span class="bool-val">false</span>,
+	    <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Junk</span>,
         }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">random</span>(<span class="ident">length</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">Origin</span> {
-            <span class="ident">ref_id</span>: <span class="string">&quot;random&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+            <span class="ident">ref_id</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
             <span class="ident">start</span>: <span class="number">0</span>,
             <span class="ident">end</span>: <span class="ident">length</span>,
-            <span class="ident">junk</span>: <span class="bool-val">false</span>,
-            <span class="ident">random</span>: <span class="bool-val">true</span>,
+	    <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>,
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Origin</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">junk</span> {
-            <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;junk_seq&quot;</span>)
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">random</span> {
-            <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;random_seq&quot;</span>)
-        } <span class="kw">else</span> {
-            <span class="macro">write</span><span class="macro">!</span>(
+	<span class="kw">match</span> <span class="self">self</span>.<span class="ident">read_type</span> {
+	    <span class="ident">ReadType</span>::<span class="ident">Junk</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;junk_seq&quot;</span>),
+            <span class="ident">ReadType</span>::<span class="ident">Random</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;random_seq&quot;</span>),
+	    <span class="ident">ReadType</span>::<span class="ident">Real</span> <span class="op">=</span><span class="op">&gt;</span>             <span class="macro">write</span><span class="macro">!</span>(
                 <span class="ident">f</span>,
                 <span class="string">&quot;{},{}strand,{}-{}&quot;</span>,
                 <span class="self">self</span>.<span class="ident">ref_id</span>, <span class="self">self</span>.<span class="ident">strand</span>, <span class="self">self</span>.<span class="ident">start</span>, <span class="self">self</span>.<span class="ident">end</span>
             )
-        }
+	}
     }
 }
 
@@ -287,12 +289,11 @@
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;bépo,+strand,100-400&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">test</span>));
 
-        <span class="ident">test</span>.<span class="ident">junk</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="ident">test</span>.<span class="ident">read_type</span> <span class="op">=</span> <span class="ident">ReadType</span>::<span class="ident">Junk</span>;
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;junk_seq&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">test</span>));
 
-        <span class="ident">test</span>.<span class="ident">junk</span> <span class="op">=</span> <span class="bool-val">false</span>;
-        <span class="ident">test</span>.<span class="ident">random</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="ident">test</span>.<span class="ident">read_type</span> <span class="op">=</span> <span class="ident">ReadType</span>::<span class="ident">Random</span>;
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;random_seq&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">test</span>));
 
@@ -316,7 +317,7 @@
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;bépo,+strand,100-400 chimera bépo,+strand,100-400 length=300 error-free_length=301 read_identity=99.99%&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">des</span>));
 
-        <span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">junk</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">read_type</span> <span class="op">=</span> <span class="ident">ReadType</span>::<span class="ident">Junk</span>;
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;junk_seq chimera bépo,+strand,100-400 length=300 error-free_length=301 read_identity=99.99%&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">des</span>));
 
@@ -327,8 +328,7 @@
             <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">des</span>)
         );
 
-        <span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">junk</span> <span class="op">=</span> <span class="bool-val">false</span>;
-        <span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">random</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">read_type</span> <span class="op">=</span> <span class="ident">ReadType</span>::<span class="ident">Random</span>;
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="string">&quot;random_seq length=300 error-free_length=301 read_identity=99.99%&quot;</span>,
