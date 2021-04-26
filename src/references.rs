@@ -40,17 +40,6 @@ pub struct References {
     pub dist: rand::distributions::WeightedIndex<f64>,
 }
 
-pub trait AbsReferences {
-    fn from_stream<R>(input: R) -> Result<Self>
-    where
-        R: std::io::Read,
-        Self: Sized;
-
-    fn get_reference<R>(rng: &mut R) -> (&Text, char)
-    where
-        R: rand::Rng;
-}
-
 impl References {
     /// Read a collection of sequence in fasta format from an input stream.
     ///
@@ -97,15 +86,14 @@ impl References {
         })
     }
 
-    /// Randomly get a reference and strand according to depth
-    pub fn get_reference<R>(&self, rng: &mut R) -> (String, &Text, char, bool)
+    /// Randomly get a reference index and strand according to depth
+    pub fn choose_reference<R>(&self, rng: &mut R) -> (usize, char)
     where
         R: rand::Rng,
     {
-        let seq = &self.sequences[self.dist.sample(rng)];
         match ['+', '-'][rng.gen_range(0..=1) as usize] {
-            '+' => (seq.id.clone(), &seq.seq, '+', seq.circular),
-            '-' => (seq.id.clone(), &seq.revcomp, '-', seq.circular),
+            '+' => (self.dist.sample(rng), '+'),
+            '-' => (self.dist.sample(rng), '-'),
             _ => unreachable!(),
         }
     }
@@ -214,71 +202,20 @@ TCCCGCTGTC
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
         let refs = References::from_stream(std::io::Cursor::new(FASTA)).unwrap();
 
-        let seqs: Vec<(String, &Text, char, bool)> =
-            (0..10).map(|_| refs.get_reference(&mut rng)).collect();
+        let seqs: Vec<(usize, char)> = (0..10).map(|_| refs.choose_reference(&mut rng)).collect();
 
         assert_eq!(
             vec![
-                (
-                    "random_seq_5".to_string(),
-                    &vec![67, 71, 67, 84, 84, 84, 71, 84, 71, 65].into_boxed_slice(),
-                    '+',
-                    false
-                ),
-                (
-                    "random_seq_8".to_string(),
-                    &vec![67, 84, 71, 65, 71, 84, 84, 67, 67, 71].into_boxed_slice(),
-                    '-',
-                    true
-                ),
-                (
-                    "random_seq_3".to_string(),
-                    &vec![84, 71, 67, 65, 65, 71, 65, 84, 67, 65].into_boxed_slice(),
-                    '+',
-                    false
-                ),
-                (
-                    "random_seq_4".to_string(),
-                    &vec![65, 67, 67, 65, 67, 71, 71, 67, 84, 65].into_boxed_slice(),
-                    '-',
-                    false
-                ),
-                (
-                    "random_seq_7".to_string(),
-                    &vec![67, 71, 67, 65, 84, 84, 65, 71, 65, 84].into_boxed_slice(),
-                    '-',
-                    false,
-                ),
-                (
-                    "random_seq_4".to_string(),
-                    &vec![84, 65, 71, 67, 67, 71, 84, 71, 71, 84].into_boxed_slice(),
-                    '+',
-                    false
-                ),
-                (
-                    "random_seq_9".to_string(),
-                    &vec![71, 65, 67, 65, 71, 67, 71, 71, 71, 65].into_boxed_slice(),
-                    '-',
-                    false
-                ),
-                (
-                    "random_seq_8".to_string(),
-                    &vec![67, 84, 71, 65, 71, 84, 84, 67, 67, 71].into_boxed_slice(),
-                    '-',
-                    true
-                ),
-                (
-                    "random_seq_7".to_string(),
-                    &vec![67, 71, 67, 65, 84, 84, 65, 71, 65, 84].into_boxed_slice(),
-                    '-',
-                    false
-                ),
-                (
-                    "random_seq_1".to_string(),
-                    &vec![71, 84, 65, 65, 84, 67, 71, 84, 71, 65].into_boxed_slice(),
-                    '-',
-                    false
-                ),
+                (2, '+'),
+                (6, '-'),
+                (4, '+'),
+                (7, '-'),
+                (4, '-'),
+                (9, '+'),
+                (8, '-'),
+                (7, '-'),
+                (1, '-'),
+                (1, '-')
             ],
             seqs
         );

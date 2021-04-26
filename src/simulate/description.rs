@@ -71,7 +71,7 @@ impl std::fmt::Display for Origin {
 }
 
 /// Store information about read
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Description {
     pub origin: Origin,
     pub chimera: Option<Origin>,

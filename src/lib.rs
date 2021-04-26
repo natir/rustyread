@@ -8,6 +8,10 @@ pub mod model;
 pub mod references;
 pub mod simulate;
 
+/* constant definition */
+const CHIMERA_START_ADAPTER_CHANCE: f64 = 0.25;
+const CHIMERA_END_ADAPTER_CHANCE: f64 = 0.25;
+
 const NUCS: [u8; 4] = [b'A', b'C', b'T', b'G'];
 
 /// Get a random base
