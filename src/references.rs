@@ -69,6 +69,7 @@ impl References {
         R: std::io::Read,
     {
         let (seqs, mut prob) = References::read_reference(input)?;
+
         prob = References::adjust_depth(&seqs, prob, small_plasmid_bias, length_model, rng)?;
 
         Ok(Self {
@@ -159,7 +160,7 @@ impl References {
                 record.seq().into(),
                 circular,
             ));
-            me_pro.push(weight);
+            me_pro.push(weight * record.seq().len() as f64);
         }
 
         Ok((me_seq, me_pro))

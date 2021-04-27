@@ -160,6 +160,17 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
         base_produce += base_loop;
 
         log::info!("Start generate {} bases", base_loop);
+        // for (_, _, description, _) in Fragments::new(
+        //     base_loop,
+        //     (params.junk, params.random, params.chimera),
+        //     &references,
+        //     &length,
+        //     &identity,
+        //     &mut main_rng,
+        // ) {
+        //     println!("{:?}", description);
+        // }
+        // panic!();
         let sequences: Vec<(Description, Seq, Quality)> = Fragments::new(
             base_loop,
             (params.junk, params.random, params.chimera),
@@ -394,16 +405,16 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
 
         assert_eq!(
             vec![
-                b"GG".to_vec(),
-                b"ACGT".to_vec(),
-                b"GGGCGCA".to_vec(),
-                b"CGGCT".to_vec(),
-                b"A".to_vec(),
-                b"TGTG".to_vec(),
-                b"AAAGC".to_vec(),
-                b"GTGCGCC".to_vec(),
-                b"T".to_vec(),
-                b"ATGGGCGC".to_vec()
+                vec![65, 84, 67, 84, 65, 65, 84, 71, 67],
+                vec![84, 67, 67, 84, 65, 65, 67, 71, 84],
+                vec![84, 84, 65, 67, 67, 67, 84],
+                vec![71, 84, 65, 65, 84, 67, 71],
+                vec![84, 65, 65, 84, 67, 71, 84, 71, 65],
+                vec![67, 84, 67, 65, 71, 67, 71, 71, 65],
+                vec![71, 65, 67, 65, 71, 67, 71, 71, 71],
+                vec![71, 84, 67, 65, 67, 65, 65],
+                vec![67, 65, 71, 84, 67, 67, 67, 71, 67, 84],
+                vec![67, 71, 67, 71, 67]
             ],
             seqs
         );
@@ -456,89 +467,73 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 (
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_4".to_string(),
+                            ref_id: "random_seq_7".to_string(),
                             strand: '+',
-                            start: 7,
+                            start: 0,
                             end: 9,
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 3,
-                        identity: 90.0
+                        length: 10,
+                        identity: 88.88888888888889
                     },
-                    vec![65, 84, 84, 84, 71, 65, 84, 65, 67, 71, 71, 71, 84, 84, 65, 67, 67, 67],
-                    vec![35, 44, 46, 47, 34, 51, 46, 49, 48, 51, 36, 43, 43, 39, 45, 38, 36, 34]
+                    vec![
+                        65, 84, 84, 84, 71, 65, 71, 65, 84, 67, 71, 65, 84, 67, 84, 65, 65, 71, 67,
+                        84, 84, 84, 65, 67, 67, 67
+                    ],
+                    vec![
+                        50, 48, 41, 36, 34, 47, 35, 53, 39, 36, 38, 53, 48, 48, 37, 34, 35, 47, 46,
+                        51, 38, 51, 53, 36, 47, 50
+                    ]
                 ),
                 (
                     Description {
                         origin: Origin {
                             ref_id: "random_seq_0".to_string(),
                             strand: '+',
-                            start: 5,
+                            start: 0,
                             end: 9,
                             read_type: ReadType::Real
                         },
                         chimera: Some(Origin {
-                            ref_id: "random_seq_3".to_string(),
+                            ref_id: "random_seq_6".to_string(),
                             strand: '+',
                             start: 4,
-                            end: 9,
+                            end: 2,
                             read_type: ReadType::Real
                         }),
-                        length: 11,
-                        identity: 92.5925925925926
+                        length: 18,
+                        identity: 74.28571428571429
                     },
                     vec![
-                        67, 67, 84, 65, 67, 65, 65, 65, 65, 67, 67, 71, 84, 84, 65, 67, 65, 71, 65,
-                        84, 67, 65, 84, 65, 65, 71, 65, 65
+                        67, 67, 84, 65, 67, 65, 84, 84, 67, 67, 84, 67, 84, 65, 65, 84, 84, 65, 67,
+                        71, 71, 71, 67, 67, 71, 67, 65, 65, 65, 71, 65, 65
                     ],
                     vec![
-                        52, 41, 50, 42, 42, 51, 49, 47, 39, 35, 36, 45, 53, 38, 40, 35, 42, 46, 51,
-                        41, 41, 47, 40, 44, 37, 47, 36, 45
+                        52, 53, 36, 51, 50, 50, 44, 39, 36, 37, 43, 35, 43, 34, 37, 50, 36, 39, 53,
+                        42, 35, 48, 45, 49, 50, 43, 50, 37, 43, 36, 45, 39
                     ]
                 ),
                 (
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_8".to_string(),
+                            ref_id: "random_seq_10".to_string(),
                             strand: '-',
-                            start: 3,
-                            end: 2,
+                            start: 35,
+                            end: 44,
                             read_type: ReadType::Real
                         },
                         chimera: None,
                         length: 9,
-                        identity: 66.66666666666667
+                        identity: 70.37037037037037
                     },
                     vec![
-                        71, 84, 65, 71, 84, 65, 84, 71, 84, 65, 84, 67, 65, 71, 71, 84, 84, 67, 71,
-                        65, 84, 65, 71, 84, 67, 67, 84, 67, 84, 84, 71
+                        71, 84, 65, 71, 84, 65, 84, 71, 84, 65, 84, 67, 65, 84, 71, 71, 84, 71, 67,
+                        71, 67, 65, 84, 67, 67, 67, 67, 84, 84, 71
                     ],
                     vec![
                         45, 53, 39, 34, 38, 40, 35, 48, 38, 41, 45, 50, 41, 46, 41, 52, 49, 39, 39,
-                        44, 38, 49, 48, 40, 48, 47, 53, 41, 40, 37, 38
-                    ]
-                ),
-                (
-                    Description {
-                        origin: Origin {
-                            ref_id: "random_seq_4".to_string(),
-                            strand: '+',
-                            start: 8,
-                            end: 9,
-                            read_type: ReadType::Real
-                        },
-                        chimera: None,
-                        length: 2,
-                        identity: 88.0
-                    },
-                    vec![
-                        71, 84, 65, 65, 67, 67, 84, 67, 84, 65, 67, 84, 65, 84, 84, 71, 67, 71, 65,
-                        84, 65, 71, 65, 65, 67
-                    ],
-                    vec![
-                        45, 38, 38, 50, 40, 48, 44, 44, 47, 51, 47, 45, 50, 39, 36, 35, 53, 34, 44,
-                        36, 36, 39, 43, 45, 51
+                        44, 38, 49, 48, 40, 48, 47, 53, 41, 40, 37
                     ]
                 ),
                 (
@@ -546,86 +541,132 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         origin: Origin {
                             ref_id: "random_seq_7".to_string(),
                             strand: '+',
-                            start: 5,
-                            end: 9,
-                            read_type: ReadType::Real
-                        },
-                        chimera: Some(Origin {
-                            ref_id: "random_seq_5".to_string(),
-                            strand: '+',
-                            start: 6,
-                            end: 9,
-                            read_type: ReadType::Real
-                        }),
-                        length: 9,
-                        identity: 72.41379310344827
-                    },
-                    vec![
-                        65, 71, 84, 71, 67, 65, 84, 84, 65, 67, 65, 84, 67, 67, 84, 84, 71, 71, 84,
-                        67, 71, 84, 65, 84, 65, 71, 84, 84
-                    ],
-                    vec![
-                        39, 39, 43, 48, 37, 52, 42, 37, 46, 39, 34, 51, 35, 46, 42, 46, 43, 37, 47,
-                        52, 52, 34, 49, 46, 35, 38, 47, 37
-                    ]
-                ),
-                (
-                    Description {
-                        origin: Origin {
-                            ref_id: "random_seq_5".to_string(),
-                            strand: '-',
-                            start: 6,
+                            start: 0,
                             end: 9,
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 4,
-                        identity: 84.84848484848484
+                        length: 10,
+                        identity: 96.96969696969697
                     },
                     vec![
-                        71, 65, 67, 71, 84, 65, 67, 84, 65, 67, 71, 84, 65, 84, 65, 71, 84, 65, 67,
-                        67, 71, 84, 84, 71, 84, 84, 71, 65, 67, 84, 71
+                        71, 84, 65, 65, 84, 67, 84, 84, 65, 67, 71, 84, 65, 84, 84, 71, 67, 65, 84,
+                        67, 84, 65, 65, 84, 71, 67, 65, 84, 65, 71, 65, 65, 67
                     ],
                     vec![
-                        45, 38, 38, 45, 49, 52, 47, 47, 43, 52, 42, 52, 37, 38, 36, 41, 42, 35, 41,
-                        45, 50, 44, 45, 38, 52, 51, 41, 44, 51, 39, 36
+                        37, 38, 48, 42, 48, 45, 44, 49, 41, 48, 45, 42, 46, 48, 50, 34, 49, 53, 53,
+                        34, 49, 48, 37, 45, 49, 46, 41, 44, 38, 50, 39, 34, 43
                     ]
                 ),
                 (
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_7".to_string(),
+                            ref_id: "random_seq_10".to_string(),
                             strand: '+',
-                            start: 8,
-                            end: 9,
+                            start: 0,
+                            end: 99,
                             read_type: ReadType::Real
                         },
                         chimera: Some(Origin {
                             ref_id: "random_seq_10".to_string(),
-                            strand: '-',
-                            start: 89,
-                            end: 99,
+                            strand: '+',
+                            start: 68,
+                            end: 74,
                             read_type: ReadType::Real
                         }),
-                        length: 12,
-                        identity: 66.66666666666667
+                        length: 106,
+                        identity: 73.33333333333334
                     },
                     vec![
-                        65, 84, 65, 71, 84, 67, 84, 65, 65, 67, 67, 65, 67, 65, 84, 84, 84, 71, 71,
-                        84, 65, 84, 65, 67, 67, 84, 71, 65
+                        67, 71, 67, 84, 84, 65, 84, 84, 67, 67, 84, 65, 65, 67, 71, 84, 84, 84, 71,
+                        67, 65, 65, 71, 65, 67, 65, 84, 65, 67, 67, 67, 71, 84, 71, 71, 71, 84, 67,
+                        71, 67, 84, 84, 84, 71, 84, 71, 71, 65, 67, 65, 67, 65, 67, 71, 71, 71, 67,
+                        71, 65, 84, 67, 84, 65, 65, 84, 71, 67, 67, 67, 71, 71, 71, 65, 65, 67, 84,
+                        65, 71, 84, 84, 67, 67, 67, 71, 67, 84, 71, 84, 67, 71, 65, 84, 67, 84, 84,
+                        84, 65, 71, 84, 84, 71
                     ],
                     vec![
-                        38, 38, 46, 45, 34, 41, 47, 45, 38, 51, 48, 39, 38, 47, 40, 37, 42, 53, 43,
-                        49, 52, 48, 53, 47, 49, 39, 49, 44
+                        53, 49, 34, 45, 51, 42, 38, 49, 50, 46, 48, 36, 42, 39, 46, 48, 44, 47, 47,
+                        50, 38, 37, 37, 38, 46, 34, 40, 52, 36, 38, 49, 38, 38, 48, 39, 44, 34, 47,
+                        42, 36, 39, 36, 34, 51, 36, 41, 34, 46, 51, 39, 45, 37, 45, 37, 51, 47, 53,
+                        43, 50, 51, 36, 36, 49, 39, 48, 51, 52, 52, 44, 35, 36, 52, 40, 52, 39, 49,
+                        38, 51, 49, 48, 50, 40, 50, 46, 50, 51, 49, 40, 41, 44, 45, 53, 49, 46, 43,
+                        44, 49, 34, 46, 40, 40
                     ]
                 ),
                 (
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_6".to_string(),
+                            ref_id: "random_seq_10".to_string(),
                             strand: '+',
-                            start: 3,
-                            end: 1,
+                            start: 25,
+                            end: 33,
+                            read_type: ReadType::Real
+                        },
+                        chimera: None,
+                        length: 8,
+                        identity: 96.66666666666667
+                    },
+                    vec![
+                        84, 65, 65, 84, 67, 67, 65, 84, 67, 67, 71, 65, 84, 84, 71, 67, 84, 65, 67,
+                        71, 84, 65, 84, 84, 84, 67, 67, 84, 67, 84, 71
+                    ],
+                    vec![
+                        46, 45, 37, 37, 37, 45, 45, 51, 53, 46, 44, 52, 34, 39, 36, 36, 35, 43, 50,
+                        41, 36, 48, 51, 52, 49, 38, 51, 41, 38, 36, 43
+                    ]
+                ),
+                (
+                    Description {
+                        origin: Origin {
+                            ref_id: "random_seq_7".to_string(),
+                            strand: '+',
+                            start: 0,
+                            end: 9,
+                            read_type: ReadType::Real
+                        },
+                        chimera: None,
+                        length: 10,
+                        identity: 95.83333333333334
+                    },
+                    vec![
+                        67, 84, 65, 84, 65, 65, 71, 84, 65, 84, 84, 84, 65, 65, 84, 71, 67, 84, 84,
+                        65, 71, 71, 84, 65
+                    ],
+                    vec![
+                        35, 50, 37, 43, 51, 40, 43, 52, 50, 52, 51, 48, 37, 36, 37, 41, 35, 39, 40,
+                        34, 41, 43, 47, 39
+                    ]
+                ),
+                (
+                    Description {
+                        origin: Origin {
+                            ref_id: "random_seq_10".to_string(),
+                            strand: '+',
+                            start: 81,
+                            end: 88,
+                            read_type: ReadType::Real
+                        },
+                        chimera: None,
+                        length: 7,
+                        identity: 90.625
+                    },
+                    vec![
+                        65, 84, 71, 84, 67, 65, 65, 84, 65, 71, 71, 65, 65, 67, 84, 67, 84, 65, 67,
+                        71, 84, 65, 84, 84, 84, 71, 67, 67, 84, 65, 84
+                    ],
+                    vec![
+                        52, 51, 46, 51, 52, 46, 45, 43, 38, 46, 44, 52, 47, 42, 41, 46, 47, 49, 35,
+                        50, 39, 47, 35, 42, 44, 34, 40, 38, 46, 46, 53
+                    ]
+                ),
+                (
+                    Description {
+                        origin: Origin {
+                            ref_id: "random_seq_10".to_string(),
+                            strand: '+',
+                            start: 32,
+                            end: 40,
                             read_type: ReadType::Real
                         },
                         chimera: None,
@@ -633,8 +674,8 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         identity: 77.41935483870968
                     },
                     vec![
-                        71, 84, 71, 67, 65, 84, 71, 71, 84, 65, 67, 71, 71, 65, 84, 71, 71, 71, 67,
-                        71, 67, 84, 84, 65, 71, 84, 71, 65, 65, 67, 71, 65, 65, 67
+                        71, 84, 71, 67, 65, 84, 71, 71, 84, 65, 67, 71, 71, 67, 65, 65, 71, 65, 84,
+                        67, 65, 84, 84, 65, 71, 84, 71, 65, 65, 67, 71, 65, 65, 67
                     ],
                     vec![
                         41, 52, 41, 46, 50, 43, 53, 40, 37, 46, 42, 38, 44, 49, 36, 40, 34, 44, 34,
@@ -666,29 +707,29 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 (
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_4".to_string(),
+                            ref_id: "random_seq_7".to_string(),
                             strand: '-',
-                            start: 2,
+                            start: 0,
                             end: 9,
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 8,
-                        identity: 78.26086956521739
+                        length: 10,
+                        identity: 84.0
                     },
                     vec![
-                        71, 84, 71, 67, 65, 67, 71, 65, 67, 67, 71, 71, 71, 84, 84, 84, 65, 67, 67,
-                        65, 65, 67, 71, 65, 65
+                        71, 84, 71, 65, 67, 71, 84, 65, 67, 71, 67, 65, 84, 84, 71, 84, 65, 71, 65,
+                        84, 65, 67, 67, 65, 65, 67, 71, 65, 65
                     ],
                     vec![
-                        48, 35, 35, 41, 42, 41, 41, 50, 34, 52, 43, 50, 36, 46, 51, 35, 41, 37, 36,
-                        38, 38, 43, 52, 50, 48
+                        48, 34, 49, 40, 35, 51, 50, 47, 49, 44, 38, 52, 41, 50, 44, 40, 38, 51, 38,
+                        50, 40, 38, 37, 42, 42, 49, 47, 42, 48
                     ]
                 ),
                 (
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_5".to_string(),
+                            ref_id: "random_seq_8".to_string(),
                             strand: '-',
                             start: 2,
                             end: 8,
@@ -696,11 +737,11 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         },
                         chimera: None,
                         length: 6,
-                        identity: 79.3103448275862
+                        identity: 82.75862068965517
                     },
                     vec![
-                        71, 67, 71, 67, 71, 84, 71, 84, 65, 67, 71, 65, 65, 84, 84, 71, 65, 67, 65,
-                        71, 65, 84, 84, 84, 67, 67, 67, 84
+                        71, 67, 71, 67, 71, 84, 71, 84, 65, 67, 71, 65, 65, 84, 84, 71, 71, 65, 71,
+                        71, 84, 84, 84, 84, 67, 67, 67, 84
                     ],
                     vec![
                         48, 49, 53, 48, 39, 38, 43, 53, 44, 43, 35, 53, 37, 40, 44, 36, 38, 49, 53,
@@ -734,43 +775,43 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         origin: Origin {
                             ref_id: "random_seq_0".to_string(),
                             strand: '+',
-                            start: 1,
+                            start: 0,
                             end: 9,
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 9,
-                        identity: 86.20689655172413
+                        length: 10,
+                        identity: 80.0
                     },
                     vec![
-                        65, 71, 71, 71, 65, 67, 71, 65, 67, 71, 84, 67, 67, 84, 65, 65, 65, 67, 71,
-                        84, 84, 65, 65, 71, 71, 71, 71, 71, 65
+                        65, 71, 71, 65, 67, 71, 67, 71, 84, 65, 67, 84, 84, 67, 67, 84, 65, 65, 67,
+                        71, 65, 84, 67, 65, 65, 71, 67, 84, 71, 71, 65
                     ],
                     vec![
                         40, 50, 34, 44, 35, 35, 49, 37, 38, 43, 39, 49, 43, 46, 39, 39, 38, 46, 51,
-                        44, 44, 51, 40, 48, 52, 48, 49, 38, 43
+                        44, 44, 51, 40, 48, 52, 48, 49, 38, 43, 36, 53
                     ]
                 ),
                 (
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_9".to_string(),
+                            ref_id: "random_seq_10".to_string(),
                             strand: '+',
-                            start: 8,
-                            end: 9,
+                            start: 85,
+                            end: 94,
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 2,
-                        identity: 80.76923076923077
+                        length: 9,
+                        identity: 88.23529411764706
                     },
                     vec![
-                        67, 65, 65, 84, 65, 84, 84, 65, 67, 67, 71, 65, 71, 84, 84, 65, 71, 67, 65,
-                        71, 84, 84, 71
+                        67, 65, 65, 84, 65, 84, 84, 84, 67, 71, 65, 84, 84, 71, 67, 84, 67, 65, 71,
+                        67, 67, 67, 67, 84, 65, 71, 67, 65, 71, 84, 84, 71
                     ],
                     vec![
                         45, 46, 39, 44, 45, 47, 41, 34, 40, 49, 51, 52, 34, 50, 36, 38, 42, 44, 42,
-                        35, 50, 36, 49
+                        35, 50, 36, 49, 39, 35, 40, 35, 38, 45, 41, 40, 38
                     ]
                 ),
                 (
@@ -820,89 +861,67 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 (
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_7".to_string(),
+                            ref_id: "random_seq_10".to_string(),
                             strand: '-',
-                            start: 4,
-                            end: 9,
+                            start: 36,
+                            end: 45,
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 6,
-                        identity: 87.5
+                        length: 9,
+                        identity: 80.0
                     },
                     vec![
-                        84, 67, 71, 71, 67, 71, 65, 84, 65, 67, 71, 84, 84, 71, 84, 65, 71, 84, 84,
-                        84, 84, 84, 71, 71, 67, 84
+                        67, 71, 71, 71, 84, 71, 71, 84, 84, 71, 84, 71, 84, 84, 67, 65, 67, 65, 65,
+                        65, 71, 65, 71, 84
                     ],
                     vec![
-                        51, 50, 37, 49, 50, 34, 53, 43, 48, 37, 44, 49, 38, 52, 37, 43, 39, 49, 52,
-                        43, 46, 36, 37, 49, 39, 36
+                        42, 47, 36, 34, 34, 48, 34, 46, 38, 36, 43, 40, 34, 41, 51, 47, 40, 49, 36,
+                        34, 38, 43, 48, 40
                     ]
                 ),
                 (
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_6".to_string(),
+                            ref_id: "random_seq_10".to_string(),
                             strand: '+',
-                            start: 6,
-                            end: 4,
+                            start: 76,
+                            end: 83,
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 8,
-                        identity: 84.0
+                        length: 7,
+                        identity: 96.15384615384616
                     },
                     vec![
-                        84, 65, 84, 84, 71, 65, 65, 84, 71, 67, 71, 71, 67, 71, 71, 67, 65, 67, 65,
-                        84, 71, 71, 67, 67, 84, 65
+                        67, 84, 67, 65, 71, 84, 71, 84, 65, 67, 71, 65, 84, 71, 67, 71, 67, 71, 71,
+                        71, 67, 71, 84, 65, 67, 65
                     ],
                     vec![
-                        42, 46, 34, 36, 37, 34, 52, 53, 51, 39, 43, 52, 46, 50, 38, 35, 43, 37, 48,
-                        48, 49, 47, 40, 51, 49, 40
+                        36, 38, 53, 50, 53, 46, 37, 42, 38, 40, 35, 51, 51, 45, 53, 53, 50, 49, 35,
+                        44, 51, 47, 45, 45, 41, 42
                     ]
                 ),
                 (
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_5".to_string(),
-                            strand: '+',
-                            start: 4,
-                            end: 9,
+                            ref_id: "random_seq_10".to_string(),
+                            strand: '-',
+                            start: 71,
+                            end: 76,
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 6,
-                        identity: 81.81818181818181
+                        length: 5,
+                        identity: 95.83333333333334
                     },
                     vec![
-                        67, 65, 71, 71, 67, 65, 84, 65, 84, 84, 71, 84, 84, 84, 71, 84, 84, 71, 65,
-                        65, 67, 65
+                        71, 84, 65, 71, 67, 84, 84, 65, 84, 65, 67, 71, 84, 84, 67, 71, 71, 65, 84,
+                        71, 71, 67, 71, 84, 67
                     ],
                     vec![
-                        41, 47, 35, 37, 41, 36, 45, 40, 43, 51, 44, 37, 40, 45, 42, 50, 36, 43, 40,
-                        53, 46, 36
-                    ]
-                ),
-                (
-                    Description {
-                        origin: Origin {
-                            ref_id: "random_seq_5".to_string(),
-                            strand: '+',
-                            start: 0,
-                            end: 6,
-                            read_type: ReadType::Real
-                        },
-                        chimera: None,
-                        length: 6,
-                        identity: 81.4814814814815
-                    },
-                    vec![
-                        67, 65, 84, 67, 84, 71, 67, 67, 84, 65, 67, 84, 65, 84, 67, 67, 84, 84, 84,
-                        65, 65, 65, 71, 71, 71, 65, 84
-                    ],
-                    vec![
-                        45, 45, 50, 47, 44, 51, 41, 52, 42, 36, 51, 48, 42, 44, 44, 49, 34, 53, 39,
-                        53, 53, 43, 45, 48, 46, 50, 47
+                        47, 42, 45, 49, 35, 43, 44, 53, 53, 41, 53, 43, 35, 42, 52, 41, 38, 35, 50,
+                        53, 39, 42, 41, 46, 51
                     ]
                 )
             ],

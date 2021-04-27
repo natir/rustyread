@@ -64,7 +64,7 @@ impl<'a> Fragments<'a> {
     /// Produce a fragment
     pub fn generate_fragment(&mut self) -> (usize, usize, Origin) {
         let read_type = self.get_read_type();
-        let mut length = self.length_model.get_length(self.rng) as usize;
+        let length = self.length_model.get_length(self.rng) as usize;
 
         match read_type {
             ReadType::Real => {
@@ -78,18 +78,22 @@ impl<'a> Fragments<'a> {
                     ref_index = r;
                     strand = s;
                     reference = &self.references.sequences[ref_index];
-                    length = self.length_model.get_length(self.rng) as usize;
                 }
 
-                let begin = self.rng.gen_range(0..reference.seq.len()) as usize;
-                let (end, real_length) = if begin + length < reference.seq.len() {
-                    (begin + length, length)
+                let try_begin = self.rng.gen_range(0..reference.seq.len()) as usize;
+                let (begin, end, real_length) = if try_begin + length < reference.seq.len() {
+                    (try_begin, try_begin + length, length)
                 } else if reference.circular {
-                    (length - (reference.seq.len() - begin), length)
+                    (
+                        try_begin,
+                        length - (reference.seq.len() - try_begin),
+                        length,
+                    )
                 } else {
-                    (reference.seq.len() - 1, reference.seq.len() - begin)
+                    (0, reference.seq.len() - 1, reference.seq.len())
                 };
 
+                log::debug!("target length {} real {}", length, real_length);
                 (
                     ref_index,
                     real_length,
@@ -103,9 +107,17 @@ impl<'a> Fragments<'a> {
 }
 
 fn fragment_is_possible(frag_len: usize, ref_len: usize, circular: bool) -> bool {
+    log::debug!(
+        "frag_len {} ref_len {} circular {}",
+        frag_len,
+        ref_len,
+        circular
+    );
     if frag_len >= ref_len {
+        log::debug!("return {}", !circular);
         !circular
     } else {
+        log::debug!("return {}", true);
         true
     }
 }
@@ -253,12 +265,12 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
         assert_eq!(
             vec![
                 (
-                    4,
-                    3,
+                    7,
+                    10,
                     Origin {
-                        ref_id: "random_seq_4".to_string(),
+                        ref_id: "random_seq_7".to_string(),
                         strand: '+',
-                        start: 7,
+                        start: 0,
                         end: 9,
                         read_type: ReadType::Real
                     }
@@ -276,11 +288,11 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 ),
                 (
                     0,
-                    5,
+                    10,
                     Origin {
                         ref_id: "random_seq_0".to_string(),
                         strand: '+',
-                        start: 5,
+                        start: 0,
                         end: 9,
                         read_type: ReadType::Real
                     }
@@ -297,68 +309,68 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     }
                 ),
                 (
-                    6,
+                    10,
                     4,
                     Origin {
-                        ref_id: "random_seq_6".to_string(),
+                        ref_id: "random_seq_10".to_string(),
                         strand: '+',
-                        start: 5,
-                        end: 9,
+                        start: 16,
+                        end: 20,
                         read_type: ReadType::Real
                     }
                 ),
                 (
                     0,
-                    8,
+                    17,
                     Origin {
                         ref_id: "".to_string(),
                         strand: '*',
                         start: 0,
-                        end: 8,
-                        read_type: ReadType::Junk
+                        end: 17,
+                        read_type: ReadType::Random
                     }
                 ),
                 (
-                    6,
-                    9,
+                    1,
+                    7,
                     Origin {
-                        ref_id: "random_seq_6".to_string(),
+                        ref_id: "random_seq_1".to_string(),
+                        strand: '-',
+                        start: 0,
+                        end: 7,
+                        read_type: ReadType::Real
+                    }
+                ),
+                (
+                    7,
+                    10,
+                    Origin {
+                        ref_id: "random_seq_7".to_string(),
                         strand: '+',
-                        start: 4,
+                        start: 0,
+                        end: 9,
+                        read_type: ReadType::Real
+                    }
+                ),
+                (
+                    7,
+                    10,
+                    Origin {
+                        ref_id: "random_seq_7".to_string(),
+                        strand: '+',
+                        start: 0,
+                        end: 9,
+                        read_type: ReadType::Real
+                    }
+                ),
+                (
+                    8,
+                    8,
+                    Origin {
+                        ref_id: "random_seq_8".to_string(),
+                        strand: '+',
+                        start: 5,
                         end: 3,
-                        read_type: ReadType::Real
-                    }
-                ),
-                (
-                    4,
-                    2,
-                    Origin {
-                        ref_id: "random_seq_4".to_string(),
-                        strand: '+',
-                        start: 8,
-                        end: 9,
-                        read_type: ReadType::Real
-                    }
-                ),
-                (
-                    4,
-                    8,
-                    Origin {
-                        ref_id: "random_seq_4".to_string(),
-                        strand: '+',
-                        start: 2,
-                        end: 9,
-                        read_type: ReadType::Real
-                    }
-                ),
-                (
-                    5,
-                    5,
-                    Origin {
-                        ref_id: "random_seq_5".to_string(),
-                        strand: '+',
-                        start: 5,
-                        end: 9,
                         read_type: ReadType::Real
                     }
                 ),
@@ -374,79 +386,90 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     }
                 ),
                 (
-                    9,
+                    10,
                     6,
+                    Origin {
+                        ref_id: "random_seq_10".to_string(),
+                        strand: '-',
+                        start: 48,
+                        end: 54,
+                        read_type: ReadType::Real
+                    }
+                ),
+                (
+                    9,
+                    10,
                     Origin {
                         ref_id: "random_seq_9".to_string(),
                         strand: '-',
-                        start: 4,
+                        start: 0,
                         end: 9,
                         read_type: ReadType::Real
                     }
                 ),
                 (
-                    0,
-                    8,
+                    10,
+                    9,
                     Origin {
-                        ref_id: "".to_string(),
-                        strand: '*',
-                        start: 0,
-                        end: 8,
-                        read_type: ReadType::Random
+                        ref_id: "random_seq_10".to_string(),
+                        strand: '-',
+                        start: 25,
+                        end: 34,
+                        read_type: ReadType::Real
                     }
                 ),
                 (
-                    6,
+                    0,
                     7,
                     Origin {
-                        ref_id: "random_seq_6".to_string(),
-                        strand: '-',
-                        start: 7,
-                        end: 4,
-                        read_type: ReadType::Real
+                        ref_id: "".to_string(),
+                        strand: '*',
+                        start: 0,
+                        end: 7,
+                        read_type: ReadType::Junk
                     }
                 ),
                 (
                     0,
-                    12,
+                    8,
                     Origin {
                         ref_id: "".to_string(),
                         strand: '*',
                         start: 0,
-                        end: 12,
+                        end: 8,
                         read_type: ReadType::Random
                     }
                 ),
                 (
-                    9,
-                    2,
+                    5,
+                    10,
                     Origin {
-                        ref_id: "random_seq_9".to_string(),
-                        strand: '+',
-                        start: 8,
+                        ref_id: "random_seq_5".to_string(),
+                        strand: '-',
+                        start: 0,
                         end: 9,
                         read_type: ReadType::Real
                     }
                 ),
                 (
-                    5,
+                    0,
+                    7,
+                    Origin {
+                        ref_id: "".to_string(),
+                        strand: '*',
+                        start: 0,
+                        end: 7,
+                        read_type: ReadType::Random
+                    }
+                ),
+                (
+                    3,
                     6,
                     Origin {
-                        ref_id: "random_seq_5".to_string(),
-                        strand: '-',
-                        start: 4,
-                        end: 9,
-                        read_type: ReadType::Real
-                    }
-                ),
-                (
-                    1,
-                    8,
-                    Origin {
-                        ref_id: "random_seq_1".to_string(),
+                        ref_id: "random_seq_3".to_string(),
                         strand: '-',
                         start: 0,
-                        end: 8,
+                        end: 6,
                         read_type: ReadType::Real
                     }
                 ),
@@ -459,17 +482,6 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         start: 0,
                         end: 8,
                         read_type: ReadType::Random
-                    }
-                ),
-                (
-                    5,
-                    8,
-                    Origin {
-                        ref_id: "random_seq_5".to_string(),
-                        strand: '+',
-                        start: 1,
-                        end: 9,
-                        read_type: ReadType::Real
                     }
                 )
             ],
@@ -498,54 +510,54 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
         assert_eq!(
             vec![
                 (
-                    4,
+                    7,
                     0,
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_4".to_string(),
+                            ref_id: "random_seq_7".to_string(),
                             strand: '+',
-                            start: 7,
+                            start: 0,
                             end: 9,
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 3,
+                        length: 10,
                         identity: 0.9023903395427547
                     },
                     17195042692806716983
                 ),
                 (
                     0,
-                    3,
+                    6,
                     Description {
                         origin: Origin {
                             ref_id: "random_seq_0".to_string(),
                             strand: '+',
-                            start: 5,
+                            start: 0,
                             end: 9,
                             read_type: ReadType::Real
                         },
                         chimera: Some(Origin {
-                            ref_id: "random_seq_3".to_string(),
+                            ref_id: "random_seq_6".to_string(),
                             strand: '+',
                             start: 4,
-                            end: 9,
+                            end: 2,
                             read_type: ReadType::Real
                         }),
-                        length: 11,
+                        length: 18,
                         identity: 0.785919024034962
                     },
                     7410303534117827570
                 ),
                 (
-                    8,
+                    10,
                     0,
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_8".to_string(),
+                            ref_id: "random_seq_10".to_string(),
                             strand: '-',
-                            start: 3,
-                            end: 2,
+                            start: 35,
+                            end: 44,
                             read_type: ReadType::Real
                         },
                         chimera: None,
@@ -555,81 +567,92 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     657338316926129147
                 ),
                 (
-                    4,
+                    7,
                     0,
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_4".to_string(),
+                            ref_id: "random_seq_7".to_string(),
                             strand: '+',
-                            start: 8,
+                            start: 0,
                             end: 9,
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 2,
+                        length: 10,
                         identity: 0.7943651602000301
                     },
                     10605392195150115091
                 ),
                 (
-                    7,
-                    5,
-                    Description {
-                        origin: Origin {
-                            ref_id: "random_seq_7".to_string(),
-                            strand: '+',
-                            start: 5,
-                            end: 9,
-                            read_type: ReadType::Real
-                        },
-                        chimera: Some(Origin {
-                            ref_id: "random_seq_5".to_string(),
-                            strand: '+',
-                            start: 6,
-                            end: 9,
-                            read_type: ReadType::Real
-                        }),
-                        length: 9,
-                        identity: 0.7517399836760904
-                    },
-                    8961782845502155372
-                ),
-                (
-                    5,
-                    0,
-                    Description {
-                        origin: Origin {
-                            ref_id: "random_seq_5".to_string(),
-                            strand: '-',
-                            start: 6,
-                            end: 9,
-                            read_type: ReadType::Real
-                        },
-                        chimera: None,
-                        length: 4,
-                        identity: 0.8671570964369748
-                    },
-                    3410506326048755836
-                ),
-                (
-                    7,
+                    10,
                     10,
                     Description {
                         origin: Origin {
-                            ref_id: "random_seq_7".to_string(),
+                            ref_id: "random_seq_10".to_string(),
                             strand: '+',
-                            start: 8,
-                            end: 9,
+                            start: 0,
+                            end: 99,
                             read_type: ReadType::Real
                         },
                         chimera: Some(Origin {
                             ref_id: "random_seq_10".to_string(),
-                            strand: '-',
-                            start: 89,
-                            end: 99,
+                            strand: '+',
+                            start: 68,
+                            end: 74,
                             read_type: ReadType::Real
                         }),
-                        length: 12,
+                        length: 106,
+                        identity: 0.9166196996085733
+                    },
+                    11312190434313393638
+                ),
+                (
+                    10,
+                    0,
+                    Description {
+                        origin: Origin {
+                            ref_id: "random_seq_10".to_string(),
+                            strand: '+',
+                            start: 25,
+                            end: 33,
+                            read_type: ReadType::Real
+                        },
+                        chimera: None,
+                        length: 8,
+                        identity: 0.8409338668084709
+                    },
+                    5274222100112014305
+                ),
+                (
+                    7,
+                    0,
+                    Description {
+                        origin: Origin {
+                            ref_id: "random_seq_7".to_string(),
+                            strand: '+',
+                            start: 0,
+                            end: 9,
+                            read_type: ReadType::Real
+                        },
+                        chimera: None,
+                        length: 10,
+                        identity: 0.9103369460151146
+                    },
+                    10567391463651436578
+                ),
+                (
+                    10,
+                    0,
+                    Description {
+                        origin: Origin {
+                            ref_id: "random_seq_10".to_string(),
+                            strand: '+',
+                            start: 81,
+                            end: 88,
+                            read_type: ReadType::Real
+                        },
+                        chimera: None,
+                        length: 7,
                         identity: 0.8210852839903914
                     },
                     12595372283568864177
@@ -653,7 +676,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 ),
                 (
                     0,
-                    3,
+                    6,
                     Description {
                         origin: Origin {
                             ref_id: "".to_string(),
@@ -663,33 +686,16 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Random
                         },
                         chimera: Some(Origin {
-                            ref_id: "random_seq_3".to_string(),
+                            ref_id: "random_seq_6".to_string(),
                             strand: '-',
                             start: 2,
-                            end: 9,
+                            end: 0,
                             read_type: ReadType::Real
                         }),
                         length: 12,
                         identity: 0.8815059110082734
                     },
                     14485571221210959617
-                ),
-                (
-                    0,
-                    0,
-                    Description {
-                        origin: Origin {
-                            ref_id: "".to_string(),
-                            strand: '*',
-                            start: 0,
-                            end: 8,
-                            read_type: ReadType::Junk
-                        },
-                        chimera: None,
-                        length: 8,
-                        identity: 0.8912371443805706
-                    },
-                    10141363226306133878
                 )
             ],
             frags
