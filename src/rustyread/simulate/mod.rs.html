@@ -913,6 +913,25 @@
 <span id="910">910</span>
 <span id="911">911</span>
 <span id="912">912</span>
+<span id="913">913</span>
+<span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
+<span id="924">924</span>
+<span id="925">925</span>
+<span id="926">926</span>
+<span id="927">927</span>
+<span id="928">928</span>
+<span id="929">929</span>
+<span id="930">930</span>
+<span id="931">931</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Simulate reads</span>
 
@@ -1076,6 +1095,17 @@
         <span class="ident">base_produce</span> <span class="op">+</span><span class="op">=</span> <span class="ident">base_loop</span>;
 
         <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Start generate {} bases&quot;</span>, <span class="ident">base_loop</span>);
+        <span class="comment">// for (_, _, description, _) in Fragments::new(</span>
+        <span class="comment">//     base_loop,</span>
+        <span class="comment">//     (params.junk, params.random, params.chimera),</span>
+        <span class="comment">//     &amp;references,</span>
+        <span class="comment">//     &amp;length,</span>
+        <span class="comment">//     &amp;identity,</span>
+        <span class="comment">//     &amp;mut main_rng,</span>
+        <span class="comment">// ) {</span>
+        <span class="comment">//     println!(&quot;{:?}&quot;, description);</span>
+        <span class="comment">// }</span>
+        <span class="comment">// panic!();</span>
         <span class="kw">let</span> <span class="ident">sequences</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Description</span>, <span class="ident">Seq</span>, <span class="ident">Quality</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Fragments</span>::<span class="ident">new</span>(
             <span class="ident">base_loop</span>,
             (<span class="ident">params</span>.<span class="ident">junk</span>, <span class="ident">params</span>.<span class="ident">random</span>, <span class="ident">params</span>.<span class="ident">chimera</span>),
@@ -1310,16 +1340,16 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="macro">vec</span><span class="macro">!</span>[
-                <span class="string">b&quot;GG&quot;</span>.<span class="ident">to_vec</span>(),
-                <span class="string">b&quot;ACGT&quot;</span>.<span class="ident">to_vec</span>(),
-                <span class="string">b&quot;GGGCGCA&quot;</span>.<span class="ident">to_vec</span>(),
-                <span class="string">b&quot;CGGCT&quot;</span>.<span class="ident">to_vec</span>(),
-                <span class="string">b&quot;A&quot;</span>.<span class="ident">to_vec</span>(),
-                <span class="string">b&quot;TGTG&quot;</span>.<span class="ident">to_vec</span>(),
-                <span class="string">b&quot;AAAGC&quot;</span>.<span class="ident">to_vec</span>(),
-                <span class="string">b&quot;GTGCGCC&quot;</span>.<span class="ident">to_vec</span>(),
-                <span class="string">b&quot;T&quot;</span>.<span class="ident">to_vec</span>(),
-                <span class="string">b&quot;ATGGGCGC&quot;</span>.<span class="ident">to_vec</span>()
+                <span class="macro">vec</span><span class="macro">!</span>[<span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>],
+                <span class="macro">vec</span><span class="macro">!</span>[<span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>],
+                <span class="macro">vec</span><span class="macro">!</span>[<span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>],
+                <span class="macro">vec</span><span class="macro">!</span>[<span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">71</span>],
+                <span class="macro">vec</span><span class="macro">!</span>[<span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">65</span>],
+                <span class="macro">vec</span><span class="macro">!</span>[<span class="number">67</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">65</span>],
+                <span class="macro">vec</span><span class="macro">!</span>[<span class="number">71</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>],
+                <span class="macro">vec</span><span class="macro">!</span>[<span class="number">71</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">65</span>],
+                <span class="macro">vec</span><span class="macro">!</span>[<span class="number">67</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">84</span>],
+                <span class="macro">vec</span><span class="macro">!</span>[<span class="number">67</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">67</span>]
             ],
             <span class="ident">seqs</span>
         );
@@ -1372,89 +1402,73 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 (
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_4&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">7</span>,
+                            <span class="ident">start</span>: <span class="number">0</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">3</span>,
-                        <span class="ident">identity</span>: <span class="number">90.0</span>
+                        <span class="ident">length</span>: <span class="number">10</span>,
+                        <span class="ident">identity</span>: <span class="number">88.88888888888889</span>
                     },
-                    <span class="macro">vec</span><span class="macro">!</span>[<span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>],
-                    <span class="macro">vec</span><span class="macro">!</span>[<span class="number">35</span>, <span class="number">44</span>, <span class="number">46</span>, <span class="number">47</span>, <span class="number">34</span>, <span class="number">51</span>, <span class="number">46</span>, <span class="number">49</span>, <span class="number">48</span>, <span class="number">51</span>, <span class="number">36</span>, <span class="number">43</span>, <span class="number">43</span>, <span class="number">39</span>, <span class="number">45</span>, <span class="number">38</span>, <span class="number">36</span>, <span class="number">34</span>]
+                    <span class="macro">vec</span><span class="macro">!</span>[
+                        <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">67</span>,
+                        <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>
+                    ],
+                    <span class="macro">vec</span><span class="macro">!</span>[
+                        <span class="number">50</span>, <span class="number">48</span>, <span class="number">41</span>, <span class="number">36</span>, <span class="number">34</span>, <span class="number">47</span>, <span class="number">35</span>, <span class="number">53</span>, <span class="number">39</span>, <span class="number">36</span>, <span class="number">38</span>, <span class="number">53</span>, <span class="number">48</span>, <span class="number">48</span>, <span class="number">37</span>, <span class="number">34</span>, <span class="number">35</span>, <span class="number">47</span>, <span class="number">46</span>,
+                        <span class="number">51</span>, <span class="number">38</span>, <span class="number">51</span>, <span class="number">53</span>, <span class="number">36</span>, <span class="number">47</span>, <span class="number">50</span>
+                    ]
                 ),
                 (
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_0&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">5</span>,
+                            <span class="ident">start</span>: <span class="number">0</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">Some</span>(<span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_3&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_6&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                             <span class="ident">start</span>: <span class="number">4</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
+                            <span class="ident">end</span>: <span class="number">2</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         }),
-                        <span class="ident">length</span>: <span class="number">11</span>,
-                        <span class="ident">identity</span>: <span class="number">92.5925925925926</span>
+                        <span class="ident">length</span>: <span class="number">18</span>,
+                        <span class="ident">identity</span>: <span class="number">74.28571428571429</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">65</span>,
-                        <span class="number">84</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>
+                        <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>,
+                        <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>
                     ],
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">52</span>, <span class="number">41</span>, <span class="number">50</span>, <span class="number">42</span>, <span class="number">42</span>, <span class="number">51</span>, <span class="number">49</span>, <span class="number">47</span>, <span class="number">39</span>, <span class="number">35</span>, <span class="number">36</span>, <span class="number">45</span>, <span class="number">53</span>, <span class="number">38</span>, <span class="number">40</span>, <span class="number">35</span>, <span class="number">42</span>, <span class="number">46</span>, <span class="number">51</span>,
-                        <span class="number">41</span>, <span class="number">41</span>, <span class="number">47</span>, <span class="number">40</span>, <span class="number">44</span>, <span class="number">37</span>, <span class="number">47</span>, <span class="number">36</span>, <span class="number">45</span>
+                        <span class="number">52</span>, <span class="number">53</span>, <span class="number">36</span>, <span class="number">51</span>, <span class="number">50</span>, <span class="number">50</span>, <span class="number">44</span>, <span class="number">39</span>, <span class="number">36</span>, <span class="number">37</span>, <span class="number">43</span>, <span class="number">35</span>, <span class="number">43</span>, <span class="number">34</span>, <span class="number">37</span>, <span class="number">50</span>, <span class="number">36</span>, <span class="number">39</span>, <span class="number">53</span>,
+                        <span class="number">42</span>, <span class="number">35</span>, <span class="number">48</span>, <span class="number">45</span>, <span class="number">49</span>, <span class="number">50</span>, <span class="number">43</span>, <span class="number">50</span>, <span class="number">37</span>, <span class="number">43</span>, <span class="number">36</span>, <span class="number">45</span>, <span class="number">39</span>
                     ]
                 ),
                 (
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_8&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">3</span>,
-                            <span class="ident">end</span>: <span class="number">2</span>,
+                            <span class="ident">start</span>: <span class="number">35</span>,
+                            <span class="ident">end</span>: <span class="number">44</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
                         <span class="ident">length</span>: <span class="number">9</span>,
-                        <span class="ident">identity</span>: <span class="number">66.66666666666667</span>
+                        <span class="ident">identity</span>: <span class="number">70.37037037037037</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">71</span>,
-                        <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>
+                        <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>,
+                        <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>
                     ],
                     <span class="macro">vec</span><span class="macro">!</span>[
                         <span class="number">45</span>, <span class="number">53</span>, <span class="number">39</span>, <span class="number">34</span>, <span class="number">38</span>, <span class="number">40</span>, <span class="number">35</span>, <span class="number">48</span>, <span class="number">38</span>, <span class="number">41</span>, <span class="number">45</span>, <span class="number">50</span>, <span class="number">41</span>, <span class="number">46</span>, <span class="number">41</span>, <span class="number">52</span>, <span class="number">49</span>, <span class="number">39</span>, <span class="number">39</span>,
-                        <span class="number">44</span>, <span class="number">38</span>, <span class="number">49</span>, <span class="number">48</span>, <span class="number">40</span>, <span class="number">48</span>, <span class="number">47</span>, <span class="number">53</span>, <span class="number">41</span>, <span class="number">40</span>, <span class="number">37</span>, <span class="number">38</span>
-                    ]
-                ),
-                (
-                    <span class="ident">Description</span> {
-                        <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_4&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">8</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
-                        },
-                        <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">2</span>,
-                        <span class="ident">identity</span>: <span class="number">88.0</span>
-                    },
-                    <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>,
-                        <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>
-                    ],
-                    <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">45</span>, <span class="number">38</span>, <span class="number">38</span>, <span class="number">50</span>, <span class="number">40</span>, <span class="number">48</span>, <span class="number">44</span>, <span class="number">44</span>, <span class="number">47</span>, <span class="number">51</span>, <span class="number">47</span>, <span class="number">45</span>, <span class="number">50</span>, <span class="number">39</span>, <span class="number">36</span>, <span class="number">35</span>, <span class="number">53</span>, <span class="number">34</span>, <span class="number">44</span>,
-                        <span class="number">36</span>, <span class="number">36</span>, <span class="number">39</span>, <span class="number">43</span>, <span class="number">45</span>, <span class="number">51</span>
+                        <span class="number">44</span>, <span class="number">38</span>, <span class="number">49</span>, <span class="number">48</span>, <span class="number">40</span>, <span class="number">48</span>, <span class="number">47</span>, <span class="number">53</span>, <span class="number">41</span>, <span class="number">40</span>, <span class="number">37</span>
                     ]
                 ),
                 (
@@ -1462,86 +1476,132 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">5</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
-                        },
-                        <span class="ident">chimera</span>: <span class="prelude-val">Some</span>(<span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_5&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">6</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
-                        }),
-                        <span class="ident">length</span>: <span class="number">9</span>,
-                        <span class="ident">identity</span>: <span class="number">72.41379310344827</span>
-                    },
-                    <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">84</span>,
-                        <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>
-                    ],
-                    <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">39</span>, <span class="number">39</span>, <span class="number">43</span>, <span class="number">48</span>, <span class="number">37</span>, <span class="number">52</span>, <span class="number">42</span>, <span class="number">37</span>, <span class="number">46</span>, <span class="number">39</span>, <span class="number">34</span>, <span class="number">51</span>, <span class="number">35</span>, <span class="number">46</span>, <span class="number">42</span>, <span class="number">46</span>, <span class="number">43</span>, <span class="number">37</span>, <span class="number">47</span>,
-                        <span class="number">52</span>, <span class="number">52</span>, <span class="number">34</span>, <span class="number">49</span>, <span class="number">46</span>, <span class="number">35</span>, <span class="number">38</span>, <span class="number">47</span>, <span class="number">37</span>
-                    ]
-                ),
-                (
-                    <span class="ident">Description</span> {
-                        <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_5&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">6</span>,
+                            <span class="ident">start</span>: <span class="number">0</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">4</span>,
-                        <span class="ident">identity</span>: <span class="number">84.84848484848484</span>
+                        <span class="ident">length</span>: <span class="number">10</span>,
+                        <span class="ident">identity</span>: <span class="number">96.96969696969697</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">71</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>,
-                        <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">71</span>
+                        <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>,
+                        <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>
                     ],
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">45</span>, <span class="number">38</span>, <span class="number">38</span>, <span class="number">45</span>, <span class="number">49</span>, <span class="number">52</span>, <span class="number">47</span>, <span class="number">47</span>, <span class="number">43</span>, <span class="number">52</span>, <span class="number">42</span>, <span class="number">52</span>, <span class="number">37</span>, <span class="number">38</span>, <span class="number">36</span>, <span class="number">41</span>, <span class="number">42</span>, <span class="number">35</span>, <span class="number">41</span>,
-                        <span class="number">45</span>, <span class="number">50</span>, <span class="number">44</span>, <span class="number">45</span>, <span class="number">38</span>, <span class="number">52</span>, <span class="number">51</span>, <span class="number">41</span>, <span class="number">44</span>, <span class="number">51</span>, <span class="number">39</span>, <span class="number">36</span>
+                        <span class="number">37</span>, <span class="number">38</span>, <span class="number">48</span>, <span class="number">42</span>, <span class="number">48</span>, <span class="number">45</span>, <span class="number">44</span>, <span class="number">49</span>, <span class="number">41</span>, <span class="number">48</span>, <span class="number">45</span>, <span class="number">42</span>, <span class="number">46</span>, <span class="number">48</span>, <span class="number">50</span>, <span class="number">34</span>, <span class="number">49</span>, <span class="number">53</span>, <span class="number">53</span>,
+                        <span class="number">34</span>, <span class="number">49</span>, <span class="number">48</span>, <span class="number">37</span>, <span class="number">45</span>, <span class="number">49</span>, <span class="number">46</span>, <span class="number">41</span>, <span class="number">44</span>, <span class="number">38</span>, <span class="number">50</span>, <span class="number">39</span>, <span class="number">34</span>, <span class="number">43</span>
                     ]
                 ),
                 (
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">8</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
+                            <span class="ident">start</span>: <span class="number">0</span>,
+                            <span class="ident">end</span>: <span class="number">99</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">Some</span>(<span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">89</span>,
-                            <span class="ident">end</span>: <span class="number">99</span>,
+                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+                            <span class="ident">start</span>: <span class="number">68</span>,
+                            <span class="ident">end</span>: <span class="number">74</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         }),
-                        <span class="ident">length</span>: <span class="number">12</span>,
-                        <span class="ident">identity</span>: <span class="number">66.66666666666667</span>
+                        <span class="ident">length</span>: <span class="number">106</span>,
+                        <span class="ident">identity</span>: <span class="number">73.33333333333334</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">71</span>,
-                        <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">65</span>
+                        <span class="number">67</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>,
+                        <span class="number">67</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">67</span>,
+                        <span class="number">71</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">67</span>,
+                        <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">84</span>,
+                        <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">84</span>,
+                        <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>
                     ],
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">38</span>, <span class="number">38</span>, <span class="number">46</span>, <span class="number">45</span>, <span class="number">34</span>, <span class="number">41</span>, <span class="number">47</span>, <span class="number">45</span>, <span class="number">38</span>, <span class="number">51</span>, <span class="number">48</span>, <span class="number">39</span>, <span class="number">38</span>, <span class="number">47</span>, <span class="number">40</span>, <span class="number">37</span>, <span class="number">42</span>, <span class="number">53</span>, <span class="number">43</span>,
-                        <span class="number">49</span>, <span class="number">52</span>, <span class="number">48</span>, <span class="number">53</span>, <span class="number">47</span>, <span class="number">49</span>, <span class="number">39</span>, <span class="number">49</span>, <span class="number">44</span>
+                        <span class="number">53</span>, <span class="number">49</span>, <span class="number">34</span>, <span class="number">45</span>, <span class="number">51</span>, <span class="number">42</span>, <span class="number">38</span>, <span class="number">49</span>, <span class="number">50</span>, <span class="number">46</span>, <span class="number">48</span>, <span class="number">36</span>, <span class="number">42</span>, <span class="number">39</span>, <span class="number">46</span>, <span class="number">48</span>, <span class="number">44</span>, <span class="number">47</span>, <span class="number">47</span>,
+                        <span class="number">50</span>, <span class="number">38</span>, <span class="number">37</span>, <span class="number">37</span>, <span class="number">38</span>, <span class="number">46</span>, <span class="number">34</span>, <span class="number">40</span>, <span class="number">52</span>, <span class="number">36</span>, <span class="number">38</span>, <span class="number">49</span>, <span class="number">38</span>, <span class="number">38</span>, <span class="number">48</span>, <span class="number">39</span>, <span class="number">44</span>, <span class="number">34</span>, <span class="number">47</span>,
+                        <span class="number">42</span>, <span class="number">36</span>, <span class="number">39</span>, <span class="number">36</span>, <span class="number">34</span>, <span class="number">51</span>, <span class="number">36</span>, <span class="number">41</span>, <span class="number">34</span>, <span class="number">46</span>, <span class="number">51</span>, <span class="number">39</span>, <span class="number">45</span>, <span class="number">37</span>, <span class="number">45</span>, <span class="number">37</span>, <span class="number">51</span>, <span class="number">47</span>, <span class="number">53</span>,
+                        <span class="number">43</span>, <span class="number">50</span>, <span class="number">51</span>, <span class="number">36</span>, <span class="number">36</span>, <span class="number">49</span>, <span class="number">39</span>, <span class="number">48</span>, <span class="number">51</span>, <span class="number">52</span>, <span class="number">52</span>, <span class="number">44</span>, <span class="number">35</span>, <span class="number">36</span>, <span class="number">52</span>, <span class="number">40</span>, <span class="number">52</span>, <span class="number">39</span>, <span class="number">49</span>,
+                        <span class="number">38</span>, <span class="number">51</span>, <span class="number">49</span>, <span class="number">48</span>, <span class="number">50</span>, <span class="number">40</span>, <span class="number">50</span>, <span class="number">46</span>, <span class="number">50</span>, <span class="number">51</span>, <span class="number">49</span>, <span class="number">40</span>, <span class="number">41</span>, <span class="number">44</span>, <span class="number">45</span>, <span class="number">53</span>, <span class="number">49</span>, <span class="number">46</span>, <span class="number">43</span>,
+                        <span class="number">44</span>, <span class="number">49</span>, <span class="number">34</span>, <span class="number">46</span>, <span class="number">40</span>, <span class="number">40</span>
                     ]
                 ),
                 (
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_6&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">3</span>,
-                            <span class="ident">end</span>: <span class="number">1</span>,
+                            <span class="ident">start</span>: <span class="number">25</span>,
+                            <span class="ident">end</span>: <span class="number">33</span>,
+                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        },
+                        <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
+                        <span class="ident">length</span>: <span class="number">8</span>,
+                        <span class="ident">identity</span>: <span class="number">96.66666666666667</span>
+                    },
+                    <span class="macro">vec</span><span class="macro">!</span>[
+                        <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>,
+                        <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">71</span>
+                    ],
+                    <span class="macro">vec</span><span class="macro">!</span>[
+                        <span class="number">46</span>, <span class="number">45</span>, <span class="number">37</span>, <span class="number">37</span>, <span class="number">37</span>, <span class="number">45</span>, <span class="number">45</span>, <span class="number">51</span>, <span class="number">53</span>, <span class="number">46</span>, <span class="number">44</span>, <span class="number">52</span>, <span class="number">34</span>, <span class="number">39</span>, <span class="number">36</span>, <span class="number">36</span>, <span class="number">35</span>, <span class="number">43</span>, <span class="number">50</span>,
+                        <span class="number">41</span>, <span class="number">36</span>, <span class="number">48</span>, <span class="number">51</span>, <span class="number">52</span>, <span class="number">49</span>, <span class="number">38</span>, <span class="number">51</span>, <span class="number">41</span>, <span class="number">38</span>, <span class="number">36</span>, <span class="number">43</span>
+                    ]
+                ),
+                (
+                    <span class="ident">Description</span> {
+                        <span class="ident">origin</span>: <span class="ident">Origin</span> {
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+                            <span class="ident">start</span>: <span class="number">0</span>,
+                            <span class="ident">end</span>: <span class="number">9</span>,
+                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        },
+                        <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
+                        <span class="ident">length</span>: <span class="number">10</span>,
+                        <span class="ident">identity</span>: <span class="number">95.83333333333334</span>
+                    },
+                    <span class="macro">vec</span><span class="macro">!</span>[
+                        <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">84</span>,
+                        <span class="number">65</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>
+                    ],
+                    <span class="macro">vec</span><span class="macro">!</span>[
+                        <span class="number">35</span>, <span class="number">50</span>, <span class="number">37</span>, <span class="number">43</span>, <span class="number">51</span>, <span class="number">40</span>, <span class="number">43</span>, <span class="number">52</span>, <span class="number">50</span>, <span class="number">52</span>, <span class="number">51</span>, <span class="number">48</span>, <span class="number">37</span>, <span class="number">36</span>, <span class="number">37</span>, <span class="number">41</span>, <span class="number">35</span>, <span class="number">39</span>, <span class="number">40</span>,
+                        <span class="number">34</span>, <span class="number">41</span>, <span class="number">43</span>, <span class="number">47</span>, <span class="number">39</span>
+                    ]
+                ),
+                (
+                    <span class="ident">Description</span> {
+                        <span class="ident">origin</span>: <span class="ident">Origin</span> {
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+                            <span class="ident">start</span>: <span class="number">81</span>,
+                            <span class="ident">end</span>: <span class="number">88</span>,
+                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        },
+                        <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
+                        <span class="ident">length</span>: <span class="number">7</span>,
+                        <span class="ident">identity</span>: <span class="number">90.625</span>
+                    },
+                    <span class="macro">vec</span><span class="macro">!</span>[
+                        <span class="number">65</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>,
+                        <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>
+                    ],
+                    <span class="macro">vec</span><span class="macro">!</span>[
+                        <span class="number">52</span>, <span class="number">51</span>, <span class="number">46</span>, <span class="number">51</span>, <span class="number">52</span>, <span class="number">46</span>, <span class="number">45</span>, <span class="number">43</span>, <span class="number">38</span>, <span class="number">46</span>, <span class="number">44</span>, <span class="number">52</span>, <span class="number">47</span>, <span class="number">42</span>, <span class="number">41</span>, <span class="number">46</span>, <span class="number">47</span>, <span class="number">49</span>, <span class="number">35</span>,
+                        <span class="number">50</span>, <span class="number">39</span>, <span class="number">47</span>, <span class="number">35</span>, <span class="number">42</span>, <span class="number">44</span>, <span class="number">34</span>, <span class="number">40</span>, <span class="number">38</span>, <span class="number">46</span>, <span class="number">46</span>, <span class="number">53</span>
+                    ]
+                ),
+                (
+                    <span class="ident">Description</span> {
+                        <span class="ident">origin</span>: <span class="ident">Origin</span> {
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+                            <span class="ident">start</span>: <span class="number">32</span>,
+                            <span class="ident">end</span>: <span class="number">40</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
@@ -1549,8 +1609,8 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">identity</span>: <span class="number">77.41935483870968</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">67</span>,
-                        <span class="number">71</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>
+                        <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>,
+                        <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>
                     ],
                     <span class="macro">vec</span><span class="macro">!</span>[
                         <span class="number">41</span>, <span class="number">52</span>, <span class="number">41</span>, <span class="number">46</span>, <span class="number">50</span>, <span class="number">43</span>, <span class="number">53</span>, <span class="number">40</span>, <span class="number">37</span>, <span class="number">46</span>, <span class="number">42</span>, <span class="number">38</span>, <span class="number">44</span>, <span class="number">49</span>, <span class="number">36</span>, <span class="number">40</span>, <span class="number">34</span>, <span class="number">44</span>, <span class="number">34</span>,
@@ -1582,29 +1642,29 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 (
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_4&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">2</span>,
+                            <span class="ident">start</span>: <span class="number">0</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">8</span>,
-                        <span class="ident">identity</span>: <span class="number">78.26086956521739</span>
+                        <span class="ident">length</span>: <span class="number">10</span>,
+                        <span class="ident">identity</span>: <span class="number">84.0</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">67</span>,
-                        <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>
+                        <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">65</span>,
+                        <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>
                     ],
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">48</span>, <span class="number">35</span>, <span class="number">35</span>, <span class="number">41</span>, <span class="number">42</span>, <span class="number">41</span>, <span class="number">41</span>, <span class="number">50</span>, <span class="number">34</span>, <span class="number">52</span>, <span class="number">43</span>, <span class="number">50</span>, <span class="number">36</span>, <span class="number">46</span>, <span class="number">51</span>, <span class="number">35</span>, <span class="number">41</span>, <span class="number">37</span>, <span class="number">36</span>,
-                        <span class="number">38</span>, <span class="number">38</span>, <span class="number">43</span>, <span class="number">52</span>, <span class="number">50</span>, <span class="number">48</span>
+                        <span class="number">48</span>, <span class="number">34</span>, <span class="number">49</span>, <span class="number">40</span>, <span class="number">35</span>, <span class="number">51</span>, <span class="number">50</span>, <span class="number">47</span>, <span class="number">49</span>, <span class="number">44</span>, <span class="number">38</span>, <span class="number">52</span>, <span class="number">41</span>, <span class="number">50</span>, <span class="number">44</span>, <span class="number">40</span>, <span class="number">38</span>, <span class="number">51</span>, <span class="number">38</span>,
+                        <span class="number">50</span>, <span class="number">40</span>, <span class="number">38</span>, <span class="number">37</span>, <span class="number">42</span>, <span class="number">42</span>, <span class="number">49</span>, <span class="number">47</span>, <span class="number">42</span>, <span class="number">48</span>
                     ]
                 ),
                 (
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_5&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_8&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
                             <span class="ident">start</span>: <span class="number">2</span>,
                             <span class="ident">end</span>: <span class="number">8</span>,
@@ -1612,11 +1672,11 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
                         <span class="ident">length</span>: <span class="number">6</span>,
-                        <span class="ident">identity</span>: <span class="number">79.3103448275862</span>
+                        <span class="ident">identity</span>: <span class="number">82.75862068965517</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>,
-                        <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>
+                        <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">71</span>,
+                        <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>
                     ],
                     <span class="macro">vec</span><span class="macro">!</span>[
                         <span class="number">48</span>, <span class="number">49</span>, <span class="number">53</span>, <span class="number">48</span>, <span class="number">39</span>, <span class="number">38</span>, <span class="number">43</span>, <span class="number">53</span>, <span class="number">44</span>, <span class="number">43</span>, <span class="number">35</span>, <span class="number">53</span>, <span class="number">37</span>, <span class="number">40</span>, <span class="number">44</span>, <span class="number">36</span>, <span class="number">38</span>, <span class="number">49</span>, <span class="number">53</span>,
@@ -1650,43 +1710,43 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_0&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">1</span>,
+                            <span class="ident">start</span>: <span class="number">0</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">9</span>,
-                        <span class="ident">identity</span>: <span class="number">86.20689655172413</span>
+                        <span class="ident">length</span>: <span class="number">10</span>,
+                        <span class="ident">identity</span>: <span class="number">80.0</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">65</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>,
-                        <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">65</span>
+                        <span class="number">65</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">67</span>,
+                        <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">65</span>
                     ],
                     <span class="macro">vec</span><span class="macro">!</span>[
                         <span class="number">40</span>, <span class="number">50</span>, <span class="number">34</span>, <span class="number">44</span>, <span class="number">35</span>, <span class="number">35</span>, <span class="number">49</span>, <span class="number">37</span>, <span class="number">38</span>, <span class="number">43</span>, <span class="number">39</span>, <span class="number">49</span>, <span class="number">43</span>, <span class="number">46</span>, <span class="number">39</span>, <span class="number">39</span>, <span class="number">38</span>, <span class="number">46</span>, <span class="number">51</span>,
-                        <span class="number">44</span>, <span class="number">44</span>, <span class="number">51</span>, <span class="number">40</span>, <span class="number">48</span>, <span class="number">52</span>, <span class="number">48</span>, <span class="number">49</span>, <span class="number">38</span>, <span class="number">43</span>
+                        <span class="number">44</span>, <span class="number">44</span>, <span class="number">51</span>, <span class="number">40</span>, <span class="number">48</span>, <span class="number">52</span>, <span class="number">48</span>, <span class="number">49</span>, <span class="number">38</span>, <span class="number">43</span>, <span class="number">36</span>, <span class="number">53</span>
                     ]
                 ),
                 (
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_9&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">8</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
+                            <span class="ident">start</span>: <span class="number">85</span>,
+                            <span class="ident">end</span>: <span class="number">94</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">2</span>,
-                        <span class="ident">identity</span>: <span class="number">80.76923076923077</span>
+                        <span class="ident">length</span>: <span class="number">9</span>,
+                        <span class="ident">identity</span>: <span class="number">88.23529411764706</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">67</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>,
-                        <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>
+                        <span class="number">67</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">71</span>,
+                        <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>
                     ],
                     <span class="macro">vec</span><span class="macro">!</span>[
                         <span class="number">45</span>, <span class="number">46</span>, <span class="number">39</span>, <span class="number">44</span>, <span class="number">45</span>, <span class="number">47</span>, <span class="number">41</span>, <span class="number">34</span>, <span class="number">40</span>, <span class="number">49</span>, <span class="number">51</span>, <span class="number">52</span>, <span class="number">34</span>, <span class="number">50</span>, <span class="number">36</span>, <span class="number">38</span>, <span class="number">42</span>, <span class="number">44</span>, <span class="number">42</span>,
-                        <span class="number">35</span>, <span class="number">50</span>, <span class="number">36</span>, <span class="number">49</span>
+                        <span class="number">35</span>, <span class="number">50</span>, <span class="number">36</span>, <span class="number">49</span>, <span class="number">39</span>, <span class="number">35</span>, <span class="number">40</span>, <span class="number">35</span>, <span class="number">38</span>, <span class="number">45</span>, <span class="number">41</span>, <span class="number">40</span>, <span class="number">38</span>
                     ]
                 ),
                 (
@@ -1736,89 +1796,67 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 (
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">4</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
+                            <span class="ident">start</span>: <span class="number">36</span>,
+                            <span class="ident">end</span>: <span class="number">45</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">6</span>,
-                        <span class="ident">identity</span>: <span class="number">87.5</span>
+                        <span class="ident">length</span>: <span class="number">9</span>,
+                        <span class="ident">identity</span>: <span class="number">80.0</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">84</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>,
-                        <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">84</span>
+                        <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">65</span>,
+                        <span class="number">65</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>
                     ],
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">51</span>, <span class="number">50</span>, <span class="number">37</span>, <span class="number">49</span>, <span class="number">50</span>, <span class="number">34</span>, <span class="number">53</span>, <span class="number">43</span>, <span class="number">48</span>, <span class="number">37</span>, <span class="number">44</span>, <span class="number">49</span>, <span class="number">38</span>, <span class="number">52</span>, <span class="number">37</span>, <span class="number">43</span>, <span class="number">39</span>, <span class="number">49</span>, <span class="number">52</span>,
-                        <span class="number">43</span>, <span class="number">46</span>, <span class="number">36</span>, <span class="number">37</span>, <span class="number">49</span>, <span class="number">39</span>, <span class="number">36</span>
+                        <span class="number">42</span>, <span class="number">47</span>, <span class="number">36</span>, <span class="number">34</span>, <span class="number">34</span>, <span class="number">48</span>, <span class="number">34</span>, <span class="number">46</span>, <span class="number">38</span>, <span class="number">36</span>, <span class="number">43</span>, <span class="number">40</span>, <span class="number">34</span>, <span class="number">41</span>, <span class="number">51</span>, <span class="number">47</span>, <span class="number">40</span>, <span class="number">49</span>, <span class="number">36</span>,
+                        <span class="number">34</span>, <span class="number">38</span>, <span class="number">43</span>, <span class="number">48</span>, <span class="number">40</span>
                     ]
                 ),
                 (
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_6&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">6</span>,
-                            <span class="ident">end</span>: <span class="number">4</span>,
+                            <span class="ident">start</span>: <span class="number">76</span>,
+                            <span class="ident">end</span>: <span class="number">83</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">8</span>,
-                        <span class="ident">identity</span>: <span class="number">84.0</span>
+                        <span class="ident">length</span>: <span class="number">7</span>,
+                        <span class="ident">identity</span>: <span class="number">96.15384615384616</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>,
-                        <span class="number">84</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>
+                        <span class="number">67</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>,
+                        <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>
                     ],
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">42</span>, <span class="number">46</span>, <span class="number">34</span>, <span class="number">36</span>, <span class="number">37</span>, <span class="number">34</span>, <span class="number">52</span>, <span class="number">53</span>, <span class="number">51</span>, <span class="number">39</span>, <span class="number">43</span>, <span class="number">52</span>, <span class="number">46</span>, <span class="number">50</span>, <span class="number">38</span>, <span class="number">35</span>, <span class="number">43</span>, <span class="number">37</span>, <span class="number">48</span>,
-                        <span class="number">48</span>, <span class="number">49</span>, <span class="number">47</span>, <span class="number">40</span>, <span class="number">51</span>, <span class="number">49</span>, <span class="number">40</span>
+                        <span class="number">36</span>, <span class="number">38</span>, <span class="number">53</span>, <span class="number">50</span>, <span class="number">53</span>, <span class="number">46</span>, <span class="number">37</span>, <span class="number">42</span>, <span class="number">38</span>, <span class="number">40</span>, <span class="number">35</span>, <span class="number">51</span>, <span class="number">51</span>, <span class="number">45</span>, <span class="number">53</span>, <span class="number">53</span>, <span class="number">50</span>, <span class="number">49</span>, <span class="number">35</span>,
+                        <span class="number">44</span>, <span class="number">51</span>, <span class="number">47</span>, <span class="number">45</span>, <span class="number">45</span>, <span class="number">41</span>, <span class="number">42</span>
                     ]
                 ),
                 (
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_5&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">4</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
+                            <span class="ident">start</span>: <span class="number">71</span>,
+                            <span class="ident">end</span>: <span class="number">76</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">6</span>,
-                        <span class="ident">identity</span>: <span class="number">81.81818181818181</span>
+                        <span class="ident">length</span>: <span class="number">5</span>,
+                        <span class="ident">identity</span>: <span class="number">95.83333333333334</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">67</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">65</span>,
-                        <span class="number">65</span>, <span class="number">67</span>, <span class="number">65</span>
+                        <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>,
+                        <span class="number">71</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">67</span>
                     ],
                     <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">41</span>, <span class="number">47</span>, <span class="number">35</span>, <span class="number">37</span>, <span class="number">41</span>, <span class="number">36</span>, <span class="number">45</span>, <span class="number">40</span>, <span class="number">43</span>, <span class="number">51</span>, <span class="number">44</span>, <span class="number">37</span>, <span class="number">40</span>, <span class="number">45</span>, <span class="number">42</span>, <span class="number">50</span>, <span class="number">36</span>, <span class="number">43</span>, <span class="number">40</span>,
-                        <span class="number">53</span>, <span class="number">46</span>, <span class="number">36</span>
-                    ]
-                ),
-                (
-                    <span class="ident">Description</span> {
-                        <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_5&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">0</span>,
-                            <span class="ident">end</span>: <span class="number">6</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
-                        },
-                        <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">6</span>,
-                        <span class="ident">identity</span>: <span class="number">81.4814814814815</span>
-                    },
-                    <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">67</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>,
-                        <span class="number">65</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>
-                    ],
-                    <span class="macro">vec</span><span class="macro">!</span>[
-                        <span class="number">45</span>, <span class="number">45</span>, <span class="number">50</span>, <span class="number">47</span>, <span class="number">44</span>, <span class="number">51</span>, <span class="number">41</span>, <span class="number">52</span>, <span class="number">42</span>, <span class="number">36</span>, <span class="number">51</span>, <span class="number">48</span>, <span class="number">42</span>, <span class="number">44</span>, <span class="number">44</span>, <span class="number">49</span>, <span class="number">34</span>, <span class="number">53</span>, <span class="number">39</span>,
-                        <span class="number">53</span>, <span class="number">53</span>, <span class="number">43</span>, <span class="number">45</span>, <span class="number">48</span>, <span class="number">46</span>, <span class="number">50</span>, <span class="number">47</span>
+                        <span class="number">47</span>, <span class="number">42</span>, <span class="number">45</span>, <span class="number">49</span>, <span class="number">35</span>, <span class="number">43</span>, <span class="number">44</span>, <span class="number">53</span>, <span class="number">53</span>, <span class="number">41</span>, <span class="number">53</span>, <span class="number">43</span>, <span class="number">35</span>, <span class="number">42</span>, <span class="number">52</span>, <span class="number">41</span>, <span class="number">38</span>, <span class="number">35</span>, <span class="number">50</span>,
+                        <span class="number">53</span>, <span class="number">39</span>, <span class="number">42</span>, <span class="number">41</span>, <span class="number">46</span>, <span class="number">51</span>
                     ]
                 )
             ],

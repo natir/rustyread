@@ -699,6 +699,12 @@
 <span id="696">696</span>
 <span id="697">697</span>
 <span id="698">698</span>
+<span id="699">699</span>
+<span id="700">700</span>
+<span id="701">701</span>
+<span id="702">702</span>
+<span id="703">703</span>
+<span id="704">704</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Generate fragments</span>
 
@@ -766,7 +772,7 @@
     <span class="doccomment">/// Produce a fragment</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_fragment</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">Origin</span>) {
         <span class="kw">let</span> <span class="ident">read_type</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_read_type</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">length</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">length_model</span>.<span class="ident">get_length</span>(<span class="self">self</span>.<span class="ident">rng</span>) <span class="kw">as</span> <span class="ident">usize</span>;
+        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">length_model</span>.<span class="ident">get_length</span>(<span class="self">self</span>.<span class="ident">rng</span>) <span class="kw">as</span> <span class="ident">usize</span>;
 
         <span class="kw">match</span> <span class="ident">read_type</span> {
             <span class="ident">ReadType</span>::<span class="ident">Real</span> <span class="op">=</span><span class="op">&gt;</span> {
@@ -780,18 +786,22 @@
                     <span class="ident">ref_index</span> <span class="op">=</span> <span class="ident">r</span>;
                     <span class="ident">strand</span> <span class="op">=</span> <span class="ident">s</span>;
                     <span class="ident">reference</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">references</span>.<span class="ident">sequences</span>[<span class="ident">ref_index</span>];
-                    <span class="ident">length</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">length_model</span>.<span class="ident">get_length</span>(<span class="self">self</span>.<span class="ident">rng</span>) <span class="kw">as</span> <span class="ident">usize</span>;
                 }
 
-                <span class="kw">let</span> <span class="ident">begin</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0</span>..<span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>()) <span class="kw">as</span> <span class="ident">usize</span>;
-                <span class="kw">let</span> (<span class="ident">end</span>, <span class="ident">real_length</span>) <span class="op">=</span> <span class="kw">if</span> <span class="ident">begin</span> <span class="op">+</span> <span class="ident">length</span> <span class="op">&lt;</span> <span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>() {
-                    (<span class="ident">begin</span> <span class="op">+</span> <span class="ident">length</span>, <span class="ident">length</span>)
+                <span class="kw">let</span> <span class="ident">try_begin</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0</span>..<span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>()) <span class="kw">as</span> <span class="ident">usize</span>;
+                <span class="kw">let</span> (<span class="ident">begin</span>, <span class="ident">end</span>, <span class="ident">real_length</span>) <span class="op">=</span> <span class="kw">if</span> <span class="ident">try_begin</span> <span class="op">+</span> <span class="ident">length</span> <span class="op">&lt;</span> <span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>() {
+                    (<span class="ident">try_begin</span>, <span class="ident">try_begin</span> <span class="op">+</span> <span class="ident">length</span>, <span class="ident">length</span>)
                 } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">reference</span>.<span class="ident">circular</span> {
-                    (<span class="ident">length</span> <span class="op">-</span> (<span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">begin</span>), <span class="ident">length</span>)
+                    (
+                        <span class="ident">try_begin</span>,
+                        <span class="ident">length</span> <span class="op">-</span> (<span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">try_begin</span>),
+                        <span class="ident">length</span>,
+                    )
                 } <span class="kw">else</span> {
-                    (<span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>, <span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">begin</span>)
+                    (<span class="number">0</span>, <span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>, <span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>())
                 };
 
+                <span class="ident">log</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;target length {} real {}&quot;</span>, <span class="ident">length</span>, <span class="ident">real_length</span>);
                 (
                     <span class="ident">ref_index</span>,
                     <span class="ident">real_length</span>,
@@ -805,9 +815,17 @@
 }
 
 <span class="kw">fn</span> <span class="ident">fragment_is_possible</span>(<span class="ident">frag_len</span>: <span class="ident">usize</span>, <span class="ident">ref_len</span>: <span class="ident">usize</span>, <span class="ident">circular</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="ident">log</span>::<span class="macro">debug</span><span class="macro">!</span>(
+        <span class="string">&quot;frag_len {} ref_len {} circular {}&quot;</span>,
+        <span class="ident">frag_len</span>,
+        <span class="ident">ref_len</span>,
+        <span class="ident">circular</span>
+    );
     <span class="kw">if</span> <span class="ident">frag_len</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">ref_len</span> {
+        <span class="ident">log</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;return {}&quot;</span>, <span class="op">!</span><span class="ident">circular</span>);
         <span class="op">!</span><span class="ident">circular</span>
     } <span class="kw">else</span> {
+        <span class="ident">log</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;return {}&quot;</span>, <span class="bool-val">true</span>);
         <span class="bool-val">true</span>
     }
 }
@@ -955,12 +973,12 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="macro">vec</span><span class="macro">!</span>[
                 (
-                    <span class="number">4</span>,
-                    <span class="number">3</span>,
+                    <span class="number">7</span>,
+                    <span class="number">10</span>,
                     <span class="ident">Origin</span> {
-                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_4&quot;</span>.<span class="ident">to_string</span>(),
+                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">7</span>,
+                        <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
@@ -978,11 +996,11 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 ),
                 (
                     <span class="number">0</span>,
-                    <span class="number">5</span>,
+                    <span class="number">10</span>,
                     <span class="ident">Origin</span> {
                         <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_0&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">5</span>,
+                        <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
@@ -999,68 +1017,68 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     }
                 ),
                 (
-                    <span class="number">6</span>,
+                    <span class="number">10</span>,
                     <span class="number">4</span>,
                     <span class="ident">Origin</span> {
-                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_6&quot;</span>.<span class="ident">to_string</span>(),
+                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">5</span>,
-                        <span class="ident">end</span>: <span class="number">9</span>,
+                        <span class="ident">start</span>: <span class="number">16</span>,
+                        <span class="ident">end</span>: <span class="number">20</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
                 ),
                 (
                     <span class="number">0</span>,
-                    <span class="number">8</span>,
+                    <span class="number">17</span>,
                     <span class="ident">Origin</span> {
                         <span class="ident">ref_id</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
                         <span class="ident">start</span>: <span class="number">0</span>,
-                        <span class="ident">end</span>: <span class="number">8</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Junk</span>
+                        <span class="ident">end</span>: <span class="number">17</span>,
+                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
                     }
                 ),
                 (
-                    <span class="number">6</span>,
-                    <span class="number">9</span>,
+                    <span class="number">1</span>,
+                    <span class="number">7</span>,
                     <span class="ident">Origin</span> {
-                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_6&quot;</span>.<span class="ident">to_string</span>(),
+                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_1&quot;</span>.<span class="ident">to_string</span>(),
+                        <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
+                        <span class="ident">start</span>: <span class="number">0</span>,
+                        <span class="ident">end</span>: <span class="number">7</span>,
+                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                    }
+                ),
+                (
+                    <span class="number">7</span>,
+                    <span class="number">10</span>,
+                    <span class="ident">Origin</span> {
+                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">4</span>,
+                        <span class="ident">start</span>: <span class="number">0</span>,
+                        <span class="ident">end</span>: <span class="number">9</span>,
+                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                    }
+                ),
+                (
+                    <span class="number">7</span>,
+                    <span class="number">10</span>,
+                    <span class="ident">Origin</span> {
+                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
+                        <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+                        <span class="ident">start</span>: <span class="number">0</span>,
+                        <span class="ident">end</span>: <span class="number">9</span>,
+                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                    }
+                ),
+                (
+                    <span class="number">8</span>,
+                    <span class="number">8</span>,
+                    <span class="ident">Origin</span> {
+                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_8&quot;</span>.<span class="ident">to_string</span>(),
+                        <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+                        <span class="ident">start</span>: <span class="number">5</span>,
                         <span class="ident">end</span>: <span class="number">3</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
-                    }
-                ),
-                (
-                    <span class="number">4</span>,
-                    <span class="number">2</span>,
-                    <span class="ident">Origin</span> {
-                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_4&quot;</span>.<span class="ident">to_string</span>(),
-                        <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">8</span>,
-                        <span class="ident">end</span>: <span class="number">9</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
-                    }
-                ),
-                (
-                    <span class="number">4</span>,
-                    <span class="number">8</span>,
-                    <span class="ident">Origin</span> {
-                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_4&quot;</span>.<span class="ident">to_string</span>(),
-                        <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">2</span>,
-                        <span class="ident">end</span>: <span class="number">9</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
-                    }
-                ),
-                (
-                    <span class="number">5</span>,
-                    <span class="number">5</span>,
-                    <span class="ident">Origin</span> {
-                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_5&quot;</span>.<span class="ident">to_string</span>(),
-                        <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">5</span>,
-                        <span class="ident">end</span>: <span class="number">9</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
                 ),
@@ -1076,79 +1094,90 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     }
                 ),
                 (
-                    <span class="number">9</span>,
+                    <span class="number">10</span>,
                     <span class="number">6</span>,
+                    <span class="ident">Origin</span> {
+                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
+                        <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
+                        <span class="ident">start</span>: <span class="number">48</span>,
+                        <span class="ident">end</span>: <span class="number">54</span>,
+                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                    }
+                ),
+                (
+                    <span class="number">9</span>,
+                    <span class="number">10</span>,
                     <span class="ident">Origin</span> {
                         <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_9&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">4</span>,
+                        <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
                 ),
                 (
-                    <span class="number">0</span>,
-                    <span class="number">8</span>,
+                    <span class="number">10</span>,
+                    <span class="number">9</span>,
                     <span class="ident">Origin</span> {
-                        <span class="ident">ref_id</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(),
-                        <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">0</span>,
-                        <span class="ident">end</span>: <span class="number">8</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
+                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
+                        <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
+                        <span class="ident">start</span>: <span class="number">25</span>,
+                        <span class="ident">end</span>: <span class="number">34</span>,
+                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
                 ),
                 (
-                    <span class="number">6</span>,
+                    <span class="number">0</span>,
                     <span class="number">7</span>,
                     <span class="ident">Origin</span> {
-                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_6&quot;</span>.<span class="ident">to_string</span>(),
-                        <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">7</span>,
-                        <span class="ident">end</span>: <span class="number">4</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        <span class="ident">ref_id</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(),
+                        <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
+                        <span class="ident">start</span>: <span class="number">0</span>,
+                        <span class="ident">end</span>: <span class="number">7</span>,
+                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Junk</span>
                     }
                 ),
                 (
                     <span class="number">0</span>,
-                    <span class="number">12</span>,
+                    <span class="number">8</span>,
                     <span class="ident">Origin</span> {
                         <span class="ident">ref_id</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
                         <span class="ident">start</span>: <span class="number">0</span>,
-                        <span class="ident">end</span>: <span class="number">12</span>,
+                        <span class="ident">end</span>: <span class="number">8</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
                     }
                 ),
                 (
-                    <span class="number">9</span>,
-                    <span class="number">2</span>,
+                    <span class="number">5</span>,
+                    <span class="number">10</span>,
                     <span class="ident">Origin</span> {
-                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_9&quot;</span>.<span class="ident">to_string</span>(),
-                        <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">8</span>,
+                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_5&quot;</span>.<span class="ident">to_string</span>(),
+                        <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
+                        <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
                 ),
                 (
-                    <span class="number">5</span>,
+                    <span class="number">0</span>,
+                    <span class="number">7</span>,
+                    <span class="ident">Origin</span> {
+                        <span class="ident">ref_id</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(),
+                        <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
+                        <span class="ident">start</span>: <span class="number">0</span>,
+                        <span class="ident">end</span>: <span class="number">7</span>,
+                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
+                    }
+                ),
+                (
+                    <span class="number">3</span>,
                     <span class="number">6</span>,
                     <span class="ident">Origin</span> {
-                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_5&quot;</span>.<span class="ident">to_string</span>(),
-                        <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">4</span>,
-                        <span class="ident">end</span>: <span class="number">9</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
-                    }
-                ),
-                (
-                    <span class="number">1</span>,
-                    <span class="number">8</span>,
-                    <span class="ident">Origin</span> {
-                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_1&quot;</span>.<span class="ident">to_string</span>(),
+                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_3&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
                         <span class="ident">start</span>: <span class="number">0</span>,
-                        <span class="ident">end</span>: <span class="number">8</span>,
+                        <span class="ident">end</span>: <span class="number">6</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
                 ),
@@ -1161,17 +1190,6 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">8</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
-                    }
-                ),
-                (
-                    <span class="number">5</span>,
-                    <span class="number">8</span>,
-                    <span class="ident">Origin</span> {
-                        <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_5&quot;</span>.<span class="ident">to_string</span>(),
-                        <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">1</span>,
-                        <span class="ident">end</span>: <span class="number">9</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
                 )
             ],
@@ -1200,54 +1218,54 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="macro">vec</span><span class="macro">!</span>[
                 (
-                    <span class="number">4</span>,
+                    <span class="number">7</span>,
                     <span class="number">0</span>,
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_4&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">7</span>,
+                            <span class="ident">start</span>: <span class="number">0</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">3</span>,
+                        <span class="ident">length</span>: <span class="number">10</span>,
                         <span class="ident">identity</span>: <span class="number">0.9023903395427547</span>
                     },
                     <span class="number">17195042692806716983</span>
                 ),
                 (
                     <span class="number">0</span>,
-                    <span class="number">3</span>,
+                    <span class="number">6</span>,
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_0&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">5</span>,
+                            <span class="ident">start</span>: <span class="number">0</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">Some</span>(<span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_3&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_6&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                             <span class="ident">start</span>: <span class="number">4</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
+                            <span class="ident">end</span>: <span class="number">2</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         }),
-                        <span class="ident">length</span>: <span class="number">11</span>,
+                        <span class="ident">length</span>: <span class="number">18</span>,
                         <span class="ident">identity</span>: <span class="number">0.785919024034962</span>
                     },
                     <span class="number">7410303534117827570</span>
                 ),
                 (
-                    <span class="number">8</span>,
+                    <span class="number">10</span>,
                     <span class="number">0</span>,
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_8&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">3</span>,
-                            <span class="ident">end</span>: <span class="number">2</span>,
+                            <span class="ident">start</span>: <span class="number">35</span>,
+                            <span class="ident">end</span>: <span class="number">44</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
@@ -1257,81 +1275,92 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     <span class="number">657338316926129147</span>
                 ),
                 (
-                    <span class="number">4</span>,
+                    <span class="number">7</span>,
                     <span class="number">0</span>,
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_4&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">8</span>,
+                            <span class="ident">start</span>: <span class="number">0</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">2</span>,
+                        <span class="ident">length</span>: <span class="number">10</span>,
                         <span class="ident">identity</span>: <span class="number">0.7943651602000301</span>
                     },
                     <span class="number">10605392195150115091</span>
                 ),
                 (
-                    <span class="number">7</span>,
-                    <span class="number">5</span>,
-                    <span class="ident">Description</span> {
-                        <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">5</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
-                        },
-                        <span class="ident">chimera</span>: <span class="prelude-val">Some</span>(<span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_5&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">6</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
-                        }),
-                        <span class="ident">length</span>: <span class="number">9</span>,
-                        <span class="ident">identity</span>: <span class="number">0.7517399836760904</span>
-                    },
-                    <span class="number">8961782845502155372</span>
-                ),
-                (
-                    <span class="number">5</span>,
-                    <span class="number">0</span>,
-                    <span class="ident">Description</span> {
-                        <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_5&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">6</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
-                        },
-                        <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">4</span>,
-                        <span class="ident">identity</span>: <span class="number">0.8671570964369748</span>
-                    },
-                    <span class="number">3410506326048755836</span>
-                ),
-                (
-                    <span class="number">7</span>,
+                    <span class="number">10</span>,
                     <span class="number">10</span>,
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">8</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
+                            <span class="ident">start</span>: <span class="number">0</span>,
+                            <span class="ident">end</span>: <span class="number">99</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">Some</span>(<span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">89</span>,
-                            <span class="ident">end</span>: <span class="number">99</span>,
+                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+                            <span class="ident">start</span>: <span class="number">68</span>,
+                            <span class="ident">end</span>: <span class="number">74</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         }),
-                        <span class="ident">length</span>: <span class="number">12</span>,
+                        <span class="ident">length</span>: <span class="number">106</span>,
+                        <span class="ident">identity</span>: <span class="number">0.9166196996085733</span>
+                    },
+                    <span class="number">11312190434313393638</span>
+                ),
+                (
+                    <span class="number">10</span>,
+                    <span class="number">0</span>,
+                    <span class="ident">Description</span> {
+                        <span class="ident">origin</span>: <span class="ident">Origin</span> {
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+                            <span class="ident">start</span>: <span class="number">25</span>,
+                            <span class="ident">end</span>: <span class="number">33</span>,
+                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        },
+                        <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
+                        <span class="ident">length</span>: <span class="number">8</span>,
+                        <span class="ident">identity</span>: <span class="number">0.8409338668084709</span>
+                    },
+                    <span class="number">5274222100112014305</span>
+                ),
+                (
+                    <span class="number">7</span>,
+                    <span class="number">0</span>,
+                    <span class="ident">Description</span> {
+                        <span class="ident">origin</span>: <span class="ident">Origin</span> {
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+                            <span class="ident">start</span>: <span class="number">0</span>,
+                            <span class="ident">end</span>: <span class="number">9</span>,
+                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        },
+                        <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
+                        <span class="ident">length</span>: <span class="number">10</span>,
+                        <span class="ident">identity</span>: <span class="number">0.9103369460151146</span>
+                    },
+                    <span class="number">10567391463651436578</span>
+                ),
+                (
+                    <span class="number">10</span>,
+                    <span class="number">0</span>,
+                    <span class="ident">Description</span> {
+                        <span class="ident">origin</span>: <span class="ident">Origin</span> {
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
+                            <span class="ident">start</span>: <span class="number">81</span>,
+                            <span class="ident">end</span>: <span class="number">88</span>,
+                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        },
+                        <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
+                        <span class="ident">length</span>: <span class="number">7</span>,
                         <span class="ident">identity</span>: <span class="number">0.8210852839903914</span>
                     },
                     <span class="number">12595372283568864177</span>
@@ -1355,7 +1384,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 ),
                 (
                     <span class="number">0</span>,
-                    <span class="number">3</span>,
+                    <span class="number">6</span>,
                     <span class="ident">Description</span> {
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(),
@@ -1365,33 +1394,16 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">Some</span>(<span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_3&quot;</span>.<span class="ident">to_string</span>(),
+                            <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_6&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
                             <span class="ident">start</span>: <span class="number">2</span>,
-                            <span class="ident">end</span>: <span class="number">9</span>,
+                            <span class="ident">end</span>: <span class="number">0</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         }),
                         <span class="ident">length</span>: <span class="number">12</span>,
                         <span class="ident">identity</span>: <span class="number">0.8815059110082734</span>
                     },
                     <span class="number">14485571221210959617</span>
-                ),
-                (
-                    <span class="number">0</span>,
-                    <span class="number">0</span>,
-                    <span class="ident">Description</span> {
-                        <span class="ident">origin</span>: <span class="ident">Origin</span> {
-                            <span class="ident">ref_id</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">0</span>,
-                            <span class="ident">end</span>: <span class="number">8</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Junk</span>
-                        },
-                        <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">8</span>,
-                        <span class="ident">identity</span>: <span class="number">0.8912371443805706</span>
-                    },
-                    <span class="number">10141363226306133878</span>
                 )
             ],
             <span class="ident">frags</span>
