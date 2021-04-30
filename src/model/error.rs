@@ -68,8 +68,11 @@ impl Error {
                 prob.push(1.0 - sum_of_prob);
             }
 
-            kmer_length = alts[0].0.len();
-            data.insert(alts[0].0.clone(), (alts, prob));
+            let key = alts.remove(0);
+            prob.remove(0);
+
+            kmer_length = key.0.len();
+            data.insert(key.0.clone(), (alts, prob));
         }
 
         Ok(Self {
@@ -159,11 +162,11 @@ mod t {
 
         assert_eq!(
             model.add_errors_to_kmer(b"ACAGTTG", &mut rng),
-            (b"ACGGTTG".to_vec(), 1)
+            (b"ACAGG".to_vec(), 2)
         );
         assert_eq!(
             model.add_errors_to_kmer(b"ACAGTTG", &mut rng),
-            (b"ACAGTTG".to_vec(), 0)
+            (b"ACGGTTG".to_vec(), 1)
         );
         assert_eq!(
             model.add_errors_to_kmer(b"ACAGTTG", &mut rng),
@@ -171,7 +174,7 @@ mod t {
         );
         assert_eq!(
             model.add_errors_to_kmer(b"ACAGTTG", &mut rng),
-            (b"ACGGTTG".to_vec(), 1)
+            (b"ACAGG".to_vec(), 2)
         );
         assert_eq!(
             model.add_errors_to_kmer(b"ACAGTTG", &mut rng),
@@ -187,7 +190,7 @@ mod t {
         );
         assert_eq!(
             model.add_errors_to_kmer(b"ACAGTTG", &mut rng),
-            (b"ACAGG".to_vec(), 2)
+            (b"ACATTTG".to_vec(), 1)
         );
     }
 
