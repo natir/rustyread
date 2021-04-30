@@ -220,6 +220,9 @@
 <span id="217">217</span>
 <span id="218">218</span>
 <span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Model to add error sequence</span>
 
@@ -291,8 +294,11 @@
                 <span class="ident">prob</span>.<span class="ident">push</span>(<span class="number">1.0</span> <span class="op">-</span> <span class="ident">sum_of_prob</span>);
             }
 
-            <span class="ident">kmer_length</span> <span class="op">=</span> <span class="ident">alts</span>[<span class="number">0</span>].<span class="number">0</span>.<span class="ident">len</span>();
-            <span class="ident">data</span>.<span class="ident">insert</span>(<span class="ident">alts</span>[<span class="number">0</span>].<span class="number">0</span>.<span class="ident">clone</span>(), (<span class="ident">alts</span>, <span class="ident">prob</span>));
+            <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">alts</span>.<span class="ident">remove</span>(<span class="number">0</span>);
+            <span class="ident">prob</span>.<span class="ident">remove</span>(<span class="number">0</span>);
+
+            <span class="ident">kmer_length</span> <span class="op">=</span> <span class="ident">key</span>.<span class="number">0</span>.<span class="ident">len</span>();
+            <span class="ident">data</span>.<span class="ident">insert</span>(<span class="ident">key</span>.<span class="number">0</span>.<span class="ident">clone</span>(), (<span class="ident">alts</span>, <span class="ident">prob</span>));
         }
 
         <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
@@ -382,11 +388,11 @@
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="ident">model</span>.<span class="ident">add_errors_to_kmer</span>(<span class="string">b&quot;ACAGTTG&quot;</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>),
-            (<span class="string">b&quot;ACGGTTG&quot;</span>.<span class="ident">to_vec</span>(), <span class="number">1</span>)
+            (<span class="string">b&quot;ACAGG&quot;</span>.<span class="ident">to_vec</span>(), <span class="number">2</span>)
         );
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="ident">model</span>.<span class="ident">add_errors_to_kmer</span>(<span class="string">b&quot;ACAGTTG&quot;</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>),
-            (<span class="string">b&quot;ACAGTTG&quot;</span>.<span class="ident">to_vec</span>(), <span class="number">0</span>)
+            (<span class="string">b&quot;ACGGTTG&quot;</span>.<span class="ident">to_vec</span>(), <span class="number">1</span>)
         );
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="ident">model</span>.<span class="ident">add_errors_to_kmer</span>(<span class="string">b&quot;ACAGTTG&quot;</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>),
@@ -394,7 +400,7 @@
         );
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="ident">model</span>.<span class="ident">add_errors_to_kmer</span>(<span class="string">b&quot;ACAGTTG&quot;</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>),
-            (<span class="string">b&quot;ACGGTTG&quot;</span>.<span class="ident">to_vec</span>(), <span class="number">1</span>)
+            (<span class="string">b&quot;ACAGG&quot;</span>.<span class="ident">to_vec</span>(), <span class="number">2</span>)
         );
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="ident">model</span>.<span class="ident">add_errors_to_kmer</span>(<span class="string">b&quot;ACAGTTG&quot;</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>),
@@ -410,7 +416,7 @@
         );
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="ident">model</span>.<span class="ident">add_errors_to_kmer</span>(<span class="string">b&quot;ACAGTTG&quot;</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>),
-            (<span class="string">b&quot;ACAGG&quot;</span>.<span class="ident">to_vec</span>(), <span class="number">2</span>)
+            (<span class="string">b&quot;ACATTTG&quot;</span>.<span class="ident">to_vec</span>(), <span class="number">1</span>)
         );
     }
 
