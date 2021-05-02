@@ -3,7 +3,6 @@
 /* standard use */
 
 /* crate use */
-use rand::Rng;
 
 /* local use */
 use crate::model;
@@ -238,13 +237,16 @@ pub fn number_of_edit(target: f64, length: usize) -> f64 {
 }
 
 /// Apply error on read
-pub fn sequence(
+pub fn sequence<RNG>(
     identity: f64,
     seq: &[u8],
     error_model: &model::Error,
     glitch_model: &model::Glitch,
-    rng: &mut rand::rngs::StdRng,
-) -> (Seq, Cigar, f64) {
+    rng: &mut RNG,
+) -> (Seq, Cigar, f64)
+where
+    RNG: rand::Rng,
+{
     let k = error_model.k();
     let target = number_of_edit(identity, seq.len());
 
@@ -284,12 +286,10 @@ pub fn sequence(
 }
 
 /// Create Change correspond to glitches
-pub fn add_glitches(
-    raw: &[u8],
-    changes: &mut Changes,
-    model: &model::Glitch,
-    rng: &mut rand::rngs::StdRng,
-) {
+pub fn add_glitches<RNG>(raw: &[u8], changes: &mut Changes, model: &model::Glitch, rng: &mut RNG)
+where
+    RNG: rand::Rng,
+{
     let mut position = 0;
 
     while let Some((begin, end, seq)) = model.get_glitch(rng) {
@@ -308,16 +308,16 @@ pub fn add_glitches(
 }
 
 /// Add Change correspond to error in changes
-pub fn add_error(
+pub fn add_error<RNG>(
     k: usize,
     target: f64,
     raw: &[u8],
     changes: &mut Changes,
     error_model: &model::Error,
-    rng: &mut rand::rngs::StdRng,
-) {
-    let mut loop_count = 0;
-    let mut sum_of_edit = 0.0;
+    rng: &mut RNG,
+) where
+    RNG: rand::Rng,
+{
 
     // Add error until we reach target or we loop raw length
     while sum_of_edit < target && loop_count < raw.len() {

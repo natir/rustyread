@@ -23,9 +23,9 @@ pub struct Quality {
 
 impl Quality {
     /// Load model from an stdin
-    pub fn from_stream<R>(input: R) -> Result<Self>
+    pub fn from_stream<RNG>(input: RNG) -> Result<Self>
     where
-        R: std::io::Read,
+        RNG: std::io::Read,
     {
         let mut data = rustc_hash::FxHashMap::default();
 
@@ -110,9 +110,9 @@ impl Quality {
     }
 
     /// Generate error associate to a cigar string with odd length
-    pub fn get_qscore<R>(&self, cigar: &[u8], rng: &mut R) -> Result<u8>
+    pub fn get_qscore<RNG>(&self, cigar: &[u8], rng: &mut RNG) -> Result<u8>
     where
-        R: rand::Rng,
+        RNG: rand::Rng,
     {
         let mut c = cigar;
 

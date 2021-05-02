@@ -35,9 +35,9 @@ impl Length {
     }
 
     /// Get length from model
-    pub fn get_length<R>(&self, rng: &mut R) -> u64
+    pub fn get_length<RNG>(&self, rng: &mut RNG) -> u64
     where
-        R: rand::Rng,
+        RNG: rand::Rng,
     {
         if let Some(dist) = self.dist {
             dist.sample(rng).round() as u64

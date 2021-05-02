@@ -42,9 +42,9 @@ impl Identity {
     }
 
     /// Get identity from model
-    pub fn get_identity<R>(&self, rng: &mut R) -> f64
+    pub fn get_identity<RNG>(&self, rng: &mut RNG) -> f64
     where
-        R: rand::Rng,
+        RNG: rand::Rng,
     {
         if let Some(dist) = self.dist {
             self.max * dist.sample(rng)

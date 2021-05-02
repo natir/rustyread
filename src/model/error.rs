@@ -23,10 +23,10 @@ pub struct Error {
 
 impl Error {
     /// Load model from an stdin
-    pub fn from_stream<R, A>(input: R, rng: &mut A) -> Result<Self>
+    pub fn from_stream<R, RNG>(input: R, rng: &mut RNG) -> Result<Self>
     where
         R: std::io::Read,
-        A: rand::Rng,
+        RNG: rand::Rng,
     {
         let mut data = rustc_hash::FxHashMap::default();
 
@@ -90,9 +90,9 @@ impl Error {
     }
 
     /// Add error to a kmer
-    pub fn add_errors_to_kmer<R>(&self, kmer: &[u8], rng: &mut R) -> (Kmer, u64)
+    pub fn add_errors_to_kmer<RNG>(&self, kmer: &[u8], rng: &mut RNG) -> (Kmer, u64)
     where
-        R: rand::Rng,
+        RNG: rand::Rng,
     {
         if let Some(data) = &self.kmer2alts_edit_prob {
             if let Some(values) = data.get(kmer) {
@@ -113,9 +113,9 @@ impl Error {
 }
 
 /// Add a single random error in a kmer
-pub fn random_error<R>(kmer: &[u8], rng: &mut R) -> Kmer
+pub fn random_error<RNG>(kmer: &[u8], rng: &mut RNG) -> Kmer
 where
-    R: rand::Rng,
+    RNG: rand::Rng,
 {
     let error_pos = rng.gen_range(0..kmer.len());
 

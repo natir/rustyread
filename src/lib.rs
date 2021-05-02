@@ -15,17 +15,17 @@ const CHIMERA_END_ADAPTER_CHANCE: f64 = 0.25;
 const NUCS: [u8; 4] = [b'A', b'C', b'T', b'G'];
 
 /// Get a random base
-pub fn random_base<R>(rng: &mut R) -> u8
+pub fn random_base<RNG>(rng: &mut RNG) -> u8
 where
-    R: rand::Rng,
+    RNG: rand::Rng,
 {
     NUCS[rng.gen_range(0..=3)]
 }
 
 /// Get a random base diffrent than nuc
-pub fn random_base_diff<R>(nuc: u8, rng: &mut R) -> u8
+pub fn random_base_diff<RNG>(nuc: u8, rng: &mut RNG) -> u8
 where
-    R: rand::Rng,
+    RNG: rand::Rng,
 {
     loop {
         let idx = rng.gen_range(0..=3);
@@ -37,9 +37,9 @@ where
 }
 
 /// Get random sequences
-pub fn random_seq<R>(length: usize, rng: &mut R) -> Vec<u8>
+pub fn random_seq<RNG>(length: usize, rng: &mut RNG) -> Vec<u8>
 where
-    R: rand::Rng,
+    RNG: rand::Rng,
 {
     (0..length).map(|_| random_base(rng)).collect()
 }

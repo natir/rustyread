@@ -11,11 +11,10 @@ use crate::model;
 type Quality = Vec<u8>;
 
 /// Generate quality string
-pub fn generate_quality(
-    cigar: &[u8],
-    model: &model::Quality,
-    rng: &mut rand::rngs::StdRng,
-) -> Result<Quality> {
+pub fn generate_quality<RNG>(cigar: &[u8], model: &model::Quality, rng: &mut RNG) -> Result<Quality>
+where
+    RNG: rand::Rng,
+{
     let mut qual = Vec::with_capacity(cigar.len());
     let margin = (model.max_k() - 1) / 2;
 

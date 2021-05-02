@@ -48,9 +48,9 @@ impl Glitch {
     }
 
     /// Get glitch
-    pub fn get_glitch<R>(&self, rng: &mut R) -> Option<(usize, usize, Vec<u8>)>
+    pub fn get_glitch<RNG>(&self, rng: &mut RNG) -> Option<(usize, usize, Vec<u8>)>
     where
-        R: rand::Rng,
+        RNG: rand::Rng,
     {
         if let Some(dist) = self.distance {
             let begin = dist.sample(rng) as usize;

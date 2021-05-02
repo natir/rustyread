@@ -3,8 +3,6 @@
 /* standard use */
 
 /* crate use */
-use rand::Rng;
-use rand::RngCore;
 
 /* local use */
 use crate::model;
@@ -12,7 +10,10 @@ use crate::references::*;
 use crate::simulate::description::{Description, Origin, ReadType};
 
 /// An iterator produce fragment, a description and a seed
-pub struct Fragments<'a> {
+pub struct Fragments<'a, R>
+where
+    R: rand::Rng,
+{
     target: u64,
     junk_rate: f64,
     random_rate: f64,
@@ -20,10 +21,13 @@ pub struct Fragments<'a> {
     references: &'a References,
     length_model: &'a model::Length,
     identity_model: &'a model::Identity,
-    rng: &'a mut rand::rngs::StdRng,
+    rng: &'a mut R,
 }
 
-impl<'a> Fragments<'a> {
+impl<'a, R> Fragments<'a, R>
+where
+    R: rand::Rng,
+{
     /// Create a new Fragments
     pub fn new(
         target: u64,
@@ -31,8 +35,11 @@ impl<'a> Fragments<'a> {
         references: &'a References,
         length_model: &'a model::Length,
         identity_model: &'a model::Identity,
-        rng: &'a mut rand::rngs::StdRng,
-    ) -> Self {
+        rng: &'a mut R,
+    ) -> Self
+    where
+        R: rand::Rng,
+    {
         Self {
             target,
             junk_rate: rates.0 / 100.0,
@@ -93,7 +100,6 @@ impl<'a> Fragments<'a> {
                     (0, reference.seq.len() - 1, reference.seq.len())
                 };
 
-                log::debug!("target length {} real {}", length, real_length);
                 (
                     ref_index,
                     real_length,
@@ -107,22 +113,17 @@ impl<'a> Fragments<'a> {
 }
 
 fn fragment_is_possible(frag_len: usize, ref_len: usize, circular: bool) -> bool {
-    log::debug!(
-        "frag_len {} ref_len {} circular {}",
-        frag_len,
-        ref_len,
-        circular
-    );
     if frag_len >= ref_len {
-        log::debug!("return {}", !circular);
         !circular
     } else {
-        log::debug!("return {}", true);
         true
     }
 }
 
-impl<'a> Iterator for Fragments<'a> {
+impl<'a, R> Iterator for Fragments<'a, R>
+where
+    R: rand::Rng,
+{
     // ((ref_index, chimeric_ref_index), Description, Seed)
     type Item = (usize, usize, Description, u64);
 

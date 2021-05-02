@@ -230,15 +230,18 @@ type Seq = Vec<u8>;
 type Quality = Vec<u8>;
 
 /// Function realy generate read
-fn generate_read(
+fn generate_read<R>(
     references: (&Reference, &Reference),
     mut description: Description,
     adapter_model: &model::Adapter,
     error_model: &model::Error,
     glitch_model: &model::Glitch,
     qscore_model: &model::Quality,
-    mut rng: rand::rngs::StdRng,
-) -> Result<(Description, Seq, Quality)> {
+    mut rng: R,
+) -> Result<(Description, Seq, Quality)>
+where
+    R: rand::Rng,
+{
     let k = error_model.k();
 
     // Estimate size of final fragment all edit is consider as insertion -> it's overestimation
@@ -298,12 +301,10 @@ fn generate_read(
     Ok((description, err_fragment, quality))
 }
 
-fn add_fragment(
-    raw_fragment: &mut Vec<u8>,
-    origin: &Origin,
-    reference: &Reference,
-    rng: &mut rand::rngs::StdRng,
-) {
+fn add_fragment<RNG>(raw_fragment: &mut Vec<u8>, origin: &Origin, reference: &Reference, rng: &mut RNG)
+where
+    RNG: rand::Rng,
+{
     match origin.read_type {
         ReadType::Junk => add_junk(raw_fragment, origin.end, rng),
         ReadType::Random => add_random(raw_fragment, origin.end, rng),
@@ -311,13 +312,19 @@ fn add_fragment(
     }
 }
 
-fn add_junk(raw_fragment: &mut Vec<u8>, length: usize, rng: &mut rand::rngs::StdRng) {
+fn add_junk<RNG>(raw_fragment: &mut Vec<u8>, length: usize, rng: &mut RNG)
+where
+    RNG: rand::Rng,
+{
     let small_seq = crate::random_seq(rng.gen_range(1..=5), rng);
 
     raw_fragment.extend(small_seq.repeat(length / small_seq.len()))
 }
 
-fn add_random(raw_fragment: &mut Vec<u8>, length: usize, rng: &mut rand::rngs::StdRng) {
+fn add_random<RNG>(raw_fragment: &mut Vec<u8>, length: usize, rng: &mut RNG)
+where
+    RNG: rand::Rng,
+{
     raw_fragment.extend(crate::random_seq(length, rng))
 }
 

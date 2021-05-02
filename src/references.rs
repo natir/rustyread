@@ -59,14 +59,15 @@ impl References {
     }
 
     /// Same as from_stream but small sequence have increase weighted to fix bias.
-    pub fn from_stream_adjusted_weigth<R>(
+    pub fn from_stream_adjusted_weigth<R, RNG>(
         input: R,
         small_plasmid_bias: bool,
         length_model: &model::Length,
-        rng: &mut rand::rngs::StdRng,
+        rng: &mut RNG,
     ) -> Result<Self>
     where
         R: std::io::Read,
+        RNG: rand::Rng,
     {
         let (seqs, mut prob) = References::read_reference(input)?;
 
@@ -79,9 +80,9 @@ impl References {
     }
 
     /// Randomly get a reference index and strand according to depth
-    pub fn choose_reference<R>(&self, rng: &mut R) -> (usize, char)
+    pub fn choose_reference<RNG>(&self, rng: &mut RNG) -> (usize, char)
     where
-        R: rand::Rng,
+        RNG: rand::Rng,
     {
         match ['+', '-'][rng.gen_range(0..=1) as usize] {
             '+' => (self.dist.sample(rng), '+'),
@@ -91,13 +92,16 @@ impl References {
     }
 
     /// Adjust depth of reference to fix bias in small sequence representation
-    fn adjust_depth(
+    fn adjust_depth<RNG>(
         sequences: &[Reference],
         mut weight: Vec<f64>,
         small_plasmid_bias: bool,
         model: &model::Length,
-        rng: &mut rand::rngs::StdRng,
-    ) -> Result<Vec<f64>> {
+        rng: &mut RNG,
+    ) -> Result<Vec<f64>>
+    where
+        RNG: rand::Rng,
+    {
         let lengths: Vec<u64> = (0..100_000).map(|_| model.get_length(rng)).collect();
         let total: u64 = lengths.iter().sum();
 

@@ -61,9 +61,9 @@ impl Adapter {
         })
     }
 
-    pub fn get_start<R>(&self, rng: &mut R) -> Vec<u8>
+    pub fn get_start<RNG>(&self, rng: &mut RNG) -> Vec<u8>
     where
-        R: rand::Rng,
+        RNG: rand::Rng,
     {
         if rng.gen_bool(self.start_rate) {
             if let Some(dist) = self.start_dist {
@@ -77,9 +77,9 @@ impl Adapter {
         }
     }
 
-    pub fn get_end<R>(&self, rng: &mut R) -> Vec<u8>
+    pub fn get_end<RNG>(&self, rng: &mut RNG) -> Vec<u8>
     where
-        R: rand::Rng,
+        RNG: rand::Rng,
     {
         if rng.gen_bool(self.end_rate) {
             if let Some(dist) = self.end_dist {
