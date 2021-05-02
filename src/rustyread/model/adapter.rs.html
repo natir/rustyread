@@ -259,9 +259,9 @@
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_start</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_start</span><span class="op">&lt;</span><span class="ident">RNG</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RNG</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+        <span class="ident">RNG</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
     {
         <span class="kw">if</span> <span class="ident">rng</span>.<span class="ident">gen_bool</span>(<span class="self">self</span>.<span class="ident">start_rate</span>) {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">dist</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">start_dist</span> {
@@ -275,9 +275,9 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_end</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_end</span><span class="op">&lt;</span><span class="ident">RNG</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RNG</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+        <span class="ident">RNG</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
     {
         <span class="kw">if</span> <span class="ident">rng</span>.<span class="ident">gen_bool</span>(<span class="self">self</span>.<span class="ident">end_rate</span>) {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">dist</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">end_dist</span> {

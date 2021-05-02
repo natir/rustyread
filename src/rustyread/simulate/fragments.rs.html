@@ -705,14 +705,13 @@
 <span id="702">702</span>
 <span id="703">703</span>
 <span id="704">704</span>
+<span id="705">705</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Generate fragments</span>
 
 <span class="comment">/* standard use */</span>
 
 <span class="comment">/* crate use */</span>
-<span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">Rng</span>;
-<span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">RngCore</span>;
 
 <span class="comment">/* local use */</span>
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">model</span>;
@@ -720,7 +719,10 @@
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">simulate</span>::<span class="ident">description</span>::{<span class="ident">Description</span>, <span class="ident">Origin</span>, <span class="ident">ReadType</span>};
 
 <span class="doccomment">/// An iterator produce fragment, a description and a seed</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Fragments</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Fragments</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+{
     <span class="ident">target</span>: <span class="ident">u64</span>,
     <span class="ident">junk_rate</span>: <span class="ident">f64</span>,
     <span class="ident">random_rate</span>: <span class="ident">f64</span>,
@@ -728,10 +730,13 @@
     <span class="ident">references</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">References</span>,
     <span class="ident">length_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model</span>::<span class="ident">Length</span>,
     <span class="ident">identity_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model</span>::<span class="ident">Identity</span>,
-    <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
+    <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">R</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Fragments</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span> <span class="ident">Fragments</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+{
     <span class="doccomment">/// Create a new Fragments</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
         <span class="ident">target</span>: <span class="ident">u64</span>,
@@ -739,8 +744,11 @@
         <span class="ident">references</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">References</span>,
         <span class="ident">length_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model</span>::<span class="ident">Length</span>,
         <span class="ident">identity_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model</span>::<span class="ident">Identity</span>,
-        <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">R</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>
+    <span class="kw">where</span>
+        <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+    {
         <span class="self">Self</span> {
             <span class="ident">target</span>,
             <span class="ident">junk_rate</span>: <span class="ident">rates</span>.<span class="number">0</span> <span class="op">/</span> <span class="number">100.0</span>,
@@ -801,7 +809,6 @@
                     (<span class="number">0</span>, <span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>, <span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>())
                 };
 
-                <span class="ident">log</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;target length {} real {}&quot;</span>, <span class="ident">length</span>, <span class="ident">real_length</span>);
                 (
                     <span class="ident">ref_index</span>,
                     <span class="ident">real_length</span>,
@@ -815,22 +822,17 @@
 }
 
 <span class="kw">fn</span> <span class="ident">fragment_is_possible</span>(<span class="ident">frag_len</span>: <span class="ident">usize</span>, <span class="ident">ref_len</span>: <span class="ident">usize</span>, <span class="ident">circular</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-    <span class="ident">log</span>::<span class="macro">debug</span><span class="macro">!</span>(
-        <span class="string">&quot;frag_len {} ref_len {} circular {}&quot;</span>,
-        <span class="ident">frag_len</span>,
-        <span class="ident">ref_len</span>,
-        <span class="ident">circular</span>
-    );
     <span class="kw">if</span> <span class="ident">frag_len</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">ref_len</span> {
-        <span class="ident">log</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;return {}&quot;</span>, <span class="op">!</span><span class="ident">circular</span>);
         <span class="op">!</span><span class="ident">circular</span>
     } <span class="kw">else</span> {
-        <span class="ident">log</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;return {}&quot;</span>, <span class="bool-val">true</span>);
         <span class="bool-val">true</span>
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Fragments</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Fragments</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+{
     <span class="comment">// ((ref_index, chimeric_ref_index), Description, Seed)</span>
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">Description</span>, <span class="ident">u64</span>);
 

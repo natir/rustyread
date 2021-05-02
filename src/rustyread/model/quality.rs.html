@@ -346,9 +346,9 @@
 
 <span class="kw">impl</span> <span class="ident">Quality</span> {
     <span class="doccomment">/// Load model from an stdin</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_stream</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="ident">R</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_stream</span><span class="op">&lt;</span><span class="ident">RNG</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="ident">RNG</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>,
+        <span class="ident">RNG</span>: <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>,
     {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">rustc_hash</span>::<span class="ident">FxHashMap</span>::<span class="ident">default</span>();
 
@@ -433,9 +433,9 @@
     }
 
     <span class="doccomment">/// Generate error associate to a cigar string with odd length</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_qscore</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cigar</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_qscore</span><span class="op">&lt;</span><span class="ident">RNG</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cigar</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RNG</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+        <span class="ident">RNG</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
     {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">cigar</span>;
 

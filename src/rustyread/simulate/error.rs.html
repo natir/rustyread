@@ -839,7 +839,6 @@
 <span class="comment">/* standard use */</span>
 
 <span class="comment">/* crate use */</span>
-<span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">Rng</span>;
 
 <span class="comment">/* local use */</span>
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">model</span>;
@@ -1074,13 +1073,16 @@
 }
 
 <span class="doccomment">/// Apply error on read</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sequence</span>(
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sequence</span><span class="op">&lt;</span><span class="ident">RNG</span><span class="op">&gt;</span>(
     <span class="ident">identity</span>: <span class="ident">f64</span>,
     <span class="ident">seq</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
     <span class="ident">error_model</span>: <span class="kw-2">&amp;</span><span class="ident">model</span>::<span class="ident">Error</span>,
     <span class="ident">glitch_model</span>: <span class="kw-2">&amp;</span><span class="ident">model</span>::<span class="ident">Glitch</span>,
-    <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
-) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Seq</span>, <span class="ident">Cigar</span>, <span class="ident">f64</span>) {
+    <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RNG</span>,
+) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Seq</span>, <span class="ident">Cigar</span>, <span class="ident">f64</span>)
+<span class="kw">where</span>
+    <span class="ident">RNG</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+{
     <span class="kw">let</span> <span class="ident">k</span> <span class="op">=</span> <span class="ident">error_model</span>.<span class="ident">k</span>();
     <span class="kw">let</span> <span class="ident">target</span> <span class="op">=</span> <span class="ident">number_of_edit</span>(<span class="ident">identity</span>, <span class="ident">seq</span>.<span class="ident">len</span>());
 
@@ -1120,12 +1122,10 @@
 }
 
 <span class="doccomment">/// Create Change correspond to glitches</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_glitches</span>(
-    <span class="ident">raw</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-    <span class="ident">changes</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Changes</span>,
-    <span class="ident">model</span>: <span class="kw-2">&amp;</span><span class="ident">model</span>::<span class="ident">Glitch</span>,
-    <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
-) {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_glitches</span><span class="op">&lt;</span><span class="ident">RNG</span><span class="op">&gt;</span>(<span class="ident">raw</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">changes</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Changes</span>, <span class="ident">model</span>: <span class="kw-2">&amp;</span><span class="ident">model</span>::<span class="ident">Glitch</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RNG</span>)
+<span class="kw">where</span>
+    <span class="ident">RNG</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+{
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">position</span> <span class="op">=</span> <span class="number">0</span>;
 
     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">begin</span>, <span class="ident">end</span>, <span class="ident">seq</span>)) <span class="op">=</span> <span class="ident">model</span>.<span class="ident">get_glitch</span>(<span class="ident">rng</span>) {
@@ -1144,16 +1144,16 @@
 }
 
 <span class="doccomment">/// Add Change correspond to error in changes</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_error</span>(
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_error</span><span class="op">&lt;</span><span class="ident">RNG</span><span class="op">&gt;</span>(
     <span class="ident">k</span>: <span class="ident">usize</span>,
     <span class="ident">target</span>: <span class="ident">f64</span>,
     <span class="ident">raw</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
     <span class="ident">changes</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Changes</span>,
     <span class="ident">error_model</span>: <span class="kw-2">&amp;</span><span class="ident">model</span>::<span class="ident">Error</span>,
-    <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>,
-) {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">loop_count</span> <span class="op">=</span> <span class="number">0</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sum_of_edit</span> <span class="op">=</span> <span class="number">0.0</span>;
+    <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RNG</span>,
+) <span class="kw">where</span>
+    <span class="ident">RNG</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+{
 
     <span class="comment">// Add error until we reach target or we loop raw length</span>
     <span class="kw">while</span> <span class="ident">sum_of_edit</span> <span class="op">&lt;</span> <span class="ident">target</span> <span class="op">&amp;&amp;</span> <span class="ident">loop_count</span> <span class="op">&lt;</span> <span class="ident">raw</span>.<span class="ident">len</span>() {

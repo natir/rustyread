@@ -129,17 +129,17 @@
 <span class="kw">const</span> <span class="ident">NUCS</span>: [<span class="ident">u8</span>; <span class="number">4</span>] <span class="op">=</span> [<span class="string">b&#39;A&#39;</span>, <span class="string">b&#39;C&#39;</span>, <span class="string">b&#39;T&#39;</span>, <span class="string">b&#39;G&#39;</span>];
 
 <span class="doccomment">/// Get a random base</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">random_base</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">random_base</span><span class="op">&lt;</span><span class="ident">RNG</span><span class="op">&gt;</span>(<span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RNG</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span>
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+    <span class="ident">RNG</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
 {
     <span class="ident">NUCS</span>[<span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0</span>..<span class="op">=</span><span class="number">3</span>)]
 }
 
 <span class="doccomment">/// Get a random base diffrent than nuc</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">random_base_diff</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">nuc</span>: <span class="ident">u8</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">random_base_diff</span><span class="op">&lt;</span><span class="ident">RNG</span><span class="op">&gt;</span>(<span class="ident">nuc</span>: <span class="ident">u8</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RNG</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span>
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+    <span class="ident">RNG</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
 {
     <span class="kw">loop</span> {
         <span class="kw">let</span> <span class="ident">idx</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0</span>..<span class="op">=</span><span class="number">3</span>);
@@ -151,9 +151,9 @@
 }
 
 <span class="doccomment">/// Get random sequences</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">random_seq</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">length</span>: <span class="ident">usize</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">random_seq</span><span class="op">&lt;</span><span class="ident">RNG</span><span class="op">&gt;</span>(<span class="ident">length</span>: <span class="ident">usize</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RNG</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+    <span class="ident">RNG</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
 {
     (<span class="number">0</span>..<span class="ident">length</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">random_base</span>(<span class="ident">rng</span>)).<span class="ident">collect</span>()
 }
