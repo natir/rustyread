@@ -848,6 +848,63 @@
 <span id="845">845</span>
 <span id="846">846</span>
 <span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
+<span id="897">897</span>
+<span id="898">898</span>
+<span id="899">899</span>
+<span id="900">900</span>
+<span id="901">901</span>
+<span id="902">902</span>
+<span id="903">903</span>
+<span id="904">904</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Generate fragments</span>
 
@@ -929,9 +986,7 @@
                 <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">ref_index</span>, <span class="kw-2">mut</span> <span class="ident">strand</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">references</span>.<span class="ident">choose_reference</span>(<span class="self">self</span>.<span class="ident">rng</span>);
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reference</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">references</span>.<span class="ident">sequences</span>[<span class="ident">ref_index</span>];
 
-                <span class="kw">while</span> <span class="ident">read_type</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ReadType</span>::<span class="ident">Real</span>
-                    <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">fragment_is_possible</span>(<span class="ident">length</span>, <span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>(), <span class="ident">reference</span>.<span class="ident">circular</span>)
-                {
+                <span class="kw">while</span> <span class="op">!</span><span class="ident">fragment_is_possible</span>(<span class="ident">length</span>, <span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>(), <span class="ident">reference</span>.<span class="ident">circular</span>) {
                     <span class="kw">let</span> (<span class="ident">r</span>, <span class="ident">s</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">references</span>.<span class="ident">choose_reference</span>(<span class="self">self</span>.<span class="ident">rng</span>);
                     <span class="ident">ref_index</span> <span class="op">=</span> <span class="ident">r</span>;
                     <span class="ident">strand</span> <span class="op">=</span> <span class="ident">s</span>;
@@ -948,7 +1003,7 @@
                         <span class="ident">length</span>,
                     )
                 } <span class="kw">else</span> {
-                    (<span class="number">0</span>, <span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>, <span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>())
+                    (<span class="ident">try_begin</span>, <span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>, <span class="ident">reference</span>.<span class="ident">seq</span>.<span class="ident">len</span>())
                 };
 
                 (
@@ -1124,7 +1179,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     <span class="ident">Origin</span> {
                         <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">0</span>,
+                        <span class="ident">start</span>: <span class="number">7</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
@@ -1146,7 +1201,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     <span class="ident">Origin</span> {
                         <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_0&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">0</span>,
+                        <span class="ident">start</span>: <span class="number">5</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
@@ -1201,7 +1256,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     <span class="ident">Origin</span> {
                         <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">0</span>,
+                        <span class="ident">start</span>: <span class="number">8</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
@@ -1212,7 +1267,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     <span class="ident">Origin</span> {
                         <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">0</span>,
+                        <span class="ident">start</span>: <span class="number">2</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
@@ -1256,7 +1311,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     <span class="ident">Origin</span> {
                         <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_9&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">0</span>,
+                        <span class="ident">start</span>: <span class="number">6</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
@@ -1300,7 +1355,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     <span class="ident">Origin</span> {
                         <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_5&quot;</span>.<span class="ident">to_string</span>(),
                         <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
-                        <span class="ident">start</span>: <span class="number">0</span>,
+                        <span class="ident">start</span>: <span class="number">1</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
                         <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                     }
@@ -1360,7 +1415,6 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
 
         <span class="kw">let</span> <span class="ident">frags</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">Description</span>, <span class="ident">u64</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">fragments</span>.<span class="ident">take</span>(<span class="number">10</span>).<span class="ident">collect</span>();
 
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">frags</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="macro">vec</span><span class="macro">!</span>[
                 (
@@ -1370,7 +1424,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">0</span>,
+                            <span class="ident">start</span>: <span class="number">7</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
@@ -1387,7 +1441,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_0&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">0</span>,
+                            <span class="ident">start</span>: <span class="number">5</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
@@ -1427,7 +1481,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">0</span>,
+                            <span class="ident">start</span>: <span class="number">8</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
@@ -1444,7 +1498,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">0</span>,
+                            <span class="ident">start</span>: <span class="number">96</span>,
                             <span class="ident">end</span>: <span class="number">99</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
@@ -1484,7 +1538,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">origin</span>: <span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_7&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
-                            <span class="ident">start</span>: <span class="number">0</span>,
+                            <span class="ident">start</span>: <span class="number">7</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
@@ -1652,7 +1706,11 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
         <span class="kw">let</span> <span class="ident">refs</span> <span class="op">=</span> <span class="ident">References</span>::<span class="ident">from_stream_adjusted_weight</span>(<span class="ident">file</span>, <span class="bool-val">false</span>, <span class="kw-2">&amp;</span><span class="ident">length</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>).<span class="ident">unwrap</span>();
 
         <span class="kw">let</span> <span class="ident">fragments</span> <span class="op">=</span> <span class="ident">Fragments</span>::<span class="ident">new</span>(
-            <span class="number">100_000_000</span>,
+            <span class="ident">refs</span>.<span class="ident">sequences</span>
+                .<span class="ident">iter</span>()
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">seq</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>)
+                .<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>()
+                <span class="op">*</span> <span class="number">50</span>,
             (<span class="number">1.0</span>, <span class="number">1.0</span>, <span class="number">1.0</span>),
             <span class="kw-2">&amp;</span><span class="ident">refs</span>,
             <span class="kw-2">&amp;</span><span class="ident">length</span>,
@@ -1660,27 +1718,83 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>,
         );
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lengths</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lengths</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Vec</span>::<span class="ident">new</span>(); <span class="ident">refs</span>.<span class="ident">sequences</span>.<span class="ident">len</span>()];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">identitys</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
 
-        <span class="kw">for</span> (<span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">des</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="ident">fragments</span> {
-            <span class="ident">lengths</span>.<span class="ident">push</span>((<span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">end</span> <span class="op">-</span> <span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">start</span>) <span class="kw">as</span> <span class="ident">f64</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">type_count</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">4</span>];
+        <span class="kw">for</span> (<span class="ident">ori1</span>, <span class="ident">ori2</span>, <span class="ident">des</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="ident">fragments</span> {
+            <span class="kw">match</span> <span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">read_type</span> {
+                <span class="ident">ReadType</span>::<span class="ident">Real</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">type_count</span>[<span class="number">0</span>] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>,
+                <span class="ident">ReadType</span>::<span class="ident">Junk</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">type_count</span>[<span class="number">1</span>] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>,
+                <span class="ident">ReadType</span>::<span class="ident">Random</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">type_count</span>[<span class="number">2</span>] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>,
+            }
+
+            <span class="ident">lengths</span>[<span class="ident">ori1</span>].<span class="ident">push</span>((<span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">end</span> <span class="op">-</span> <span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">start</span>) <span class="kw">as</span> <span class="ident">f64</span>);
+
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">chimera</span>) <span class="op">=</span> <span class="ident">des</span>.<span class="ident">chimera</span> {
-                <span class="ident">lengths</span>.<span class="ident">push</span>((<span class="ident">chimera</span>.<span class="ident">end</span> <span class="op">-</span> <span class="ident">chimera</span>.<span class="ident">start</span>) <span class="kw">as</span> <span class="ident">f64</span>);
+                <span class="ident">type_count</span>[<span class="number">3</span>] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                <span class="ident">lengths</span>[<span class="ident">ori2</span>].<span class="ident">push</span>((<span class="ident">chimera</span>.<span class="ident">end</span> <span class="op">-</span> <span class="ident">chimera</span>.<span class="ident">start</span>) <span class="kw">as</span> <span class="ident">f64</span>);
             }
 
             <span class="ident">identitys</span>.<span class="ident">push</span>(<span class="ident">des</span>.<span class="ident">identity</span>);
         }
 
-        <span class="kw">let</span> <span class="ident">sum_len</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">lengths</span>.<span class="ident">iter</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">type_count</span>, [<span class="number">7278</span>, <span class="number">79</span>, <span class="number">77</span>, <span class="number">61</span>]);
+
+        <span class="kw">let</span> <span class="ident">read_per_ref</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">lengths</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">len</span>()).<span class="ident">collect</span>();
+
+        <span class="comment">//5_000_000, 2_500, 500, 140_000, 80_000, 75_000, 65_000, 8_000, 7_000</span>
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">read_per_ref</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="number">6918</span>, <span class="number">25</span>, <span class="number">30</span>, <span class="number">169</span>, <span class="number">125</span>, <span class="number">92</span>, <span class="number">84</span>, <span class="number">32</span>, <span class="number">20</span>]);
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">lengths</span>[<span class="number">0</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">0</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
+            <span class="number">18023.59251228679</span>
+        );
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">lengths</span>[<span class="number">1</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">1</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
+            <span class="number">1268.0</span>
+        );
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">lengths</span>[<span class="number">2</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">2</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
+            <span class="number">227.7</span>
+        );
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">lengths</span>[<span class="number">3</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">3</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
+            <span class="number">17214.721893491125</span>
+        );
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">lengths</span>[<span class="number">4</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">4</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
+            <span class="number">15697.808</span>
+        );
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">lengths</span>[<span class="number">5</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">5</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
+            <span class="number">14973.576086956522</span>
+        );
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">lengths</span>[<span class="number">6</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">6</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
+            <span class="number">13771.464285714286</span>
+        );
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">lengths</span>[<span class="number">7</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">7</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
+            <span class="number">3448.625</span>
+        );
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">lengths</span>[<span class="number">8</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">8</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
+            <span class="number">3308.55</span>
+        );
+
+        <span class="kw">let</span> <span class="ident">sum_len</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">lengths</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">iter</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>()).<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>();
         <span class="kw">let</span> <span class="ident">avg_len</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">sum_len</span> <span class="op">/</span> <span class="ident">lengths</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>;
-        <span class="kw">let</span> <span class="ident">std_len</span>: <span class="ident">f64</span> <span class="op">=</span> (<span class="ident">lengths</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> (<span class="ident">x</span> <span class="op">-</span> <span class="ident">avg_len</span>).<span class="ident">powf</span>(<span class="number">2.0</span>)).<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>()
+        <span class="kw">let</span> <span class="ident">std_len</span>: <span class="ident">f64</span> <span class="op">=</span> (<span class="ident">lengths</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> (<span class="ident">x</span> <span class="op">-</span> <span class="ident">avg_len</span>).<span class="ident">powf</span>(<span class="number">2.0</span>)).<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>())
+            .<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>()
             <span class="op">/</span> <span class="ident">lengths</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>)
             .<span class="ident">sqrt</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sum_len</span>, <span class="number">100_819_673.0</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">avg_len</span>, <span class="number">36058.53826895565</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">std_len</span>, <span class="number">297865.20280424535</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sum_len</span>, <span class="number">132308157.0</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">avg_len</span>, <span class="number">14700906.333333334</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">std_len</span>, <span class="number">423727937.5338044</span>);
 
         <span class="kw">let</span> <span class="ident">sum_id</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">identitys</span>.<span class="ident">iter</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>();
         <span class="kw">let</span> <span class="ident">avg_id</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">sum_id</span> <span class="op">/</span> <span class="ident">identitys</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>;
@@ -1691,9 +1805,9 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             <span class="op">/</span> <span class="ident">identitys</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>)
             .<span class="ident">sqrt</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sum_id</span>, <span class="number">2413.21631930477</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">avg_id</span>, <span class="number">0.8686883798793268</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">std_id</span>, <span class="number">0.09101904722196807</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sum_id</span>, <span class="number">6463.456136655821</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">avg_id</span>, <span class="number">0.869445269929489</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">std_id</span>, <span class="number">0.09092967530091031</span>);
     }
 }
 </pre></div>
