@@ -102,28 +102,53 @@ impl Change {
     ///
     /// Return an None if self and other Change can't be merge
     /// Return Some(i64) change in edit distance
-    pub fn merge(&mut self, other: &Change, original: &[u8]) -> f64 {
+    pub fn merge(&mut self, other: &Change, raw: &[u8]) -> f64 {
         if !self.overlap(other) {
             return 0.0;
         }
 
-        if other.begin() < self.end_err() {
+        let (new_raw, new_err) = if other.begin() < self.end_err() {
             let ovl = self.end_err() - other.begin();
             if other.seq().len() > ovl {
                 self.seq.extend(&other.seq()[ovl..]);
             }
 
+            let old_end = self.end_raw();
             self.end = self.end_raw() + other.end_raw() - other.begin() - ovl;
-        } else if other.begin() < self.end_raw() {
+
+            if self.end < raw.len() - 1 {
+                if old_end < self.end {
+                    (&raw[old_end..self.end], &other.seq[ovl..])
+                } else {
+                    (&raw[self.end..old_end], &other.seq[ovl..])
+                }
+            } else {
+                (&raw[old_end..], &other.seq[ovl..])
+            }
+        } else {
             self.seq.extend(&other.seq()[..]);
 
+            let old_end = self.end_raw();
             self.end = other.begin() + other.seq().len();
-        }
 
-        let prev_ed = self.edit();
-        self.update_align(original);
+            if self.end < raw.len() - 1 {
+                if old_end < self.end {
+                    (&raw[old_end..self.end], &other.seq[..])
+                } else {
+                    (&raw[self.end..old_end], &other.seq[..])
+                }
+            } else {
+                (&raw[old_end..], &other.seq[..])
+            }
+        };
 
-        self.edit() - prev_ed
+        let (edit_distance, cigar) = crate::alignment::align(new_err, new_raw);
+
+        self.cigar.extend(&cigar[..]);
+
+        self.edit_distance += edit_distance;
+
+        edit_distance as f64
     }
 
     /// Update alignment info of error
@@ -143,91 +168,27 @@ pub type Changes = Vec<Change>;
 
 trait AbsChanges {
     fn add_change(&mut self, change: Change, raw: &[u8]) -> f64;
-
-    fn insert_change(&mut self, change: Change, idx: usize) -> f64;
 }
 
 impl AbsChanges for Changes {
     fn add_change(&mut self, mut change: Change, raw: &[u8]) -> f64 {
-        if self.is_empty() {
-            change.update_align(&raw);
-            let ret = change.edit();
-            self.push(change);
-            ret
-        } else {
-            let mut edit_change = 0.0;
-
-            match self.binary_search_by_key(&change.begin(), |x| x.begin()) {
-                Ok(idx) => {
-                    if self[idx].overlap(&change) {
-                        edit_change += self[idx].merge(&change, raw);
-                        if idx + 1 < self.len() && self[idx].overlap(&self[idx + 1]) {
-                            let next = self.remove(idx + 1);
-                            edit_change -= next.edit();
-                            edit_change += self[idx].merge(&next, raw);
-                        }
-                    }
-                }
-                Err(idx) => {
-                    if idx == 0 {
-                        if idx + 1 < self.len() {
-                            if self[idx + 1].overlap(&change) {
-                                edit_change += self[idx + 1].merge(&change, raw);
-                            } else if change.overlap(&self[idx]) {
-                                let prev = self[idx].edit();
-                                change.merge(&self[idx], raw);
-                                self[idx] = change;
-                                edit_change += self[idx].edit() - prev;
-                            } else {
-                                change.update_align(&raw);
-                                edit_change += self.insert_change(change, idx);
-                            }
-                        } else {
-                            change.update_align(&raw);
-                            edit_change += self.insert_change(change, idx);
-                        }
-                    } else if idx > 0
-                        && self[idx - 1].begin() <= change.begin()
-                        && self[idx - 1].contain(&change)
-                    {
-                        edit_change += 0.0;
-                    } else if idx > 0 && self[idx - 1].overlap(&change) {
-                        edit_change += self[idx - 1].merge(&change, raw);
-                        if idx < self.len() && self[idx - 1].overlap(&self[idx]) {
-                            let next = self.remove(idx);
-                            edit_change -= next.edit();
-                            edit_change += self[idx - 1].merge(&next, raw);
-                        }
-                    } else if idx < self.len()
-                        && change.begin() <= self[idx].begin()
-                        && change.contain(&self[idx])
-                    {
-                        edit_change += 0.0;
-                    } else if idx < self.len() && change.overlap(&self[idx]) {
-                        let prev = self[idx].edit();
-                        change.merge(&self[idx], raw);
-                        self[idx] = change;
-                        edit_change += self[idx].edit() - prev;
-                        if idx > 0 && self[idx - 1].overlap(&self[idx]) {
-                            let prev = self.remove(idx);
-                            edit_change -= prev.edit();
-                            edit_change += self[idx - 1].merge(&prev, raw);
-                        }
-                    } else {
-                        change.update_align(&raw);
-                        edit_change += self.insert_change(change, idx);
-                    }
-                }
+        if let Some(last) = self.last_mut() {
+            if last.contain(&change) {
+                0.0
+            } else if last.overlap(&change) {
+                last.merge(&change, raw)
+            } else {
+                change.update_align(&raw);
+                let edit = change.edit();
+                self.push(change);
+                edit
             }
-
-            edit_change
+        } else {
+            change.update_align(&raw);
+            let edit = change.edit();
+            self.push(change);
+            edit
         }
-    }
-
-    fn insert_change(&mut self, change: Change, idx: usize) -> f64 {
-        let ret = change.edit();
-        self.insert(idx, change);
-        ret
     }
 }
 
@@ -282,6 +243,12 @@ where
         cig.extend(std::iter::repeat(b'=').take(seq.len() - pos_in_raw));
     }
 
+    log::debug!(
+        "target {} real {} {}",
+        target,
+        real_edit,
+        target - real_edit
+    );
     (err, cig, (1.0 - (real_edit / seq.len() as f64)))
 }
 
@@ -298,19 +265,14 @@ where
             break;
         }
 
-        changes.push(Change::from_seq(
-            position,
-            position + (end - begin),
-            seq,
-            raw,
-        ));
+        changes.push(Change::new(position, position + (end - begin), seq));
     }
 }
 
 /// Add Change correspond to error in changes
 pub fn add_error<RNG>(
     k: usize,
-    target: f64,
+    mut target: f64,
     raw: &[u8],
     changes: &mut Changes,
     error_model: &model::Error,
@@ -318,25 +280,37 @@ pub fn add_error<RNG>(
 ) where
     RNG: rand::Rng,
 {
+    let mut glitches: Vec<Change> = changes.clone();
+    glitches.reverse(); // We put first at the end of vec to use pop after
+    changes.clear();
 
-    // Add error until we reach target or we loop raw length
-    while sum_of_edit < target && loop_count < raw.len() {
-        loop_count += 1;
-
-        let pos = rng.gen_range(0..(raw.len() - k));
-
-        let (kmer, edit) = error_model.add_errors_to_kmer(&raw[pos..pos + k], rng);
-        if edit == 0 {
-            continue;
+    for pos in 0..(raw.len() - k) {
+        if let Some(last) = glitches.last_mut() {
+            if pos == last.begin() {
+                target -= changes.add_change(last.clone(), raw);
+                glitches.pop();
+            }
         }
 
-        sum_of_edit += changes.add_change(Change::new(pos, pos + k, kmer), raw);
+        if target < 0.0 || target > (raw.len() - pos) as f64 {
+            break;
+        }
+
+        if rng.gen_bool(target / (raw.len() - pos) as f64) {
+            let (kmer, _) = error_model.add_errors_to_kmer(&raw[pos..pos + k], rng);
+            target -= changes.add_change(Change::new(pos, pos + k, kmer), raw);
+        }
+
+        if target < 0.0 || target > (raw.len() - pos) as f64 {
+            break;
+        }
     }
 }
 
 #[cfg(test)]
 mod t {
     use super::*;
+    use rand::Rng;
     use rand::SeedableRng;
 
     fn init() {
@@ -601,6 +575,9 @@ mod t {
                 edit_distance: 12,
             },
         ];
+
+        input.sort_by_key(|x| x.begin());
+
         let mut changes = Changes::new();
 
         let edit = input
@@ -609,7 +586,7 @@ mod t {
             .collect::<Vec<f64>>();
 
         assert_eq!(
-            vec![13.0, 10.0, 20.0, 10.0, 5.0, 2.0, 0.0, 15.0, 5.0, 10.0, 5.0],
+            vec![20.0, 5.0, 5.0, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, 10.0, 5.0],
             edit
         );
         assert_eq!(95.0, edit.iter().sum());
@@ -676,14 +653,12 @@ mod t {
     fn glitches() {
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
         let model = model::Glitch::new(1_000.0, 25.0, 25.0).unwrap();
+        let raw = crate::random_seq(10_000, &mut rng);
 
         let mut glitches = Changes::new();
-        add_glitches(
-            &crate::random_seq(10_000, &mut rng),
-            &mut glitches,
-            &model,
-            &mut rng,
-        );
+        add_glitches(&raw, &mut glitches, &model, &mut rng);
+
+        glitches.iter_mut().for_each(|x| x.update_align(&raw));
 
         assert_eq!(
             vec![
@@ -761,47 +736,54 @@ mod t {
         assert_eq!(
             vec![
                 Change {
-                    begin: 4,
-                    end: 17,
-                    seq: b"ATTATGAGTACGTAAT".to_vec(),
-                    cigar: b"=====I======IIX=".to_vec(),
-                    edit_distance: 4
-                },
-                Change {
-                    begin: 21,
-                    end: 39,
-                    seq: b"TGTTACACTATGTCCTA".to_vec(),
-                    cigar: b"=D===II=======DD====".to_vec(),
+                    begin: 3,
+                    end: 19,
+                    seq: b"GATTTTAAGTACGGTAGG".to_vec(),
+                    cigar: b"====X==I=======IXX".to_vec(),
                     edit_distance: 5
                 },
                 Change {
-                    begin: 41,
-                    end: 48,
-                    seq: b"TGGTGCC".to_vec(),
-                    cigar: b"===X===".to_vec(),
-                    edit_distance: 1
-                },
-                Change {
-                    begin: 52,
-                    end: 59,
-                    seq: b"GTGGAGG".to_vec(),
-                    cigar: b"==X====".to_vec(),
-                    edit_distance: 1
-                },
-                Change {
-                    begin: 60,
-                    end: 73,
-                    seq: b"AATCCACTATATTC".to_vec(),
-                    cigar: b"I======D====I=X".to_vec(),
-                    edit_distance: 4
-                },
-                Change {
-                    begin: 75,
-                    end: 97,
-                    seq: b"ACGGGTAATAATGGGGACGGCATG".to_vec(),
-                    cigar: b"==X===I=====XX=========I".to_vec(),
+                    begin: 23,
+                    end: 34,
+                    seq: b"GTTACTATG".to_vec(),
+                    cigar: b"======DI=DDX".to_vec(),
                     edit_distance: 5
                 },
+                Change {
+                    begin: 34,
+                    end: 50,
+                    seq: b"GCCTAGAGTGCGCC".to_vec(),
+                    cigar: b"====D==X=I===D==D".to_vec(),
+                    edit_distance: 5
+                },
+                Change {
+                    begin: 57,
+                    end: 64,
+                    seq: b"GAATCC".to_vec(),
+                    cigar: b"D======".to_vec(),
+                    edit_distance: 1
+                },
+                Change {
+                    begin: 65,
+                    end: 72,
+                    seq: b"CTTATA".to_vec(),
+                    cigar: b"======D".to_vec(),
+                    edit_distance: 1
+                },
+                Change {
+                    begin: 77,
+                    end: 84,
+                    seq: b"AGGGTATA".to_vec(),
+                    cigar: b"=I======".to_vec(),
+                    edit_distance: 1
+                },
+                Change {
+                    begin: 85,
+                    end: 92,
+                    seq: b"TCCGCGAC".to_vec(),
+                    cigar: b"====I===".to_vec(),
+                    edit_distance: 1
+                }
             ],
             errors
         );
@@ -813,20 +795,20 @@ mod t {
         let e_model = model::Error::random(7);
         let g_model = model::Glitch::new(40.0, 5.0, 5.0).unwrap();
 
-        let raw = crate::random_seq(100, &mut rng);
+        let raw = crate::random_seq(150, &mut rng);
 
-        let (err, cigar, edit) = sequence(0.95, &raw, &e_model, &g_model, &mut rng);
+        let (err, cigar, edit) = sequence(0.9, &raw, &e_model, &g_model, &mut rng);
 
-        assert_eq!(b"TTAGATTATAGTACGGTACTGGTTCTACCTAGTACCTAAGTGGCGCCCGTTGGTAGAGGAATCACTTAATATATAACCAGGTAGAATCCGGACGGCATTCG".to_vec(), err);
-        assert_eq!(b"==================DDX=====D===II=I===D=================I==========D===I=II========D======X==============X==".to_vec(), cigar);
-        assert_eq!(0.84, edit);
+        assert_eq!(b"TTAGATTCATAGTGGGTATTAGTGGTTACTATGTGCCTAAGTGGCGCCCGTTGTAAGGAATCCACTTATATAACGACATGTATAATCGGACGGGATGCAGGCATGGCTATATTCTATGACAGCAGGATTATGGAAGATGTGCTCTA".to_vec(), err);
+        assert_eq!(b"=======I=====DX====I===============D=====================D===================I===X=======D=======DI==DD=========X================================D========".to_vec(), cigar);
+        assert_eq!(0.9, edit);
 
-        let raw = crate::random_seq(100, &mut rng);
+        let raw = crate::random_seq(150, &mut rng);
 
         let (err, cigar, edit) = sequence(0.85, &raw, &e_model, &g_model, &mut rng);
 
-        assert_eq!(b"ACCAGACCCACCTTCACCATGTCCTCAAAGTCCATGAGTGAGAACCCTTTGGCGATACTCGAACCGAAGGCCCGGCTCAGGTGCCAGAGGCCTGGGTCGAAA".to_vec(), err);
-        assert_eq!(b"=X====I=========X====I=D=====D========D==I=D=======I======D=X=======I==X======I====D============I==I========".to_vec(), cigar);
-        assert_eq!(0.8200000000000001, edit);
+        assert_eq!(b"GTACCTCCTAGCTTTTCAGTGTGCTTGAACAGTGTGACATTGGACACGCTATTTACTCGCCGTTGAGGCGGCTTCCTTGACTAACCGATCGTGGAGTTCATGGCGCGGATCCCTCAGCGTTCTCGGGAAGCGCGACAGAGCGTCCCCT".to_vec(), err);
+        assert_eq!(b"================I===D====ID=X==ID=====IIDD==I=ID=XX======I==========X========D============D===================D================================D==============".to_vec(), cigar);
+        assert_eq!(0.8533333333333333, edit);
     }
 }

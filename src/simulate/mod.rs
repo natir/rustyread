@@ -160,17 +160,6 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
         base_produce += base_loop;
 
         log::info!("Start generate {} bases", base_loop);
-        // for (_, _, description, _) in Fragments::new(
-        //     base_loop,
-        //     (params.junk, params.random, params.chimera),
-        //     &references,
-        //     &length,
-        //     &identity,
-        //     &mut main_rng,
-        // ) {
-        //     println!("{:?}", description);
-        // }
-        // panic!();
         let sequences: Vec<(Description, Seq, Quality)> = Fragments::new(
             base_loop,
             (params.junk, params.random, params.chimera),
@@ -301,8 +290,12 @@ where
     Ok((description, err_fragment, quality))
 }
 
-fn add_fragment<RNG>(raw_fragment: &mut Vec<u8>, origin: &Origin, reference: &Reference, rng: &mut RNG)
-where
+fn add_fragment<RNG>(
+    raw_fragment: &mut Vec<u8>,
+    origin: &Origin,
+    reference: &Reference,
+    rng: &mut RNG,
+) where
     RNG: rand::Rng,
 {
     match origin.read_type {
@@ -428,6 +421,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
     }
 
     #[test]
+    #[ignore]
     fn produce_read() {
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
         let refs = References::from_stream(std::io::Cursor::new(FASTA)).unwrap();
