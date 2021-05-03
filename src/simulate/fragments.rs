@@ -166,6 +166,8 @@ where
 mod t {
     use super::*;
     use rand::SeedableRng;
+    use std::io::Seek;
+    use std::io::Write;
 
     static FASTA: &'static [u8] = b">random_seq_0
 TCCTAACGTG
@@ -701,5 +703,145 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             ],
             frags
         );
+    }
+
+    #[test]
+    fn shape() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+
+        let length = model::Length::new(18200.0, 15500.0).unwrap();
+
+        let data: Vec<f64> = (0..100_000)
+            .map(|_| length.get_length(&mut rng) as f64)
+            .collect();
+
+        let sum = data.iter().sum::<f64>();
+        let avg = sum / data.len() as f64;
+        let std =
+            (data.iter().map(|x| (x - avg).powf(2.0)).sum::<f64>() / data.len() as f64).sqrt();
+
+        assert_eq!(sum, 1823347447.0);
+        assert_eq!(avg, 18233.47447);
+        assert_eq!(std, 15450.618044403509);
+
+        let identity = model::Identity::new(87.0, 100.0, 9.0).unwrap();
+
+        let data: Vec<f64> = (0..100_000)
+            .map(|_| identity.get_identity(&mut rng))
+            .collect();
+
+        let sum = data.iter().sum::<f64>();
+        let avg = sum / data.len() as f64;
+        let std =
+            (data.iter().map(|x| (x - avg).powf(2.0)).sum::<f64>() / data.len() as f64).sqrt();
+
+        assert_eq!(sum, 86957.66076320085);
+        assert_eq!(avg, 0.8695766076320085);
+        assert_eq!(std, 0.09016183161726986);
+
+        let mut file: std::io::Cursor<Vec<u8>> = std::io::Cursor::new(Vec::new());
+
+        writeln!(
+            file,
+            ">5_000_000\n{}",
+            String::from_utf8(crate::random_seq(5_000_000, &mut rng)).unwrap()
+        )
+        .unwrap();
+        writeln!(
+            file,
+            ">2_500\n{}",
+            String::from_utf8(crate::random_seq(2_500, &mut rng)).unwrap()
+        )
+        .unwrap();
+        writeln!(
+            file,
+            ">500\n{}",
+            String::from_utf8(crate::random_seq(500, &mut rng)).unwrap()
+        )
+        .unwrap();
+        writeln!(
+            file,
+            ">140_000\n{}",
+            String::from_utf8(crate::random_seq(140_000, &mut rng)).unwrap()
+        )
+        .unwrap();
+        writeln!(
+            file,
+            ">80_000\n{}",
+            String::from_utf8(crate::random_seq(80_000, &mut rng)).unwrap()
+        )
+        .unwrap();
+        writeln!(
+            file,
+            ">75_000\n{}",
+            String::from_utf8(crate::random_seq(75_000, &mut rng)).unwrap()
+        )
+        .unwrap();
+        writeln!(
+            file,
+            ">65_000\n{}",
+            String::from_utf8(crate::random_seq(65_000, &mut rng)).unwrap()
+        )
+        .unwrap();
+        writeln!(
+            file,
+            ">8_000\n{}",
+            String::from_utf8(crate::random_seq(8_000, &mut rng)).unwrap()
+        )
+        .unwrap();
+        writeln!(
+            file,
+            ">7_000\n{}",
+            String::from_utf8(crate::random_seq(7_000, &mut rng)).unwrap()
+        )
+        .unwrap();
+
+        file.seek(std::io::SeekFrom::Start(0)).unwrap();
+
+        let refs = References::from_stream_adjusted_weight(file, false, &length, &mut rng).unwrap();
+
+        let fragments = Fragments::new(
+            100_000_000,
+            (1.0, 1.0, 1.0),
+            &refs,
+            &length,
+            &identity,
+            &mut rng,
+        );
+
+        let mut lengths = Vec::new();
+        let mut identitys = Vec::new();
+
+        for (_, _, des, _) in fragments {
+            lengths.push((des.origin.end - des.origin.start) as f64);
+            if let Some(chimera) = des.chimera {
+                lengths.push((chimera.end - chimera.start) as f64);
+            }
+
+            identitys.push(des.identity);
+        }
+
+        let sum_len: f64 = lengths.iter().sum::<f64>();
+        let avg_len: f64 = sum_len / lengths.len() as f64;
+        let std_len: f64 = (lengths.iter().map(|x| (x - avg_len).powf(2.0)).sum::<f64>()
+            / lengths.len() as f64)
+            .sqrt();
+
+        assert_eq!(sum_len, 100_819_673.0);
+        assert_eq!(avg_len, 36058.53826895565);
+        assert_eq!(std_len, 297865.20280424535);
+
+        let sum_id: f64 = identitys.iter().sum::<f64>();
+        let avg_id: f64 = sum_id / identitys.len() as f64;
+        let std_id: f64 = (identitys
+            .iter()
+            .map(|x| (x - avg_id).powf(2.0))
+            .sum::<f64>()
+            / identitys.len() as f64)
+            .sqrt();
+
+        assert_eq!(sum_id, 2413.21631930477);
+        assert_eq!(avg_id, 0.8686883798793268);
+        assert_eq!(std_id, 0.09101904722196807);
     }
 }
