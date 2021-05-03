@@ -50,7 +50,7 @@ rule compare_rustyread:
         config["max_threads"]
         
     shell:
-        "rustyread -vvv -t {threads} simulate --reference {input.ref} --error_model {input.error} --qscore_model {input.quality} --output {output} --quantity 220x --length 18200,15550 --seed 42 2> {log}"
+        "rustyread -vvv -t {threads} simulate --reference {input.ref} --error_model {input.error} --qscore_model {input.quality} --output {output} --quantity 230x --length 18200,15550 --identity 87,100,9 --seed 42 2> {log}"
 
 
 rule compare_badread:
@@ -75,7 +75,7 @@ rule compare_badread:
         config["max_threads"]
         
     shell:
-        "badread simulate --reference {input.ref} --error_model {input.error} --qscore_model {input.quality} --quantity 220x --length 18200,15550 --seed 42 2> {log} > {output}"
+        "./scripts/multi-thread-badread.sh 230 {threads} {input.ref} 18200 15550 87 100 9 {input.error} {input.quality} {output} > {log}"
 
 
 rule map_read:
