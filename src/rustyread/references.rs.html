@@ -389,7 +389,7 @@
     }
 
     <span class="doccomment">/// Same as from_stream but small sequence have increase weighted to fix bias.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_stream_adjusted_weigth</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">RNG</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_stream_adjusted_weight</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">RNG</span><span class="op">&gt;</span>(
         <span class="ident">input</span>: <span class="ident">R</span>,
         <span class="ident">small_plasmid_bias</span>: <span class="ident">bool</span>,
         <span class="ident">length_model</span>: <span class="kw-2">&amp;</span><span class="ident">model</span>::<span class="ident">Length</span>,
@@ -627,7 +627,7 @@ TCCCGCTGTC
     <span class="kw">fn</span> <span class="ident">read_reference_adjust</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>::<span class="ident">seed_from_u64</span>(<span class="number">42</span>);
         <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Length</span>::<span class="ident">new</span>(<span class="number">10.0</span>, <span class="number">8.0</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">refs</span> <span class="op">=</span> <span class="ident">References</span>::<span class="ident">from_stream_adjusted_weigth</span>(
+        <span class="kw">let</span> <span class="ident">refs</span> <span class="op">=</span> <span class="ident">References</span>::<span class="ident">from_stream_adjusted_weight</span>(
             <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="ident">FASTA</span>),
             <span class="bool-val">false</span>,
             <span class="kw-2">&amp;</span><span class="ident">length</span>,

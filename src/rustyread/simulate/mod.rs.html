@@ -978,7 +978,7 @@
     <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;End init lenght model&quot;</span>);
 
     <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Start read reference&quot;</span>);
-    <span class="kw">let</span> <span class="ident">references</span> <span class="op">=</span> <span class="ident">References</span>::<span class="ident">from_stream_adjusted_weigth</span>(
+    <span class="kw">let</span> <span class="ident">references</span> <span class="op">=</span> <span class="ident">References</span>::<span class="ident">from_stream_adjusted_weight</span>(
         <span class="ident">niffler</span>::<span class="ident">get_reader</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">BufReader</span>::<span class="ident">new</span>(
             <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">params</span>.<span class="ident">reference_path</span>).<span class="ident">with_context</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;Read reference file&quot;</span>)<span class="question-mark">?</span>,
         )))
