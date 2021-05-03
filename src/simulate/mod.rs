@@ -42,7 +42,7 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
     log::info!("End init lenght model");
 
     log::info!("Start read reference");
-    let references = References::from_stream_adjusted_weigth(
+    let references = References::from_stream_adjusted_weight(
         niffler::get_reader(Box::new(std::io::BufReader::new(
             std::fs::File::open(params.reference_path).with_context(|| "Read reference file")?,
         )))

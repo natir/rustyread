@@ -59,7 +59,7 @@ impl References {
     }
 
     /// Same as from_stream but small sequence have increase weighted to fix bias.
-    pub fn from_stream_adjusted_weigth<R, RNG>(
+    pub fn from_stream_adjusted_weight<R, RNG>(
         input: R,
         small_plasmid_bias: bool,
         length_model: &model::Length,
@@ -297,7 +297,7 @@ TCCCGCTGTC
     fn read_reference_adjust() {
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
         let length = model::Length::new(10.0, 8.0).unwrap();
-        let refs = References::from_stream_adjusted_weigth(
+        let refs = References::from_stream_adjusted_weight(
             std::io::Cursor::new(FASTA),
             false,
             &length,
