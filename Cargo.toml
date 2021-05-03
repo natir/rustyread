@@ -20,8 +20,6 @@ default-run = "rustyread"
 
 [lib]
 name = "rustyread"
-crate-type = ["rlib", "cdylib", "staticlib"]
-
 
 [dependencies]
 bio            = "0.33"
@@ -48,10 +46,19 @@ thiserror      = "1"
 env_logger     = "0.8"
 
 
+[dev-dependencies]
+criterion = "0.3"
+rand      = { version = "0.8", features = ["small_rng"] }
+
 [profile.release]
-#debug = true # uncomment for profiling
+debug = true # uncomment for profiling
 lto = 'thin'
 opt-level = 3
 overflow-checks = false
 panic = 'abort'
 incremental = false
+
+
+[[bench]]
+name = "add_error"
+harness = false
