@@ -201,4 +201,45 @@ mod t {
             ]
         )
     }
+
+    #[test]
+    fn shape() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let mut dist = Identity::new(90.0, 100.0, 5.0).unwrap();
+
+        let mut data: Vec<f64> = (0..100_000).map(|_| dist.get_identity(&mut rng)).collect();
+
+        let mut sum: f64 = data.iter().sum::<f64>();
+        let mut avg: f64 = sum / data.len() as f64;
+        let mut std: f64 =
+            (data.iter().map(|x| (x - avg).powf(2.0)).sum::<f64>() / data.len() as f64).sqrt();
+
+        assert_eq!(sum, 89977.9828216092);
+        assert_eq!(avg, 0.899779828216092);
+        assert_eq!(std, 0.050158415963455626);
+
+        dist = Identity::new(87.0, 100.0, 9.0).unwrap();
+
+        data = (0..100_000).map(|_| dist.get_identity(&mut rng)).collect();
+
+        sum = data.iter().sum::<f64>();
+        avg = sum / data.len() as f64;
+        std = (data.iter().map(|x| (x - avg).powf(2.0)).sum::<f64>() / data.len() as f64).sqrt();
+
+        assert_eq!(sum, 86953.14739591492);
+        assert_eq!(avg, 0.8695314739591492);
+        assert_eq!(std, 0.08995545381620422);
+
+        dist = Identity::new(75.0, 100.0, 15.0).unwrap();
+
+        data = (0..100_000).map(|_| dist.get_identity(&mut rng)).collect();
+
+        sum = data.iter().sum::<f64>();
+        avg = sum / data.len() as f64;
+        std = (data.iter().map(|x| (x - avg).powf(2.0)).sum::<f64>() / data.len() as f64).sqrt();
+
+        assert_eq!(sum, 75079.49714634784);
+        assert_eq!(avg, 0.7507949714634784);
+        assert_eq!(std, 0.15000129996157266);
+    }
 }

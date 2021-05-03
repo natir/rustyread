@@ -79,4 +79,37 @@ mod t {
             ]
         )
     }
+
+    #[test]
+    fn shape() {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let mut dist = Length::new(15000.0, 13000.0).unwrap();
+
+        let mut data: Vec<f64> = (0..100_000)
+            .map(|_| dist.get_length(&mut rng) as f64)
+            .collect();
+
+        let mut sum: f64 = data.iter().sum::<f64>();
+        let mut avg: f64 = sum / data.len() as f64;
+        let mut std: f64 =
+            (data.iter().map(|x| (x - avg).powf(2.0)).sum::<f64>() / data.len() as f64).sqrt();
+
+        assert_eq!(sum, 1502518386.0);
+        assert_eq!(avg, 15025.18386);
+        assert_eq!(std, 12957.923631180865);
+
+        dist = Length::new(18200.0, 15500.0).unwrap();
+
+        data = (0..100_000)
+            .map(|_| dist.get_length(&mut rng) as f64)
+            .collect();
+
+        sum = data.iter().sum::<f64>();
+        avg = sum / data.len() as f64;
+        std = (data.iter().map(|x| (x - avg).powf(2.0)).sum::<f64>() / data.len() as f64).sqrt();
+
+        assert_eq!(sum, 1820658946.0);
+        assert_eq!(avg, 18206.58946);
+        assert_eq!(std, 15468.534934369749);
+    }
 }
