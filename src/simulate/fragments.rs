@@ -78,9 +78,7 @@ where
                 let (mut ref_index, mut strand) = self.references.choose_reference(self.rng);
                 let mut reference = &self.references.sequences[ref_index];
 
-                while read_type == ReadType::Real
-                    && !fragment_is_possible(length, reference.seq.len(), reference.circular)
-                {
+                while !fragment_is_possible(length, reference.seq.len(), reference.circular) {
                     let (r, s) = self.references.choose_reference(self.rng);
                     ref_index = r;
                     strand = s;
@@ -97,7 +95,7 @@ where
                         length,
                     )
                 } else {
-                    (0, reference.seq.len() - 1, reference.seq.len())
+                    (try_begin, reference.seq.len() - 1, reference.seq.len())
                 };
 
                 (
@@ -273,7 +271,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     Origin {
                         ref_id: "random_seq_7".to_string(),
                         strand: '+',
-                        start: 0,
+                        start: 7,
                         end: 9,
                         read_type: ReadType::Real
                     }
@@ -295,7 +293,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     Origin {
                         ref_id: "random_seq_0".to_string(),
                         strand: '+',
-                        start: 0,
+                        start: 5,
                         end: 9,
                         read_type: ReadType::Real
                     }
@@ -350,7 +348,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     Origin {
                         ref_id: "random_seq_7".to_string(),
                         strand: '+',
-                        start: 0,
+                        start: 8,
                         end: 9,
                         read_type: ReadType::Real
                     }
@@ -361,7 +359,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     Origin {
                         ref_id: "random_seq_7".to_string(),
                         strand: '+',
-                        start: 0,
+                        start: 2,
                         end: 9,
                         read_type: ReadType::Real
                     }
@@ -405,7 +403,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     Origin {
                         ref_id: "random_seq_9".to_string(),
                         strand: '-',
-                        start: 0,
+                        start: 6,
                         end: 9,
                         read_type: ReadType::Real
                     }
@@ -449,7 +447,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                     Origin {
                         ref_id: "random_seq_5".to_string(),
                         strand: '-',
-                        start: 0,
+                        start: 1,
                         end: 9,
                         read_type: ReadType::Real
                     }
@@ -509,7 +507,6 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
 
         let frags: Vec<(usize, usize, Description, u64)> = fragments.take(10).collect();
 
-        println!("{:?}", frags);
         assert_eq!(
             vec![
                 (
@@ -519,7 +516,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         origin: Origin {
                             ref_id: "random_seq_7".to_string(),
                             strand: '+',
-                            start: 0,
+                            start: 7,
                             end: 9,
                             read_type: ReadType::Real
                         },
@@ -536,7 +533,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         origin: Origin {
                             ref_id: "random_seq_0".to_string(),
                             strand: '+',
-                            start: 0,
+                            start: 5,
                             end: 9,
                             read_type: ReadType::Real
                         },
@@ -576,7 +573,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         origin: Origin {
                             ref_id: "random_seq_7".to_string(),
                             strand: '+',
-                            start: 0,
+                            start: 8,
                             end: 9,
                             read_type: ReadType::Real
                         },
@@ -593,7 +590,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         origin: Origin {
                             ref_id: "random_seq_10".to_string(),
                             strand: '+',
-                            start: 0,
+                            start: 96,
                             end: 99,
                             read_type: ReadType::Real
                         },
@@ -633,7 +630,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         origin: Origin {
                             ref_id: "random_seq_7".to_string(),
                             strand: '+',
-                            start: 0,
+                            start: 7,
                             end: 9,
                             read_type: ReadType::Real
                         },
@@ -801,7 +798,11 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
         let refs = References::from_stream_adjusted_weight(file, false, &length, &mut rng).unwrap();
 
         let fragments = Fragments::new(
-            100_000_000,
+            refs.sequences
+                .iter()
+                .map(|x| x.seq.len() as u64)
+                .sum::<u64>()
+                * 50,
             (1.0, 1.0, 1.0),
             &refs,
             &length,
@@ -809,27 +810,83 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             &mut rng,
         );
 
-        let mut lengths = Vec::new();
+        let mut lengths = vec![Vec::new(); refs.sequences.len()];
         let mut identitys = Vec::new();
 
-        for (_, _, des, _) in fragments {
-            lengths.push((des.origin.end - des.origin.start) as f64);
+        let mut type_count = [0; 4];
+        for (ori1, ori2, des, _) in fragments {
+            match des.origin.read_type {
+                ReadType::Real => type_count[0] += 1,
+                ReadType::Junk => type_count[1] += 1,
+                ReadType::Random => type_count[2] += 1,
+            }
+
+            lengths[ori1].push((des.origin.end - des.origin.start) as f64);
+
             if let Some(chimera) = des.chimera {
-                lengths.push((chimera.end - chimera.start) as f64);
+                type_count[3] += 1;
+                lengths[ori2].push((chimera.end - chimera.start) as f64);
             }
 
             identitys.push(des.identity);
         }
 
-        let sum_len: f64 = lengths.iter().sum::<f64>();
+        assert_eq!(type_count, [7278, 79, 77, 61]);
+
+        let read_per_ref: Vec<usize> = lengths.iter().map(|x| x.len()).collect();
+
+        //5_000_000, 2_500, 500, 140_000, 80_000, 75_000, 65_000, 8_000, 7_000
+        assert_eq!(read_per_ref, vec![6918, 25, 30, 169, 125, 92, 84, 32, 20]);
+
+        assert_eq!(
+            lengths[0].iter().cloned().sum::<f64>() / lengths[0].len() as f64,
+            18023.59251228679
+        );
+        assert_eq!(
+            lengths[1].iter().cloned().sum::<f64>() / lengths[1].len() as f64,
+            1268.0
+        );
+        assert_eq!(
+            lengths[2].iter().cloned().sum::<f64>() / lengths[2].len() as f64,
+            227.7
+        );
+        assert_eq!(
+            lengths[3].iter().cloned().sum::<f64>() / lengths[3].len() as f64,
+            17214.721893491125
+        );
+        assert_eq!(
+            lengths[4].iter().cloned().sum::<f64>() / lengths[4].len() as f64,
+            15697.808
+        );
+        assert_eq!(
+            lengths[5].iter().cloned().sum::<f64>() / lengths[5].len() as f64,
+            14973.576086956522
+        );
+        assert_eq!(
+            lengths[6].iter().cloned().sum::<f64>() / lengths[6].len() as f64,
+            13771.464285714286
+        );
+        assert_eq!(
+            lengths[7].iter().cloned().sum::<f64>() / lengths[7].len() as f64,
+            3448.625
+        );
+        assert_eq!(
+            lengths[8].iter().cloned().sum::<f64>() / lengths[8].len() as f64,
+            3308.55
+        );
+
+        let sum_len: f64 = lengths.iter().map(|x| x.iter().sum::<f64>()).sum::<f64>();
         let avg_len: f64 = sum_len / lengths.len() as f64;
-        let std_len: f64 = (lengths.iter().map(|x| (x - avg_len).powf(2.0)).sum::<f64>()
+        let std_len: f64 = (lengths
+            .iter()
+            .map(|x| x.iter().map(|x| (x - avg_len).powf(2.0)).sum::<f64>())
+            .sum::<f64>()
             / lengths.len() as f64)
             .sqrt();
 
-        assert_eq!(sum_len, 100_819_673.0);
-        assert_eq!(avg_len, 36058.53826895565);
-        assert_eq!(std_len, 297865.20280424535);
+        assert_eq!(sum_len, 132308157.0);
+        assert_eq!(avg_len, 14700906.333333334);
+        assert_eq!(std_len, 423727937.5338044);
 
         let sum_id: f64 = identitys.iter().sum::<f64>();
         let avg_id: f64 = sum_id / identitys.len() as f64;
@@ -840,8 +897,8 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             / identitys.len() as f64)
             .sqrt();
 
-        assert_eq!(sum_id, 2413.21631930477);
-        assert_eq!(avg_id, 0.8686883798793268);
-        assert_eq!(std_id, 0.09101904722196807);
+        assert_eq!(sum_id, 6463.456136655821);
+        assert_eq!(avg_id, 0.869445269929489);
+        assert_eq!(std_id, 0.09092967530091031);
     }
 }
