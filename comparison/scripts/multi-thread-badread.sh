@@ -53,7 +53,7 @@ function run() {
     log=temp_${10}_${11}.log
     seed=$((42 + ${11}))
     
-    echo "badread simulate --reference ${ref} --quantity ${coverage}x --length ${len_avg},${len_std} --identity ${identity},${max},${stdev} --error_model ${error_model} --qscore_model ${qscore_model} --seed ${seed} 2> ${log} > ${output}"
+    badread simulate --reference ${ref} --quantity ${coverage}x --length ${len_avg},${len_std} --identity ${identity},${max},${stdev} --error_model ${error_model} --qscore_model ${qscore_model} --seed ${seed} 2> ${log} > ${output}
 }
 
 function usage() {
