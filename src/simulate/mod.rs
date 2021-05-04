@@ -212,6 +212,7 @@ pub fn simulate(params: cli::simulate::Command) -> Result<()> {
         }
         log::info!("End write sequences");
     }
+
     Ok(())
 }
 
@@ -286,6 +287,7 @@ where
     }
 
     description.identity = real_id * 100.0;
+    description.length = err_fragment.len();
 
     Ok((description, err_fragment, quality))
 }
@@ -474,7 +476,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 10,
+                        length: 18,
                         identity: 90.0
                     },
                     vec![65, 84, 84, 84, 71, 65, 84, 65, 67, 71, 71, 84, 84, 84, 65, 67, 67, 67],
@@ -496,7 +498,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             end: 2,
                             read_type: ReadType::Real
                         }),
-                        length: 18,
+                        length: 33,
                         identity: 76.66666666666666
                     },
                     vec![
@@ -518,7 +520,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 9,
+                        length: 28,
                         identity: 81.4814814814815
                     },
                     vec![
@@ -540,7 +542,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 10,
+                        length: 24,
                         identity: 88.0
                     },
                     vec![
@@ -568,7 +570,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             end: 74,
                             read_type: ReadType::Real
                         }),
-                        length: 106,
+                        length: 22,
                         identity: 91.66666666666666
                     },
                     vec![
@@ -590,7 +592,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 8,
+                        length: 29,
                         identity: 86.66666666666667
                     },
                     vec![
@@ -612,7 +614,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 10,
+                        length: 16,
                         identity: 88.23529411764706
                     },
                     vec![67, 84, 65, 84, 65, 65, 84, 84, 71, 67, 84, 65, 71, 71, 84, 65],
@@ -628,7 +630,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 7,
+                        length: 32,
                         identity: 78.125
                     },
                     vec![
@@ -650,7 +652,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 8,
+                        length: 33,
                         identity: 74.19354838709677
                     },
                     vec![
@@ -672,7 +674,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 8,
+                        length: 25,
                         identity: 96.0
                     },
                     vec![
@@ -694,7 +696,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 10,
+                        length: 25,
                         identity: 82.6086956521739
                     },
                     vec![
@@ -716,7 +718,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 6,
+                        length: 28,
                         identity: 89.65517241379311
                     },
                     vec![
@@ -738,7 +740,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Random
                         },
                         chimera: None,
-                        length: 9,
+                        length: 22,
                         identity: 95.65217391304348
                     },
                     vec![
@@ -760,7 +762,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 10,
+                        length: 32,
                         identity: 89.65517241379311
                     },
                     vec![
@@ -782,7 +784,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 9,
+                        length: 32,
                         identity: 85.29411764705883
                     },
                     vec![
@@ -804,7 +806,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Random
                         },
                         chimera: None,
-                        length: 8,
+                        length: 31,
                         identity: 85.18518518518519
                     },
                     vec![
@@ -826,7 +828,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Junk
                         },
                         chimera: None,
-                        length: 4,
+                        length: 23,
                         identity: 83.33333333333334
                     },
                     vec![
@@ -848,7 +850,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 9,
+                        length: 25,
                         identity: 88.0
                     },
                     vec![
@@ -870,7 +872,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 7,
+                        length: 25,
                         identity: 84.61538461538461
                     },
                     vec![
@@ -892,7 +894,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 5,
+                        length: 28,
                         identity: 70.83333333333333
                     },
                     vec![

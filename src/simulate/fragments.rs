@@ -95,7 +95,11 @@ where
                         length,
                     )
                 } else {
-                    (try_begin, reference.seq.len() - 1, reference.seq.len())
+                    (
+                        try_begin,
+                        reference.seq.len() - 1,
+                        reference.seq.len() - try_begin,
+                    )
                 };
 
                 (
@@ -267,7 +271,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             vec![
                 (
                     7,
-                    10,
+                    3,
                     Origin {
                         ref_id: "random_seq_7".to_string(),
                         strand: '+',
@@ -289,7 +293,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 ),
                 (
                     0,
-                    10,
+                    5,
                     Origin {
                         ref_id: "random_seq_0".to_string(),
                         strand: '+',
@@ -344,7 +348,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 ),
                 (
                     7,
-                    10,
+                    2,
                     Origin {
                         ref_id: "random_seq_7".to_string(),
                         strand: '+',
@@ -355,7 +359,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 ),
                 (
                     7,
-                    10,
+                    8,
                     Origin {
                         ref_id: "random_seq_7".to_string(),
                         strand: '+',
@@ -399,7 +403,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 ),
                 (
                     9,
-                    10,
+                    4,
                     Origin {
                         ref_id: "random_seq_9".to_string(),
                         strand: '-',
@@ -443,7 +447,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                 ),
                 (
                     5,
-                    10,
+                    9,
                     Origin {
                         ref_id: "random_seq_5".to_string(),
                         strand: '-',
@@ -521,7 +525,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 10,
+                        length: 3,
                         identity: 0.9023903395427547
                     },
                     17195042692806716983
@@ -544,7 +548,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             end: 2,
                             read_type: ReadType::Real
                         }),
-                        length: 18,
+                        length: 13,
                         identity: 0.785919024034962
                     },
                     7410303534117827570
@@ -578,7 +582,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 10,
+                        length: 2,
                         identity: 0.7943651602000301
                     },
                     10605392195150115091
@@ -601,7 +605,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             end: 74,
                             read_type: ReadType::Real
                         }),
-                        length: 106,
+                        length: 10,
                         identity: 0.9166196996085733
                     },
                     11312190434313393638
@@ -635,7 +639,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             read_type: ReadType::Real
                         },
                         chimera: None,
-                        length: 10,
+                        length: 3,
                         identity: 0.9103369460151146
                     },
                     10567391463651436578
@@ -831,48 +835,51 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             identitys.push(des.identity);
         }
 
-        assert_eq!(type_count, [7278, 79, 77, 61]);
+        assert_eq!(type_count, [14710, 155, 158, 130]);
 
         let read_per_ref: Vec<usize> = lengths.iter().map(|x| x.len()).collect();
 
         //5_000_000, 2_500, 500, 140_000, 80_000, 75_000, 65_000, 8_000, 7_000
-        assert_eq!(read_per_ref, vec![6918, 25, 30, 169, 125, 92, 84, 32, 20]);
+        assert_eq!(
+            read_per_ref,
+            vec![13949, 46, 51, 367, 229, 211, 182, 63, 55]
+        );
 
         assert_eq!(
             lengths[0].iter().cloned().sum::<f64>() / lengths[0].len() as f64,
-            18023.59251228679
+            18149.65775324396
         );
         assert_eq!(
             lengths[1].iter().cloned().sum::<f64>() / lengths[1].len() as f64,
-            1268.0
+            1135.4782608695652
         );
         assert_eq!(
             lengths[2].iter().cloned().sum::<f64>() / lengths[2].len() as f64,
-            227.7
+            256.6862745098039
         );
         assert_eq!(
             lengths[3].iter().cloned().sum::<f64>() / lengths[3].len() as f64,
-            17214.721893491125
+            16951.59673024523
         );
         assert_eq!(
             lengths[4].iter().cloned().sum::<f64>() / lengths[4].len() as f64,
-            15697.808
+            15845.423580786026
         );
         assert_eq!(
             lengths[5].iter().cloned().sum::<f64>() / lengths[5].len() as f64,
-            14973.576086956522
+            13841.938388625593
         );
         assert_eq!(
             lengths[6].iter().cloned().sum::<f64>() / lengths[6].len() as f64,
-            13771.464285714286
+            13571.34065934066
         );
         assert_eq!(
             lengths[7].iter().cloned().sum::<f64>() / lengths[7].len() as f64,
-            3448.625
+            3849.095238095238
         );
         assert_eq!(
             lengths[8].iter().cloned().sum::<f64>() / lengths[8].len() as f64,
-            3308.55
+            3376.0363636363636
         );
 
         let sum_len: f64 = lengths.iter().map(|x| x.iter().sum::<f64>()).sum::<f64>();
@@ -884,9 +891,9 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             / lengths.len() as f64)
             .sqrt();
 
-        assert_eq!(sum_len, 132308157.0);
-        assert_eq!(avg_len, 14700906.333333334);
-        assert_eq!(std_len, 423727937.5338044);
+        assert_eq!(sum_len, 268903545.0);
+        assert_eq!(avg_len, 29878171.666666668);
+        assert_eq!(std_len, 1225248306.06916);
 
         let sum_id: f64 = identitys.iter().sum::<f64>();
         let avg_id: f64 = sum_id / identitys.len() as f64;
@@ -897,8 +904,8 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             / identitys.len() as f64)
             .sqrt();
 
-        assert_eq!(sum_id, 6463.456136655821);
-        assert_eq!(avg_id, 0.869445269929489);
-        assert_eq!(std_id, 0.09092967530091031);
+        assert_eq!(sum_id, 13077.741035790727);
+        assert_eq!(avg_id, 0.870514613312303);
+        assert_eq!(std_id, 0.09010848672092044);
     }
 }

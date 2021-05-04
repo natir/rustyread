@@ -243,12 +243,6 @@ where
         cig.extend(std::iter::repeat(b'=').take(seq.len() - pos_in_raw));
     }
 
-    log::debug!(
-        "target {} real {} {}",
-        target,
-        real_edit,
-        target - real_edit
-    );
     (err, cig, (1.0 - (real_edit / seq.len() as f64)))
 }
 
