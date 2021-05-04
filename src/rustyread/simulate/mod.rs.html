@@ -912,6 +912,8 @@
 <span id="909">909</span>
 <span id="910">910</span>
 <span id="911">911</span>
+<span id="912">912</span>
+<span id="913">913</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Simulate reads</span>
 
@@ -1127,6 +1129,7 @@
         }
         <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;End write sequences&quot;</span>);
     }
+
     <span class="prelude-val">Ok</span>(())
 }
 
@@ -1201,6 +1204,7 @@
     }
 
     <span class="ident">description</span>.<span class="ident">identity</span> <span class="op">=</span> <span class="ident">real_id</span> <span class="op">*</span> <span class="number">100.0</span>;
+    <span class="ident">description</span>.<span class="ident">length</span> <span class="op">=</span> <span class="ident">err_fragment</span>.<span class="ident">len</span>();
 
     <span class="prelude-val">Ok</span>((<span class="ident">description</span>, <span class="ident">err_fragment</span>, <span class="ident">quality</span>))
 }
@@ -1389,7 +1393,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">10</span>,
+                        <span class="ident">length</span>: <span class="number">18</span>,
                         <span class="ident">identity</span>: <span class="number">90.0</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[<span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">67</span>, <span class="number">67</span>, <span class="number">67</span>],
@@ -1411,7 +1415,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">end</span>: <span class="number">2</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         }),
-                        <span class="ident">length</span>: <span class="number">18</span>,
+                        <span class="ident">length</span>: <span class="number">33</span>,
                         <span class="ident">identity</span>: <span class="number">76.66666666666666</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1433,7 +1437,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">9</span>,
+                        <span class="ident">length</span>: <span class="number">28</span>,
                         <span class="ident">identity</span>: <span class="number">81.4814814814815</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1455,7 +1459,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">10</span>,
+                        <span class="ident">length</span>: <span class="number">24</span>,
                         <span class="ident">identity</span>: <span class="number">88.0</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1483,7 +1487,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">end</span>: <span class="number">74</span>,
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         }),
-                        <span class="ident">length</span>: <span class="number">106</span>,
+                        <span class="ident">length</span>: <span class="number">22</span>,
                         <span class="ident">identity</span>: <span class="number">91.66666666666666</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1505,7 +1509,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">8</span>,
+                        <span class="ident">length</span>: <span class="number">29</span>,
                         <span class="ident">identity</span>: <span class="number">86.66666666666667</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1527,7 +1531,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">10</span>,
+                        <span class="ident">length</span>: <span class="number">16</span>,
                         <span class="ident">identity</span>: <span class="number">88.23529411764706</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[<span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">65</span>, <span class="number">84</span>, <span class="number">84</span>, <span class="number">71</span>, <span class="number">67</span>, <span class="number">84</span>, <span class="number">65</span>, <span class="number">71</span>, <span class="number">71</span>, <span class="number">84</span>, <span class="number">65</span>],
@@ -1543,7 +1547,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">7</span>,
+                        <span class="ident">length</span>: <span class="number">32</span>,
                         <span class="ident">identity</span>: <span class="number">78.125</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1565,7 +1569,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">8</span>,
+                        <span class="ident">length</span>: <span class="number">33</span>,
                         <span class="ident">identity</span>: <span class="number">74.19354838709677</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1587,7 +1591,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">8</span>,
+                        <span class="ident">length</span>: <span class="number">25</span>,
                         <span class="ident">identity</span>: <span class="number">96.0</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1609,7 +1613,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">10</span>,
+                        <span class="ident">length</span>: <span class="number">25</span>,
                         <span class="ident">identity</span>: <span class="number">82.6086956521739</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1631,7 +1635,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">6</span>,
+                        <span class="ident">length</span>: <span class="number">28</span>,
                         <span class="ident">identity</span>: <span class="number">89.65517241379311</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1653,7 +1657,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">9</span>,
+                        <span class="ident">length</span>: <span class="number">22</span>,
                         <span class="ident">identity</span>: <span class="number">95.65217391304348</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1675,7 +1679,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">10</span>,
+                        <span class="ident">length</span>: <span class="number">32</span>,
                         <span class="ident">identity</span>: <span class="number">89.65517241379311</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1697,7 +1701,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">9</span>,
+                        <span class="ident">length</span>: <span class="number">32</span>,
                         <span class="ident">identity</span>: <span class="number">85.29411764705883</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1719,7 +1723,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">8</span>,
+                        <span class="ident">length</span>: <span class="number">31</span>,
                         <span class="ident">identity</span>: <span class="number">85.18518518518519</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1741,7 +1745,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Junk</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">4</span>,
+                        <span class="ident">length</span>: <span class="number">23</span>,
                         <span class="ident">identity</span>: <span class="number">83.33333333333334</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1763,7 +1767,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">9</span>,
+                        <span class="ident">length</span>: <span class="number">25</span>,
                         <span class="ident">identity</span>: <span class="number">88.0</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1785,7 +1789,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">7</span>,
+                        <span class="ident">length</span>: <span class="number">25</span>,
                         <span class="ident">identity</span>: <span class="number">84.61538461538461</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
@@ -1807,7 +1811,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">length</span>: <span class="number">5</span>,
+                        <span class="ident">length</span>: <span class="number">28</span>,
                         <span class="ident">identity</span>: <span class="number">70.83333333333333</span>
                     },
                     <span class="macro">vec</span><span class="macro">!</span>[
