@@ -342,6 +342,14 @@ fn add_real_fragment(raw_fragment: &mut Vec<u8>, origin: &Origin, reference: &Re
 mod t {
     use super::*;
     use rand::SeedableRng;
+    use std::io::Seek;
+
+    fn init() {
+        let _ = env_logger::builder()
+            .filter_level(log::LevelFilter::Trace)
+            .is_test(true)
+            .try_init();
+    }
 
     #[test]
     fn junk_seq() {
@@ -909,5 +917,108 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             ],
             seqs
         );
+    }
+
+    fn produce_error_read() -> Vec<(description::Description, Vec<u8>, Vec<u8>)> {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+
+        let length = model::Length::new(18200.0, 15500.0).unwrap();
+        let identity = model::Identity::new(87.0, 100.0, 9.0).unwrap();
+
+        let mut ref_file: std::io::Cursor<Vec<u8>> = std::io::Cursor::new(Vec::new());
+        writeln!(
+            ref_file,
+            ">5_000_000\n{}",
+            String::from_utf8(crate::random_seq(5_000_000, &mut rng)).unwrap()
+        )
+        .unwrap();
+        writeln!(
+            ref_file,
+            ">80_000\n{}",
+            String::from_utf8(crate::random_seq(80_000, &mut rng)).unwrap()
+        )
+        .unwrap();
+        writeln!(
+            ref_file,
+            ">75_000\n{}",
+            String::from_utf8(crate::random_seq(75_000, &mut rng)).unwrap()
+        )
+        .unwrap();
+        ref_file.seek(std::io::SeekFrom::Start(0)).unwrap();
+        let refs =
+            References::from_stream_adjusted_weight(ref_file, false, &length, &mut rng).unwrap();
+
+        let adapter = model::Adapter::new(
+            "TACGTATTGCT".as_bytes().to_vec(),
+            "TACGTATTGCT".as_bytes().to_vec(),
+            90.0,
+            60.0,
+            50.0,
+            20.0,
+        )
+        .unwrap();
+
+        let error = model::Error::random(7);
+        let qscore = model::Quality::random();
+        let glitches = model::Glitch::new(50.0, 5.0, 5.0).unwrap();
+
+        Fragments::new(
+            1_000_000,
+            (1.0, 1.0, 1.0),
+            &refs,
+            &length,
+            &identity,
+            &mut rng,
+        )
+        .map(|(ref_idx, ref_idx2, description, seed)| {
+            generate_read(
+                (&refs.sequences[ref_idx], &refs.sequences[ref_idx2]),
+                description,
+                &adapter,
+                &error,
+                &glitches,
+                &qscore,
+                rand::rngs::StdRng::seed_from_u64(seed),
+            )
+            .unwrap()
+        })
+        .collect()
+    }
+
+    #[test]
+    fn shape() {
+        init();
+
+        let err_reads = produce_error_read();
+
+        let mut lengths = Vec::new();
+        let mut identitys = Vec::new();
+
+        for (des, seq, _qual) in err_reads {
+            lengths.push(seq.len() as f64);
+
+            identitys.push(des.identity);
+        }
+
+        let sum_len: f64 = lengths.iter().sum::<f64>();
+        let avg_len: f64 = sum_len / lengths.len() as f64;
+        let std_len: f64 = (lengths.iter().sum::<f64>() / lengths.len() as f64).sqrt();
+
+        assert_eq!(sum_len, 1048243.0);
+        assert_eq!(avg_len, 18073.155172413793);
+        assert_eq!(std_len, 134.43643543479496);
+
+        let sum_id: f64 = identitys.iter().sum::<f64>();
+        let avg_id: f64 = sum_id / identitys.len() as f64;
+        let std_id: f64 = (identitys
+            .iter()
+            .map(|x| (x - avg_id).powf(2.0))
+            .sum::<f64>()
+            / identitys.len() as f64)
+            .sqrt();
+
+        assert_eq!(sum_id, 5109.277885082298);
+        assert_eq!(avg_id, 88.09099801866031);
+        assert_eq!(std_id, 8.56964867459141);
     }
 }
