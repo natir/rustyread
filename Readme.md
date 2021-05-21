@@ -50,7 +50,7 @@ Rustyread memory usage could be estimated with formula: `2 * reference base + 2 
 ### Full usage
 
 ```
-rustyread 0.3 Arcanine
+rustyread 0.4 Pidgeotto
 Pierre Marijon <pierre.marijon@hhu.de>
 A long read simulator based on badread idea and model
 
@@ -154,7 +154,7 @@ If you haven't a rust environment you can use [rustup](https://rustup.rs/) or yo
 #### With cargo
 
 ```
-cargo install --git https://github.com/natir/rustyread.git
+cargo install --git https://github.com/natir/rustyread.git --tag 0.4
 ```
 
 ### From source
@@ -162,7 +162,7 @@ cargo install --git https://github.com/natir/rustyread.git
 ```
 git clone https://github.com/natir/rustyread.git
 cd rustyread
-git checkout 0.3
+git checkout 0.4
 cargo install --path .
 ```
 

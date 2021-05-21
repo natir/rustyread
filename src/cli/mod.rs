@@ -9,7 +9,7 @@ pub mod simulate;
 #[derive(clap::Clap, Debug)]
 #[clap(
     name = "rustyread",
-    version = "0.3 Arcanine",
+    version = "0.4 Pidgeotto",
     author = "Pierre Marijon <pierre.marijon@hhu.de>",
     about = "A long read simulator based on badread idea and model"
 )]

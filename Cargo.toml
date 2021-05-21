@@ -1,6 +1,6 @@
 [package]
 name = "rustyread"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["Pierre Marijon <pierre.marijon@hhu.de>"]
 edition = "2018"
 description = "A long read generator based on badread method"
@@ -51,7 +51,7 @@ criterion = "0.3"
 rand      = { version = "0.8", features = ["small_rng"] }
 
 [profile.release]
-debug = true # uncomment for profiling
+#debug = true # uncomment for profiling
 lto = 'thin'
 opt-level = 3
 overflow-checks = false
