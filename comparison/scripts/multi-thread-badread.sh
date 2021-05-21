@@ -32,7 +32,7 @@ function main() {
 
     wait
 
-    cat temp_${pid}_*.fastq | seqtk seq -A - > ${output}
+    cat temp_${pid}_*.fastq > ${output}
     rm temp_${pid}_*.fastq
 
     cat temp_${pid}_*.log
