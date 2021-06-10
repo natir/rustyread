@@ -19,6 +19,7 @@ type KmerEditWeight = (Vec<KmerEdit>, Vec<f64>);
 pub struct Error {
     length: usize,
     kmer2alts_edit_prob: Option<rustc_hash::FxHashMap<Kmer, KmerEditWeight>>,
+    avg_error: f64,
 }
 
 impl Error {
@@ -38,6 +39,7 @@ impl Error {
         let mut records = reader.records();
         let mut kmer_length = 0;
 
+        let mut sum_error = 0.0;
         while let Some(Ok(record)) = records.next() {
             let mut alts: Vec<(Kmer, u64)> = Vec::new();
             let mut prob = Vec::new();
@@ -71,12 +73,20 @@ impl Error {
             let key = alts.remove(0);
             prob.remove(0);
 
+            let prob_max: f64 = prob.iter().sum();
+            sum_error += prob
+                .iter()
+                .zip(alts.iter())
+                .map(|(p, kmer)| p / prob_max * kmer.1 as f64)
+                .sum::<f64>();
+
             kmer_length = key.0.len();
             data.insert(key.0.clone(), (alts, prob));
         }
 
         Ok(Self {
             length: kmer_length,
+            avg_error: sum_error / data.len() as f64,
             kmer2alts_edit_prob: Some(data),
         })
     }
@@ -86,6 +96,7 @@ impl Error {
         Self {
             length: k,
             kmer2alts_edit_prob: None,
+            avg_error: 1.0,
         }
     }
 
@@ -109,6 +120,11 @@ impl Error {
     /// Kmer length of model
     pub fn k(&self) -> usize {
         self.length
+    }
+
+    /// Get average error rate of this model
+    pub fn avg_error(&self) -> f64 {
+        self.avg_error
     }
 }
 
@@ -159,6 +175,8 @@ mod t {
     fn read_error_model() {
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
         let model = Error::from_stream(MODEL, &mut rng).unwrap();
+
+        assert_eq!(model.avg_error(), 1.3333333333333333);
 
         assert_eq!(
             model.add_errors_to_kmer(b"ACAGTTG", &mut rng),
