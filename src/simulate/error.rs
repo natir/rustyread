@@ -222,6 +222,7 @@ where
         Vec::with_capacity(seq.len() + number_of_edit(target, seq.len()) as usize);
     let mut cig: Vec<u8> =
         Vec::with_capacity(seq.len() + number_of_edit(target, seq.len()) as usize);
+
     for change in changes {
         if change.begin() < pos_in_raw {
             continue;
@@ -278,25 +279,40 @@ pub fn add_error<RNG>(
     glitches.reverse(); // We put first at the end of vec to use pop after
     changes.clear();
 
+    let mut nb_pos = target / error_model.avg_error();
+    let nb_ovl: f64 = (0..nb_pos as u64)
+        .map(|x| x as f64 * k as f64 / raw.len() as f64)
+        .sum();
+    let prob_ovl_not_mask: f64 = (1..=k)
+        .map(|x| (1.0_f64 / k as f64) * (1.0_f64 / x as f64))
+        .sum::<f64>();
+
+    nb_pos -= nb_ovl * prob_ovl_not_mask * 1_f64;
+
+    let mut poss = (0..(nb_pos.round() as u64))
+        .map(|_| rng.gen_range(0..(raw.len() - k)))
+        .collect::<Vec<usize>>();
+
+    poss.sort_unstable();
+
+    for pos in poss {
+        if let Some(last) = glitches.last_mut() {
+            if last.begin() < pos {
+                target -= changes.add_change(last.clone(), raw);
+                glitches.pop();
+            }
+        }
+
+        let (kmer, _) = error_model.add_errors_to_kmer(&raw[pos..pos + k], rng);
+        target -= changes.add_change(Change::new(pos, pos + k, kmer), raw);
+    }
+
     for pos in 0..(raw.len() - k) {
         if let Some(last) = glitches.last_mut() {
             if pos == last.begin() {
                 target -= changes.add_change(last.clone(), raw);
                 glitches.pop();
             }
-        }
-
-        if target < 0.0 || target > (raw.len() - pos) as f64 {
-            break;
-        }
-
-        if rng.gen_bool(target / (raw.len() - pos) as f64) {
-            let (kmer, _) = error_model.add_errors_to_kmer(&raw[pos..pos + k], rng);
-            target -= changes.add_change(Change::new(pos, pos + k, kmer), raw);
-        }
-
-        if target < 0.0 || target > (raw.len() - pos) as f64 {
-            break;
         }
     }
 }
@@ -352,13 +368,13 @@ mod t {
         let first = Change::from_seq(3, 15, b"GGCCGAT".to_vec(), raw);
         let second = Change::from_seq(6, 13, b"AGACCA".to_vec(), raw);
 
-        assert_eq!(first.contain(&second), true);
+        assert!(first.contain(&second));
 
         let ray = b"TTTGCACTTGTTGCCACAGG";
         let first = Change::from_seq(2, 9, b"TGCCCTT".to_vec(), ray);
         let second = Change::from_seq(11, 18, b"TGCCTCA".to_vec(), ray);
 
-        assert_eq!(first.contain(&second), false);
+        assert!(!first.contain(&second));
     }
 
     #[test]
@@ -369,13 +385,13 @@ mod t {
         let first = Change::from_seq(3, 10, b"GGCCGAT".to_vec(), raw);
         let second = Change::from_seq(6, 13, b"AGACCA".to_vec(), raw);
 
-        assert_eq!(first.overlap(&second), true);
+        assert!(first.overlap(&second));
 
         let ray = b"TTTGCACTTGTTGCCACAGG";
         let first = Change::from_seq(2, 9, b"TGCCCTT".to_vec(), ray);
         let second = Change::from_seq(11, 18, b"TGCCTCA".to_vec(), ray);
 
-        assert_eq!(first.overlap(&second), false);
+        assert!(!first.overlap(&second));
     }
 
     #[test]
@@ -397,7 +413,7 @@ mod t {
         assert_eq!(first.end_err(), 12);
         assert_eq!(first.seq(), &b"GGCCGATCA".to_vec());
         assert_eq!(first.cigar(), &b"==XX===D==".to_vec());
-        assert_eq!(first.edit(), 3.0);
+        assert_eq!(first.edit(), 3f64);
 
         let rax = b"GTGACCGTTTCTC";
         //   GA---TTGTAACTC
@@ -414,7 +430,7 @@ mod t {
         assert_eq!(first.end_err(), 13);
         assert_eq!(first.seq(), &b"GATTGTAACTC".to_vec());
         assert_eq!(first.cigar(), &b"==DDD==I=II===".to_vec());
-        assert_eq!(first.edit(), 6.0);
+        assert_eq!(first.edit(), 6f64);
 
         let ray = b"TTTGCACTTGTTGCCACAGG";
         // TTTGCACTTGTTGCCACAGG
@@ -430,14 +446,14 @@ mod t {
         assert_eq!(first.end_err(), 9);
         assert_eq!(first.seq(), &b"TGCCCTT".to_vec());
         assert_eq!(first.cigar(), &b"===X===".to_vec());
-        assert_eq!(first.edit(), 1.0);
+        assert_eq!(first.edit(), 1f64);
 
         assert_eq!(second.begin(), 11);
         assert_eq!(second.end_raw(), 18);
         assert_eq!(second.end_err(), 18);
         assert_eq!(second.seq(), &b"TGCCTCA".to_vec());
         assert_eq!(second.cigar(), &b"====X==".to_vec());
-        assert_eq!(second.edit(), 1.0);
+        assert_eq!(second.edit(), 1f64);
     }
 
     #[test]
@@ -473,7 +489,7 @@ mod t {
         assert_eq!(change.end_err(), 10);
         assert_eq!(change.seq(), &b"TATGCGTC".to_vec());
         assert_eq!(change.cigar(), &b"===I====".to_vec());
-        assert_eq!(change.edit(), 1.0);
+        assert_eq!(change.edit(), 1f64);
 
         assert!(change.contain(&del));
         change.merge(&del, raw);
@@ -483,7 +499,7 @@ mod t {
         assert_eq!(change.end_err(), 10);
         assert_eq!(change.seq(), &b"TATGCGTC".to_vec());
         assert_eq!(change.cigar(), &b"===I====".to_vec());
-        assert_eq!(change.edit(), 1.0);
+        assert_eq!(change.edit(), 1f64);
     }
 
     #[test]
@@ -583,7 +599,7 @@ mod t {
             vec![20.0, 5.0, 5.0, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, 10.0, 5.0],
             edit
         );
-        assert_eq!(95.0, edit.iter().sum());
+        assert_eq!(edit.iter().sum::<f64>(), 95f64);
 
         assert_eq!(
             vec![
@@ -935,7 +951,7 @@ mod t {
 
         assert_eq!(b"TTAGATTCATAGTGGGTATTAGTGGTTACTATGTGCCTAAGTGGCGCCCGTTGTAAGGAATCCACTTATATAACGACATGTATAATCGGACGGGATGCAGGCATGGCTATATTCTATGACAGCAGGATTATGGAAGATGTGCTCTA".to_vec(), err);
         assert_eq!(b"=======I=====DX====I===============D=====================D===================I===X=======D=======DI==DD=========X================================D========".to_vec(), cigar);
-        assert_eq!(0.9, edit);
+        assert_eq!(edit, 0.9f64);
 
         let raw = crate::random_seq(150, &mut rng);
 
@@ -943,6 +959,6 @@ mod t {
 
         assert_eq!(b"GTACCTCCTAGCTTTTCAGTGTGCTTGAACAGTGTGACATTGGACACGCTATTTACTCGCCGTTGAGGCGGCTTCCTTGACTAACCGATCGTGGAGTTCATGGCGCGGATCCCTCAGCGTTCTCGGGAAGCGCGACAGAGCGTCCCCT".to_vec(), err);
         assert_eq!(b"================I===D====ID=X==ID=====IIDD==I=ID=XX======I==========X========D============D===================D================================D==============".to_vec(), cigar);
-        assert_eq!(0.8533333333333333, edit);
+        assert_eq!(edit, 0.8533333333333333f64);
     }
 }
