@@ -6,37 +6,28 @@ pub mod simulate;
 // pub(crate) mod qscore_model;
 // pub(crate) mod plot;
 
-#[derive(clap::Clap, Debug)]
+/// A long read simulator based on badread idea and model
+#[derive(clap::Parser, std::fmt::Debug)]
 #[clap(
     name = "rustyread",
     version = "0.4 Pidgeotto",
-    author = "Pierre Marijon <pierre.marijon@hhu.de>",
-    about = "A long read simulator based on badread idea and model"
+    author = "Pierre Marijon <pierre.marijon@hhu.de>"
 )]
 pub struct Command {
     /// Subcommand call
     #[clap(subcommand)]
     pub subcmd: SubCommand,
 
-    /// Number of thread rustyread can use
-    #[clap(
-        short = 't',
-        long = "threads",
-        about = "Number of thread use by rustyread, 0 use all avaible core, default value 0"
-    )]
+    /// Number of thread use by rustyread, 0 use all avaible core, default value 0
+    #[clap(short = 't', long = "threads")]
     pub threads: Option<usize>,
 
-    /// Verbosity level
-    #[clap(
-        short = 'v',
-        long = "verbosity",
-        parse(from_occurrences),
-        about = "verbosity level also control by environment variable RUSTYREAD_LOG if flag is set RUSTYREAD_LOG value is ignored"
-    )]
+    /// Verbosity level also control by environment variable RUSTYREAD_LOG if flag is set RUSTYREAD_LOG value is ignored
+    #[clap(short = 'v', long = "verbosity", parse(from_occurrences))]
     pub verbosity: i8,
 }
 
-#[derive(clap::Clap, Debug)]
+#[derive(clap::Parser, Debug)]
 pub enum SubCommand {
     Simulate(simulate::Command),
     // ErrorModel(error_model::Command),

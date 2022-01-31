@@ -159,144 +159,82 @@ pub fn found_model(value: String, model_type: String) -> anyhow::Result<std::pat
 }
 
 /// Struct use to parse simulate subcommand argument
-#[derive(clap::Clap, Debug)]
+#[derive(clap::Parser, Debug)]
 #[clap(about = "Generate fake long read")]
 pub struct Command {
-    /// Path to reference sequence in fasta format
-    #[clap(
-        long = "reference",
-        about = "Reference fasta (can be gzipped, bzip2ped, xzped)",
-        required = true
-    )]
+    /// Path to reference fasta (can be gzipped, bzip2ped, xzped)
+    #[clap(long = "reference", required = true)]
     pub reference_path: String,
 
-    /// Path to reference sequence in fasta format
-    #[clap(long = "output", about = "Where read is write")]
+    /// Path where read is write
+    #[clap(long = "output")]
     pub output_path: Option<String>,
 
-    /// Quantity of base rustyread have to generate
-    #[clap(
-        long = "quantity",
-        about = "Either an absolute value (e.g. 250M) or a relative depth (e.g. 25x)",
-        required = true
-    )]
+    /// Either an absolute value (e.g. 250M) or a relative depth (e.g. 25x)
+    #[clap(long = "quantity", required = true)]
     pub quantity: Quantity,
 
-    /// Read length distribution parameter
-    #[clap(
-        long = "length",
-        about = "Fragment length distribution (mean and stdev)",
-        default_value = "15000,13000"
-    )]
+    /// Fragment length distribution (mean and stdev)
+    #[clap(long = "length", default_value = "15000,13000")]
     pub length: Duo,
 
-    /// Identity distribution parameter
-    #[clap(
-        long = "identity",
-        about = "Sequencing identity distribution (mean, max and stdev)",
-        default_value = "85,95,5"
-    )]
+    /// Sequencing identity distribution (mean, max and stdev)
+    #[clap(long = "identity", default_value = "85,95,5")]
     pub identity: Trio,
 
-    /// Error model used
-    #[clap(
-        long = "error_model",
-        about = "Path to an error model file",
-        default_value = "nanopore2020"
-    )]
+    /// Path to an error model file
+    #[clap(long = "error_model", default_value = "nanopore2020")]
     pub error_model: String,
 
-    /// Qualtity score model used
-    #[clap(
-        long = "qscore_model",
-        about = "Path to an quality score model file",
-        default_value = "nanopore2020"
-    )]
+    /// Path to an quality score model file
+    #[clap(long = "qscore_model", default_value = "nanopore2020")]
     pub qscore_model: String,
 
-    /// Seed used
-    #[clap(
-        long = "seed",
-        about = "Random number generator seed for deterministic output (default: different output each time)"
-    )]
+    /// Random number generator seed for deterministic output (default: different output each time)
+    #[clap(long = "seed")]
     pub seed: Option<u64>,
 
-    /// Start adapter parameter
-    #[clap(
-        long = "start_adapter",
-        about = "Adapter parameters for read starts (rate and amount)",
-        default_value = "90,60"
-    )]
+    /// Adapter parameters for read starts (rate and amount)
+    #[clap(long = "start_adapter", default_value = "90,60")]
     pub start_adapter: Duo,
 
-    /// End adapter parameter
-    #[clap(
-        long = "end_adapter",
-        about = "Adapter parameters for read ends (rate and amount)",
-        default_value = "50,20"
-    )]
+    /// Adapter parameters for read ends (rate and amount)
+    #[clap(long = "end_adapter", default_value = "50,20")]
     pub end_adapter: Duo,
 
-    /// Start adapter sequence
+    /// Adapter parameters for read starts
     #[clap(
         long = "start_adapter_seq",
-        about = "Adapter parameters for read starts",
         default_value = "AATGTACTTCGTTCAGTTACGTATTGCT"
     )]
     pub start_adapter_seq: String,
 
-    /// End adapter sequence
-    #[clap(
-        long = "end_adapter_seq",
-        about = "Adapter parameters for read ends",
-        default_value = "GCAATACGTAACTGAACGAAGT"
-    )]
+    /// Adapter parameters for read ends
+    #[clap(long = "end_adapter_seq", default_value = "GCAATACGTAACTGAACGAAGT")]
     pub end_adapter_seq: String,
 
-    /// Junk reads parameter
-    #[clap(
-        long = "junk_reads",
-        about = "This percentage of reads wil be low complexity junk",
-        default_value = "1"
-    )]
+    /// This percentage of reads wil be low complexity junk
+    #[clap(long = "junk_reads", default_value = "1")]
     pub junk: f64,
 
-    /// Random reads parameter
-    #[clap(
-        long = "random_reads",
-        about = "This percentage of reads wil be random sequence",
-        default_value = "1"
-    )]
+    /// This percentage of reads wil be random sequence
+    #[clap(long = "random_reads", default_value = "1")]
     pub random: f64,
 
-    /// Chimera parameter
-    #[clap(
-        long = "chimera",
-        about = "Percentage at which separate fragments join together",
-        default_value = "1"
-    )]
+    /// Percentage at which separate fragments join together
+    #[clap(long = "chimera", default_value = "1")]
     pub chimera: f64,
 
-    /// Glitches parameter
-    #[clap(
-        long = "glitches",
-        about = "Read glitch parameters (rate, size and skip)",
-        default_value = "10000,25,25"
-    )]
+    /// Read glitch parameters (rate, size and skip)
+    #[clap(long = "glitches", default_value = "10000,25,25")]
     pub glitches: Trio,
 
-    /// Small plasmid bias or not
-    #[clap(
-        long = "small_plasmid_bias",
-        about = "If set, then small circular plasmids are lost when the fragment length is too high (default: small plasmids are included regardless of fragment length)"
-    )]
+    /// If set, then small circular plasmids are lost when the fragment length is too high (default: small plasmids are included regardless of fragment length)
+    #[clap(long = "small_plasmid_bias")]
     pub small_plasmid_bias: bool,
 
-    /// Limit memory usage
-    #[clap(
-        long = "number_base_store",
-        about = "Number of base, rustyread can store in ram before write in output in absolute value (e.g. 250M) or a relative depth (e.g. 25x)"
-    )]
+    /// Number of base, rustyread can store in ram before write in output in absolute value (e.g. 250M) or a relative depth (e.g. 25x)
+    #[clap(long = "number_base_store")]
     pub nb_base_store: Option<Quantity>,
 }
 

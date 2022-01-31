@@ -1,6 +1,7 @@
 /* crate use */
 use anyhow::Result;
-use clap::Clap;
+
+use clap::Parser as _;
 
 /* local use */
 use rustyread::*;
