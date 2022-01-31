@@ -249,7 +249,7 @@ where
     add_fragment(
         &mut raw_fragment,
         &description.origin,
-        &references.0,
+        references.0,
         &mut rng,
     );
 
@@ -262,7 +262,7 @@ where
             raw_fragment.extend(adapter_model.get_start(&mut rng));
         }
 
-        add_fragment(&mut raw_fragment, &chimera, &references.1, &mut rng);
+        add_fragment(&mut raw_fragment, chimera, references.1, &mut rng);
     }
 
     let end_adapter = adapter_model.get_end(&mut rng);

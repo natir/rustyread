@@ -178,13 +178,13 @@ impl AbsChanges for Changes {
             } else if last.overlap(&change) {
                 last.merge(&change, raw)
             } else {
-                change.update_align(&raw);
+                change.update_align(raw);
                 let edit = change.edit();
                 self.push(change);
                 edit
             }
         } else {
-            change.update_align(&raw);
+            change.update_align(raw);
             let edit = change.edit();
             self.push(change);
             edit
