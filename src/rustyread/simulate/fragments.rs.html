@@ -1,7 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/simulate/fragments.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>fragments.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
-<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../rustyread/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
-                <a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;simulate&#x2F;fragments.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>fragments.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><script defer src="../../../main.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script>
+    <noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../rustyread/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -912,48 +910,47 @@
 <span id="909">909</span>
 <span id="910">910</span>
 <span id="911">911</span>
-</pre><div class="example-wrap"><pre class="rust ">
-<span class="doccomment">//! Generate fragments</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Generate fragments</span>
 
 <span class="comment">/* standard use */</span>
 
 <span class="comment">/* crate use */</span>
 
 <span class="comment">/* local use */</span>
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">model</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">references</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">simulate</span>::<span class="ident">description</span>::{<span class="ident">Description</span>, <span class="ident">Origin</span>, <span class="ident">ReadType</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::model</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::references</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::simulate::description</span>::{<span class="ident">Description</span>, <span class="ident">Origin</span>, <span class="ident">ReadType</span>};
 
 <span class="doccomment">/// An iterator produce fragment, a description and a seed</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Fragments</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+    <span class="ident">R</span>: <span class="ident">rand::Rng</span>,
 {
     <span class="ident">target</span>: <span class="ident">u64</span>,
     <span class="ident">junk_rate</span>: <span class="ident">f64</span>,
     <span class="ident">random_rate</span>: <span class="ident">f64</span>,
     <span class="ident">chimera_rate</span>: <span class="ident">f64</span>,
     <span class="ident">references</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">References</span>,
-    <span class="ident">length_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model</span>::<span class="ident">Length</span>,
-    <span class="ident">identity_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model</span>::<span class="ident">Identity</span>,
+    <span class="ident">length_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model::Length</span>,
+    <span class="ident">identity_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model::Identity</span>,
     <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">R</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span> <span class="ident">Fragments</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+    <span class="ident">R</span>: <span class="ident">rand::Rng</span>,
 {
     <span class="doccomment">/// Create a new Fragments</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
         <span class="ident">target</span>: <span class="ident">u64</span>,
         <span class="ident">rates</span>: (<span class="ident">f64</span>, <span class="ident">f64</span>, <span class="ident">f64</span>),
         <span class="ident">references</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">References</span>,
-        <span class="ident">length_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model</span>::<span class="ident">Length</span>,
-        <span class="ident">identity_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model</span>::<span class="ident">Identity</span>,
+        <span class="ident">length_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model::Length</span>,
+        <span class="ident">identity_model</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">model::Identity</span>,
         <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">R</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>
+    ) -&gt; <span class="self">Self</span>
     <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+        <span class="ident">R</span>: <span class="ident">rand::Rng</span>,
     {
         <span class="self">Self</span> {
             <span class="ident">target</span>,
@@ -968,28 +965,28 @@
     }
 
     <span class="doccomment">/// Get the read type</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_read_type</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ReadType</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_read_type</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">ReadType</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">rng</span>.<span class="ident">gen_bool</span>(<span class="self">self</span>.<span class="ident">junk_rate</span>) {
-            <span class="ident">ReadType</span>::<span class="ident">Junk</span>
+            <span class="ident">ReadType::Junk</span>
         } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">rng</span>.<span class="ident">gen_bool</span>(<span class="self">self</span>.<span class="ident">random_rate</span>) {
-            <span class="ident">ReadType</span>::<span class="ident">Random</span>
+            <span class="ident">ReadType::Random</span>
         } <span class="kw">else</span> {
-            <span class="ident">ReadType</span>::<span class="ident">Real</span>
+            <span class="ident">ReadType::Real</span>
         }
     }
 
     <span class="doccomment">/// Return true fragment must be a chimera</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_chimera</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_chimera</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">rng</span>.<span class="ident">gen_bool</span>(<span class="self">self</span>.<span class="ident">chimera_rate</span>)
     }
 
     <span class="doccomment">/// Produce a fragment</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_fragment</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">Origin</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_fragment</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">Origin</span>) {
         <span class="kw">let</span> <span class="ident">read_type</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_read_type</span>();
         <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">length_model</span>.<span class="ident">get_length</span>(<span class="self">self</span>.<span class="ident">rng</span>) <span class="kw">as</span> <span class="ident">usize</span>;
 
         <span class="kw">match</span> <span class="ident">read_type</span> {
-            <span class="ident">ReadType</span>::<span class="ident">Real</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ReadType::Real</span> =&gt; {
                 <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">ref_index</span>, <span class="kw-2">mut</span> <span class="ident">strand</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">references</span>.<span class="ident">choose_reference</span>(<span class="self">self</span>.<span class="ident">rng</span>);
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reference</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">references</span>.<span class="ident">sequences</span>[<span class="ident">ref_index</span>];
 
@@ -1020,16 +1017,16 @@
                 (
                     <span class="ident">ref_index</span>,
                     <span class="ident">real_length</span>,
-                    <span class="ident">Origin</span>::<span class="ident">reference</span>(<span class="ident">reference</span>.<span class="ident">id</span>.<span class="ident">clone</span>(), <span class="ident">strand</span>, <span class="ident">begin</span>, <span class="ident">end</span>),
+                    <span class="ident">Origin::reference</span>(<span class="ident">reference</span>.<span class="ident">id</span>.<span class="ident">clone</span>(), <span class="ident">strand</span>, <span class="ident">begin</span>, <span class="ident">end</span>),
                 )
             }
-            <span class="ident">ReadType</span>::<span class="ident">Junk</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="number">0</span>, <span class="ident">length</span>, <span class="ident">Origin</span>::<span class="ident">junk</span>(<span class="ident">length</span>)),
-            <span class="ident">ReadType</span>::<span class="ident">Random</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="number">0</span>, <span class="ident">length</span>, <span class="ident">Origin</span>::<span class="ident">random</span>(<span class="ident">length</span>)),
+            <span class="ident">ReadType::Junk</span> =&gt; (<span class="number">0</span>, <span class="ident">length</span>, <span class="ident">Origin::junk</span>(<span class="ident">length</span>)),
+            <span class="ident">ReadType::Random</span> =&gt; (<span class="number">0</span>, <span class="ident">length</span>, <span class="ident">Origin::random</span>(<span class="ident">length</span>)),
         }
     }
 }
 
-<span class="kw">fn</span> <span class="ident">fragment_is_possible</span>(<span class="ident">frag_len</span>: <span class="ident">usize</span>, <span class="ident">ref_len</span>: <span class="ident">usize</span>, <span class="ident">circular</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+<span class="kw">fn</span> <span class="ident">fragment_is_possible</span>(<span class="ident">frag_len</span>: <span class="ident">usize</span>, <span class="ident">ref_len</span>: <span class="ident">usize</span>, <span class="ident">circular</span>: <span class="ident">bool</span>) -&gt; <span class="ident">bool</span> {
     <span class="kw">if</span> <span class="ident">frag_len</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">ref_len</span> {
         <span class="op">!</span><span class="ident">circular</span>
     } <span class="kw">else</span> {
@@ -1039,13 +1036,13 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Fragments</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">rand</span>::<span class="ident">Rng</span>,
+    <span class="ident">R</span>: <span class="ident">rand::Rng</span>,
 {
     <span class="comment">// ((ref_index, chimeric_ref_index), Description, Seed)</span>
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">Description</span>, <span class="ident">u64</span>);
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">target</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">target</span> <span class="op">==</span> <span class="number">0</span> {
             <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
 
@@ -1068,7 +1065,7 @@
         <span class="prelude-val">Some</span>((
             <span class="ident">first_index</span>,
             <span class="ident">second_index</span>,
-            <span class="ident">Description</span>::<span class="ident">new</span>(
+            <span class="ident">Description::new</span>(
                 <span class="ident">first_origin</span>,
                 <span class="ident">second_origin</span>,
                 <span class="ident">tt_length</span>,
@@ -1082,9 +1079,9 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">t</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">SeedableRng</span>;
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Seek</span>;
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span>;
+    <span class="kw">use</span> <span class="ident">rand::SeedableRng</span>;
+    <span class="kw">use</span> <span class="ident">std::io::Seek</span>;
+    <span class="kw">use</span> <span class="ident">std::io::Write</span>;
 
     <span class="kw">static</span> <span class="ident">FASTA</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="string">b&quot;&gt;random_seq_0
 TCCTAACGTG
@@ -1112,32 +1109,32 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">read_type</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>::<span class="ident">seed_from_u64</span>(<span class="number">42</span>);
-        <span class="kw">let</span> <span class="ident">refs</span> <span class="op">=</span> <span class="ident">References</span>::<span class="ident">from_stream</span>(<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="ident">FASTA</span>)).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Length</span>::<span class="ident">new</span>(<span class="number">8.0</span>, <span class="number">2.0</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">identity</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Identity</span>::<span class="ident">new</span>(<span class="number">85.0</span>, <span class="number">95.0</span>, <span class="number">5.0</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fragments</span> <span class="op">=</span> <span class="ident">Fragments</span>::<span class="ident">new</span>(
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand::rngs::StdRng::seed_from_u64</span>(<span class="number">42</span>);
+        <span class="kw">let</span> <span class="ident">refs</span> <span class="op">=</span> <span class="ident">References::from_stream</span>(<span class="ident">std::io::Cursor::new</span>(<span class="ident">FASTA</span>)).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">model::Length::new</span>(<span class="number">8.0</span>, <span class="number">2.0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">identity</span> <span class="op">=</span> <span class="ident">model::Identity::new</span>(<span class="number">85.0</span>, <span class="number">95.0</span>, <span class="number">5.0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fragments</span> <span class="op">=</span> <span class="ident">Fragments::new</span>(
             <span class="number">10_000</span>,
             (<span class="number">20.0</span>, <span class="number">20.0</span>, <span class="number">20.0</span>),
             <span class="kw-2">&amp;</span><span class="ident">refs</span>,
             <span class="kw-2">&amp;</span><span class="ident">length</span>,
             <span class="kw-2">&amp;</span><span class="ident">identity</span>,
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>,
+            <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>,
         );
 
         <span class="kw">let</span> <span class="ident">read_type</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ReadType</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="number">10</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">fragments</span>.<span class="ident">get_read_type</span>()).<span class="ident">collect</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="macro">vec</span><span class="macro">!</span>[
-                <span class="ident">ReadType</span>::<span class="ident">Real</span>,
-                <span class="ident">ReadType</span>::<span class="ident">Real</span>,
-                <span class="ident">ReadType</span>::<span class="ident">Junk</span>,
-                <span class="ident">ReadType</span>::<span class="ident">Real</span>,
-                <span class="ident">ReadType</span>::<span class="ident">Random</span>,
-                <span class="ident">ReadType</span>::<span class="ident">Junk</span>,
-                <span class="ident">ReadType</span>::<span class="ident">Real</span>,
-                <span class="ident">ReadType</span>::<span class="ident">Random</span>,
-                <span class="ident">ReadType</span>::<span class="ident">Real</span>,
-                <span class="ident">ReadType</span>::<span class="ident">Junk</span>
+        <span class="macro">assert_eq!</span>(
+            <span class="macro">vec!</span>[
+                <span class="ident">ReadType::Real</span>,
+                <span class="ident">ReadType::Real</span>,
+                <span class="ident">ReadType::Junk</span>,
+                <span class="ident">ReadType::Real</span>,
+                <span class="ident">ReadType::Random</span>,
+                <span class="ident">ReadType::Junk</span>,
+                <span class="ident">ReadType::Real</span>,
+                <span class="ident">ReadType::Random</span>,
+                <span class="ident">ReadType::Real</span>,
+                <span class="ident">ReadType::Junk</span>
             ],
             <span class="ident">read_type</span>
         );
@@ -1145,45 +1142,45 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">chimera</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>::<span class="ident">seed_from_u64</span>(<span class="number">42</span>);
-        <span class="kw">let</span> <span class="ident">refs</span> <span class="op">=</span> <span class="ident">References</span>::<span class="ident">from_stream</span>(<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="ident">FASTA</span>)).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Length</span>::<span class="ident">new</span>(<span class="number">8.0</span>, <span class="number">2.0</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">identity</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Identity</span>::<span class="ident">new</span>(<span class="number">85.0</span>, <span class="number">95.0</span>, <span class="number">5.0</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fragments</span> <span class="op">=</span> <span class="ident">Fragments</span>::<span class="ident">new</span>(
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand::rngs::StdRng::seed_from_u64</span>(<span class="number">42</span>);
+        <span class="kw">let</span> <span class="ident">refs</span> <span class="op">=</span> <span class="ident">References::from_stream</span>(<span class="ident">std::io::Cursor::new</span>(<span class="ident">FASTA</span>)).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">model::Length::new</span>(<span class="number">8.0</span>, <span class="number">2.0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">identity</span> <span class="op">=</span> <span class="ident">model::Identity::new</span>(<span class="number">85.0</span>, <span class="number">95.0</span>, <span class="number">5.0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fragments</span> <span class="op">=</span> <span class="ident">Fragments::new</span>(
             <span class="number">10_000</span>,
             (<span class="number">20.0</span>, <span class="number">20.0</span>, <span class="number">20.0</span>),
             <span class="kw-2">&amp;</span><span class="ident">refs</span>,
             <span class="kw-2">&amp;</span><span class="ident">length</span>,
             <span class="kw-2">&amp;</span><span class="ident">identity</span>,
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>,
+            <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>,
         );
 
         <span class="kw">let</span> <span class="ident">chimera</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="number">10</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">fragments</span>.<span class="ident">is_chimera</span>()).<span class="ident">collect</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="macro">vec</span><span class="macro">!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>],
+        <span class="macro">assert_eq!</span>(
+            <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>],
             <span class="ident">chimera</span>
         );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">fragments</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>::<span class="ident">seed_from_u64</span>(<span class="number">42</span>);
-        <span class="kw">let</span> <span class="ident">refs</span> <span class="op">=</span> <span class="ident">References</span>::<span class="ident">from_stream</span>(<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="ident">FASTA</span>)).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Length</span>::<span class="ident">new</span>(<span class="number">8.0</span>, <span class="number">2.0</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">identity</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Identity</span>::<span class="ident">new</span>(<span class="number">85.0</span>, <span class="number">95.0</span>, <span class="number">5.0</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fragments</span> <span class="op">=</span> <span class="ident">Fragments</span>::<span class="ident">new</span>(
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand::rngs::StdRng::seed_from_u64</span>(<span class="number">42</span>);
+        <span class="kw">let</span> <span class="ident">refs</span> <span class="op">=</span> <span class="ident">References::from_stream</span>(<span class="ident">std::io::Cursor::new</span>(<span class="ident">FASTA</span>)).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">model::Length::new</span>(<span class="number">8.0</span>, <span class="number">2.0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">identity</span> <span class="op">=</span> <span class="ident">model::Identity::new</span>(<span class="number">85.0</span>, <span class="number">95.0</span>, <span class="number">5.0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fragments</span> <span class="op">=</span> <span class="ident">Fragments::new</span>(
             <span class="number">10_000</span>,
             (<span class="number">20.0</span>, <span class="number">20.0</span>, <span class="number">20.0</span>),
             <span class="kw-2">&amp;</span><span class="ident">refs</span>,
             <span class="kw-2">&amp;</span><span class="ident">length</span>,
             <span class="kw-2">&amp;</span><span class="ident">identity</span>,
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>,
+            <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>,
         );
 
         <span class="kw">let</span> <span class="ident">frags</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">Origin</span>)<span class="op">&gt;</span> <span class="op">=</span>
             (<span class="number">0</span>..<span class="number">20</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">fragments</span>.<span class="ident">generate_fragment</span>()).<span class="ident">collect</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="macro">vec</span><span class="macro">!</span>[
+        <span class="macro">assert_eq!</span>(
+            <span class="macro">vec!</span>[
                 (
                     <span class="number">7</span>,
                     <span class="number">3</span>,
@@ -1192,7 +1189,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                         <span class="ident">start</span>: <span class="number">7</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                     }
                 ),
                 (
@@ -1203,7 +1200,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
                         <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">4</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Random</span>
                     }
                 ),
                 (
@@ -1214,7 +1211,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                         <span class="ident">start</span>: <span class="number">5</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                     }
                 ),
                 (
@@ -1225,7 +1222,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
                         <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Junk</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Junk</span>
                     }
                 ),
                 (
@@ -1236,7 +1233,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                         <span class="ident">start</span>: <span class="number">16</span>,
                         <span class="ident">end</span>: <span class="number">20</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                     }
                 ),
                 (
@@ -1247,7 +1244,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
                         <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">17</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Random</span>
                     }
                 ),
                 (
@@ -1258,7 +1255,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
                         <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">7</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                     }
                 ),
                 (
@@ -1269,7 +1266,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                         <span class="ident">start</span>: <span class="number">8</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                     }
                 ),
                 (
@@ -1280,7 +1277,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                         <span class="ident">start</span>: <span class="number">2</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                     }
                 ),
                 (
@@ -1291,7 +1288,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                         <span class="ident">start</span>: <span class="number">5</span>,
                         <span class="ident">end</span>: <span class="number">3</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                     }
                 ),
                 (
@@ -1302,7 +1299,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
                         <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">6</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Junk</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Junk</span>
                     }
                 ),
                 (
@@ -1313,7 +1310,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
                         <span class="ident">start</span>: <span class="number">48</span>,
                         <span class="ident">end</span>: <span class="number">54</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                     }
                 ),
                 (
@@ -1324,7 +1321,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
                         <span class="ident">start</span>: <span class="number">6</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                     }
                 ),
                 (
@@ -1335,7 +1332,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
                         <span class="ident">start</span>: <span class="number">25</span>,
                         <span class="ident">end</span>: <span class="number">34</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                     }
                 ),
                 (
@@ -1346,7 +1343,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
                         <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">7</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Junk</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Junk</span>
                     }
                 ),
                 (
@@ -1357,7 +1354,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
                         <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">8</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Random</span>
                     }
                 ),
                 (
@@ -1368,7 +1365,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
                         <span class="ident">start</span>: <span class="number">1</span>,
                         <span class="ident">end</span>: <span class="number">9</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                     }
                 ),
                 (
@@ -1379,7 +1376,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
                         <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">7</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Random</span>
                     }
                 ),
                 (
@@ -1390,7 +1387,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
                         <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">6</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                     }
                 ),
                 (
@@ -1401,7 +1398,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                         <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
                         <span class="ident">start</span>: <span class="number">0</span>,
                         <span class="ident">end</span>: <span class="number">8</span>,
-                        <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
+                        <span class="ident">read_type</span>: <span class="ident">ReadType::Random</span>
                     }
                 )
             ],
@@ -1411,23 +1408,23 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">iter</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>::<span class="ident">seed_from_u64</span>(<span class="number">42</span>);
-        <span class="kw">let</span> <span class="ident">refs</span> <span class="op">=</span> <span class="ident">References</span>::<span class="ident">from_stream</span>(<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="ident">FASTA</span>)).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Length</span>::<span class="ident">new</span>(<span class="number">8.0</span>, <span class="number">2.0</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">identity</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Identity</span>::<span class="ident">new</span>(<span class="number">85.0</span>, <span class="number">95.0</span>, <span class="number">5.0</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">fragments</span> <span class="op">=</span> <span class="ident">Fragments</span>::<span class="ident">new</span>(
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand::rngs::StdRng::seed_from_u64</span>(<span class="number">42</span>);
+        <span class="kw">let</span> <span class="ident">refs</span> <span class="op">=</span> <span class="ident">References::from_stream</span>(<span class="ident">std::io::Cursor::new</span>(<span class="ident">FASTA</span>)).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">model::Length::new</span>(<span class="number">8.0</span>, <span class="number">2.0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">identity</span> <span class="op">=</span> <span class="ident">model::Identity::new</span>(<span class="number">85.0</span>, <span class="number">95.0</span>, <span class="number">5.0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">fragments</span> <span class="op">=</span> <span class="ident">Fragments::new</span>(
             <span class="number">10_000</span>,
             (<span class="number">20.0</span>, <span class="number">20.0</span>, <span class="number">20.0</span>),
             <span class="kw-2">&amp;</span><span class="ident">refs</span>,
             <span class="kw-2">&amp;</span><span class="ident">length</span>,
             <span class="kw-2">&amp;</span><span class="ident">identity</span>,
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>,
+            <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>,
         );
 
         <span class="kw">let</span> <span class="ident">frags</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">Description</span>, <span class="ident">u64</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">fragments</span>.<span class="ident">take</span>(<span class="number">10</span>).<span class="ident">collect</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="macro">vec</span><span class="macro">!</span>[
+        <span class="macro">assert_eq!</span>(
+            <span class="macro">vec!</span>[
                 (
                     <span class="number">7</span>,
                     <span class="number">0</span>,
@@ -1437,7 +1434,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                             <span class="ident">start</span>: <span class="number">7</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                            <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
                         <span class="ident">length</span>: <span class="number">3</span>,
@@ -1454,14 +1451,14 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                             <span class="ident">start</span>: <span class="number">5</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                            <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">Some</span>(<span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_6&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                             <span class="ident">start</span>: <span class="number">4</span>,
                             <span class="ident">end</span>: <span class="number">2</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                            <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                         }),
                         <span class="ident">length</span>: <span class="number">13</span>,
                         <span class="ident">identity</span>: <span class="number">0.785919024034962</span>
@@ -1477,7 +1474,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
                             <span class="ident">start</span>: <span class="number">35</span>,
                             <span class="ident">end</span>: <span class="number">44</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                            <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
                         <span class="ident">length</span>: <span class="number">9</span>,
@@ -1494,7 +1491,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                             <span class="ident">start</span>: <span class="number">8</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                            <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
                         <span class="ident">length</span>: <span class="number">2</span>,
@@ -1511,14 +1508,14 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                             <span class="ident">start</span>: <span class="number">96</span>,
                             <span class="ident">end</span>: <span class="number">99</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                            <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">Some</span>(<span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_10&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                             <span class="ident">start</span>: <span class="number">68</span>,
                             <span class="ident">end</span>: <span class="number">74</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                            <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                         }),
                         <span class="ident">length</span>: <span class="number">10</span>,
                         <span class="ident">identity</span>: <span class="number">0.9166196996085733</span>
@@ -1534,7 +1531,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                             <span class="ident">start</span>: <span class="number">25</span>,
                             <span class="ident">end</span>: <span class="number">33</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                            <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
                         <span class="ident">length</span>: <span class="number">8</span>,
@@ -1551,7 +1548,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                             <span class="ident">start</span>: <span class="number">7</span>,
                             <span class="ident">end</span>: <span class="number">9</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                            <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
                         <span class="ident">length</span>: <span class="number">3</span>,
@@ -1568,7 +1565,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">strand</span>: <span class="string">&#39;+&#39;</span>,
                             <span class="ident">start</span>: <span class="number">81</span>,
                             <span class="ident">end</span>: <span class="number">88</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                            <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
                         <span class="ident">length</span>: <span class="number">7</span>,
@@ -1585,7 +1582,7 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
                             <span class="ident">start</span>: <span class="number">0</span>,
                             <span class="ident">end</span>: <span class="number">8</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
+                            <span class="ident">read_type</span>: <span class="ident">ReadType::Random</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">None</span>,
                         <span class="ident">length</span>: <span class="number">8</span>,
@@ -1602,14 +1599,14 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
                             <span class="ident">strand</span>: <span class="string">&#39;*&#39;</span>,
                             <span class="ident">start</span>: <span class="number">0</span>,
                             <span class="ident">end</span>: <span class="number">4</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Random</span>
+                            <span class="ident">read_type</span>: <span class="ident">ReadType::Random</span>
                         },
                         <span class="ident">chimera</span>: <span class="prelude-val">Some</span>(<span class="ident">Origin</span> {
                             <span class="ident">ref_id</span>: <span class="string">&quot;random_seq_6&quot;</span>.<span class="ident">to_string</span>(),
                             <span class="ident">strand</span>: <span class="string">&#39;-&#39;</span>,
                             <span class="ident">start</span>: <span class="number">2</span>,
                             <span class="ident">end</span>: <span class="number">0</span>,
-                            <span class="ident">read_type</span>: <span class="ident">ReadType</span>::<span class="ident">Real</span>
+                            <span class="ident">read_type</span>: <span class="ident">ReadType::Real</span>
                         }),
                         <span class="ident">length</span>: <span class="number">12</span>,
                         <span class="ident">identity</span>: <span class="number">0.8815059110082734</span>
@@ -1623,12 +1620,12 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">shape</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>::<span class="ident">seed_from_u64</span>(<span class="number">42</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand::rngs::StdRng::seed_from_u64</span>(<span class="number">42</span>);
 
-        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Length</span>::<span class="ident">new</span>(<span class="number">18200.0</span>, <span class="number">15500.0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">model::Length::new</span>(<span class="number">18200.0</span>, <span class="number">15500.0</span>).<span class="ident">unwrap</span>();
 
         <span class="kw">let</span> <span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="number">100_000</span>)
-            .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">length</span>.<span class="ident">get_length</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>) <span class="kw">as</span> <span class="ident">f64</span>)
+            .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">length</span>.<span class="ident">get_length</span>(<span class="kw-2">&amp;mut</span> <span class="ident">rng</span>) <span class="kw">as</span> <span class="ident">f64</span>)
             .<span class="ident">collect</span>();
 
         <span class="kw">let</span> <span class="ident">sum</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>();
@@ -1636,14 +1633,14 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
         <span class="kw">let</span> <span class="ident">std</span> <span class="op">=</span>
             (<span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> (<span class="ident">x</span> <span class="op">-</span> <span class="ident">avg</span>).<span class="ident">powf</span>(<span class="number">2.0</span>)).<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">data</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">sqrt</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sum</span>, <span class="number">1823347447.0</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">avg</span>, <span class="number">18233.47447</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">std</span>, <span class="number">15450.618044403509</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">sum</span>, <span class="number">1823347447.0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">avg</span>, <span class="number">18233.47447</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">std</span>, <span class="number">15450.618044403509</span>);
 
-        <span class="kw">let</span> <span class="ident">identity</span> <span class="op">=</span> <span class="ident">model</span>::<span class="ident">Identity</span>::<span class="ident">new</span>(<span class="number">87.0</span>, <span class="number">100.0</span>, <span class="number">9.0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">identity</span> <span class="op">=</span> <span class="ident">model::Identity::new</span>(<span class="number">87.0</span>, <span class="number">100.0</span>, <span class="number">9.0</span>).<span class="ident">unwrap</span>();
 
         <span class="kw">let</span> <span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="number">100_000</span>)
-            .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">identity</span>.<span class="ident">get_identity</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>))
+            .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">identity</span>.<span class="ident">get_identity</span>(<span class="kw-2">&amp;mut</span> <span class="ident">rng</span>))
             .<span class="ident">collect</span>();
 
         <span class="kw">let</span> <span class="ident">sum</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>();
@@ -1651,72 +1648,72 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
         <span class="kw">let</span> <span class="ident">std</span> <span class="op">=</span>
             (<span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> (<span class="ident">x</span> <span class="op">-</span> <span class="ident">avg</span>).<span class="ident">powf</span>(<span class="number">2.0</span>)).<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">data</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">sqrt</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sum</span>, <span class="number">86957.66076320085</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">avg</span>, <span class="number">0.8695766076320085</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">std</span>, <span class="number">0.09016183161726986</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">sum</span>, <span class="number">86957.66076320085</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">avg</span>, <span class="number">0.8695766076320085</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">std</span>, <span class="number">0.09016183161726986</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">file</span>: <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="ident">Vec</span>::<span class="ident">new</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">file</span>: <span class="ident">std::io::Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">std::io::Cursor::new</span>(<span class="ident">Vec::new</span>());
 
-        <span class="macro">writeln</span><span class="macro">!</span>(
+        <span class="macro">writeln!</span>(
             <span class="ident">file</span>,
             <span class="string">&quot;&gt;5_000_000\n{}&quot;</span>,
-            <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="kw">crate</span>::<span class="ident">random_seq</span>(<span class="number">5_000_000</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
+            <span class="ident">String::from_utf8</span>(<span class="ident"><span class="kw">crate</span>::random_seq</span>(<span class="number">5_000_000</span>, <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
         )
         .<span class="ident">unwrap</span>();
-        <span class="macro">writeln</span><span class="macro">!</span>(
+        <span class="macro">writeln!</span>(
             <span class="ident">file</span>,
             <span class="string">&quot;&gt;2_500\n{}&quot;</span>,
-            <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="kw">crate</span>::<span class="ident">random_seq</span>(<span class="number">2_500</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
+            <span class="ident">String::from_utf8</span>(<span class="ident"><span class="kw">crate</span>::random_seq</span>(<span class="number">2_500</span>, <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
         )
         .<span class="ident">unwrap</span>();
-        <span class="macro">writeln</span><span class="macro">!</span>(
+        <span class="macro">writeln!</span>(
             <span class="ident">file</span>,
             <span class="string">&quot;&gt;500\n{}&quot;</span>,
-            <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="kw">crate</span>::<span class="ident">random_seq</span>(<span class="number">500</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
+            <span class="ident">String::from_utf8</span>(<span class="ident"><span class="kw">crate</span>::random_seq</span>(<span class="number">500</span>, <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
         )
         .<span class="ident">unwrap</span>();
-        <span class="macro">writeln</span><span class="macro">!</span>(
+        <span class="macro">writeln!</span>(
             <span class="ident">file</span>,
             <span class="string">&quot;&gt;140_000\n{}&quot;</span>,
-            <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="kw">crate</span>::<span class="ident">random_seq</span>(<span class="number">140_000</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
+            <span class="ident">String::from_utf8</span>(<span class="ident"><span class="kw">crate</span>::random_seq</span>(<span class="number">140_000</span>, <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
         )
         .<span class="ident">unwrap</span>();
-        <span class="macro">writeln</span><span class="macro">!</span>(
+        <span class="macro">writeln!</span>(
             <span class="ident">file</span>,
             <span class="string">&quot;&gt;80_000\n{}&quot;</span>,
-            <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="kw">crate</span>::<span class="ident">random_seq</span>(<span class="number">80_000</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
+            <span class="ident">String::from_utf8</span>(<span class="ident"><span class="kw">crate</span>::random_seq</span>(<span class="number">80_000</span>, <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
         )
         .<span class="ident">unwrap</span>();
-        <span class="macro">writeln</span><span class="macro">!</span>(
+        <span class="macro">writeln!</span>(
             <span class="ident">file</span>,
             <span class="string">&quot;&gt;75_000\n{}&quot;</span>,
-            <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="kw">crate</span>::<span class="ident">random_seq</span>(<span class="number">75_000</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
+            <span class="ident">String::from_utf8</span>(<span class="ident"><span class="kw">crate</span>::random_seq</span>(<span class="number">75_000</span>, <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
         )
         .<span class="ident">unwrap</span>();
-        <span class="macro">writeln</span><span class="macro">!</span>(
+        <span class="macro">writeln!</span>(
             <span class="ident">file</span>,
             <span class="string">&quot;&gt;65_000\n{}&quot;</span>,
-            <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="kw">crate</span>::<span class="ident">random_seq</span>(<span class="number">65_000</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
+            <span class="ident">String::from_utf8</span>(<span class="ident"><span class="kw">crate</span>::random_seq</span>(<span class="number">65_000</span>, <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
         )
         .<span class="ident">unwrap</span>();
-        <span class="macro">writeln</span><span class="macro">!</span>(
+        <span class="macro">writeln!</span>(
             <span class="ident">file</span>,
             <span class="string">&quot;&gt;8_000\n{}&quot;</span>,
-            <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="kw">crate</span>::<span class="ident">random_seq</span>(<span class="number">8_000</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
+            <span class="ident">String::from_utf8</span>(<span class="ident"><span class="kw">crate</span>::random_seq</span>(<span class="number">8_000</span>, <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
         )
         .<span class="ident">unwrap</span>();
-        <span class="macro">writeln</span><span class="macro">!</span>(
+        <span class="macro">writeln!</span>(
             <span class="ident">file</span>,
             <span class="string">&quot;&gt;7_000\n{}&quot;</span>,
-            <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="kw">crate</span>::<span class="ident">random_seq</span>(<span class="number">7_000</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
+            <span class="ident">String::from_utf8</span>(<span class="ident"><span class="kw">crate</span>::random_seq</span>(<span class="number">7_000</span>, <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>)).<span class="ident">unwrap</span>()
         )
         .<span class="ident">unwrap</span>();
 
-        <span class="ident">file</span>.<span class="ident">seek</span>(<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">SeekFrom</span>::<span class="ident">Start</span>(<span class="number">0</span>)).<span class="ident">unwrap</span>();
+        <span class="ident">file</span>.<span class="ident">seek</span>(<span class="ident">std::io::SeekFrom::Start</span>(<span class="number">0</span>)).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">refs</span> <span class="op">=</span> <span class="ident">References</span>::<span class="ident">from_stream_adjusted_weight</span>(<span class="ident">file</span>, <span class="bool-val">false</span>, <span class="kw-2">&amp;</span><span class="ident">length</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">refs</span> <span class="op">=</span> <span class="ident">References::from_stream_adjusted_weight</span>(<span class="ident">file</span>, <span class="bool-val">false</span>, <span class="kw-2">&amp;</span><span class="ident">length</span>, <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">fragments</span> <span class="op">=</span> <span class="ident">Fragments</span>::<span class="ident">new</span>(
+        <span class="kw">let</span> <span class="ident">fragments</span> <span class="op">=</span> <span class="ident">Fragments::new</span>(
             <span class="ident">refs</span>.<span class="ident">sequences</span>
                 .<span class="ident">iter</span>()
                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">seq</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>)
@@ -1726,18 +1723,18 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             <span class="kw-2">&amp;</span><span class="ident">refs</span>,
             <span class="kw-2">&amp;</span><span class="ident">length</span>,
             <span class="kw-2">&amp;</span><span class="ident">identity</span>,
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>,
+            <span class="kw-2">&amp;mut</span> <span class="ident">rng</span>,
         );
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lengths</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Vec</span>::<span class="ident">new</span>(); <span class="ident">refs</span>.<span class="ident">sequences</span>.<span class="ident">len</span>()];
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">identitys</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lengths</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">Vec::new</span>(); <span class="ident">refs</span>.<span class="ident">sequences</span>.<span class="ident">len</span>()];
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">identitys</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">type_count</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">4</span>];
         <span class="kw">for</span> (<span class="ident">ori1</span>, <span class="ident">ori2</span>, <span class="ident">des</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="ident">fragments</span> {
             <span class="kw">match</span> <span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">read_type</span> {
-                <span class="ident">ReadType</span>::<span class="ident">Real</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">type_count</span>[<span class="number">0</span>] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>,
-                <span class="ident">ReadType</span>::<span class="ident">Junk</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">type_count</span>[<span class="number">1</span>] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>,
-                <span class="ident">ReadType</span>::<span class="ident">Random</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">type_count</span>[<span class="number">2</span>] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>,
+                <span class="ident">ReadType::Real</span> =&gt; <span class="ident">type_count</span>[<span class="number">0</span>] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>,
+                <span class="ident">ReadType::Junk</span> =&gt; <span class="ident">type_count</span>[<span class="number">1</span>] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>,
+                <span class="ident">ReadType::Random</span> =&gt; <span class="ident">type_count</span>[<span class="number">2</span>] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>,
             }
 
             <span class="ident">lengths</span>[<span class="ident">ori1</span>].<span class="ident">push</span>((<span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">end</span> <span class="op">-</span> <span class="ident">des</span>.<span class="ident">origin</span>.<span class="ident">start</span>) <span class="kw">as</span> <span class="ident">f64</span>);
@@ -1750,49 +1747,49 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             <span class="ident">identitys</span>.<span class="ident">push</span>(<span class="ident">des</span>.<span class="ident">identity</span>);
         }
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">type_count</span>, [<span class="number">14710</span>, <span class="number">155</span>, <span class="number">158</span>, <span class="number">130</span>]);
+        <span class="macro">assert_eq!</span>(<span class="ident">type_count</span>, [<span class="number">14710</span>, <span class="number">155</span>, <span class="number">158</span>, <span class="number">130</span>]);
 
         <span class="kw">let</span> <span class="ident">read_per_ref</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">lengths</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">len</span>()).<span class="ident">collect</span>();
 
         <span class="comment">//5_000_000, 2_500, 500, 140_000, 80_000, 75_000, 65_000, 8_000, 7_000</span>
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="macro">assert_eq!</span>(
             <span class="ident">read_per_ref</span>,
-            <span class="macro">vec</span><span class="macro">!</span>[<span class="number">13949</span>, <span class="number">46</span>, <span class="number">51</span>, <span class="number">367</span>, <span class="number">229</span>, <span class="number">211</span>, <span class="number">182</span>, <span class="number">63</span>, <span class="number">55</span>]
+            <span class="macro">vec!</span>[<span class="number">13949</span>, <span class="number">46</span>, <span class="number">51</span>, <span class="number">367</span>, <span class="number">229</span>, <span class="number">211</span>, <span class="number">182</span>, <span class="number">63</span>, <span class="number">55</span>]
         );
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="macro">assert_eq!</span>(
             <span class="ident">lengths</span>[<span class="number">0</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">0</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
             <span class="number">18149.65775324396</span>
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="macro">assert_eq!</span>(
             <span class="ident">lengths</span>[<span class="number">1</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">1</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
             <span class="number">1135.4782608695652</span>
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="macro">assert_eq!</span>(
             <span class="ident">lengths</span>[<span class="number">2</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">2</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
             <span class="number">256.6862745098039</span>
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="macro">assert_eq!</span>(
             <span class="ident">lengths</span>[<span class="number">3</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">3</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
             <span class="number">16951.59673024523</span>
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="macro">assert_eq!</span>(
             <span class="ident">lengths</span>[<span class="number">4</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">4</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
             <span class="number">15845.423580786026</span>
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="macro">assert_eq!</span>(
             <span class="ident">lengths</span>[<span class="number">5</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">5</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
             <span class="number">13841.938388625593</span>
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="macro">assert_eq!</span>(
             <span class="ident">lengths</span>[<span class="number">6</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">6</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
             <span class="number">13571.34065934066</span>
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="macro">assert_eq!</span>(
             <span class="ident">lengths</span>[<span class="number">7</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">7</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
             <span class="number">3849.095238095238</span>
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="macro">assert_eq!</span>(
             <span class="ident">lengths</span>[<span class="number">8</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>() <span class="op">/</span> <span class="ident">lengths</span>[<span class="number">8</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
             <span class="number">3376.0363636363636</span>
         );
@@ -1806,9 +1803,9 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             <span class="op">/</span> <span class="ident">lengths</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>)
             .<span class="ident">sqrt</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sum_len</span>, <span class="number">268903545.0</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">avg_len</span>, <span class="number">29878171.666666668</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">std_len</span>, <span class="number">1225248306.06916</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">sum_len</span>, <span class="number">268903545.0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">avg_len</span>, <span class="number">29878171.666666668</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">std_len</span>, <span class="number">1225248306.06916</span>);
 
         <span class="kw">let</span> <span class="ident">sum_id</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">identitys</span>.<span class="ident">iter</span>().<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>();
         <span class="kw">let</span> <span class="ident">avg_id</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">sum_id</span> <span class="op">/</span> <span class="ident">identitys</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>;
@@ -1819,11 +1816,11 @@ TCCTAACGTGTCACGATTACCCTATCCGATTGCAAGATCATAGCCGTGGTCGCTTTGTGACACATGGGCGATCTAATGCG
             <span class="op">/</span> <span class="ident">identitys</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>)
             .<span class="ident">sqrt</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sum_id</span>, <span class="number">13077.741035790727</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">avg_id</span>, <span class="number">0.870514613312303</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">std_id</span>, <span class="number">0.09010848672092044</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">sum_id</span>, <span class="number">13077.741035790727</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">avg_id</span>, <span class="number">0.870514613312303</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">std_id</span>, <span class="number">0.09010848672092044</span>);
     }
 }
-</pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rustyread" data-search-js="../../../search-index.js"></div>
-    <script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>
+</code></pre></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rustyread" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
+</body></html>

@@ -1,7 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/cli/simulate.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>simulate.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
-<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../rustyread/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
-                <a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;cli&#x2F;simulate.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>simulate.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><script defer src="../../../main.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script>
+    <noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../rustyread/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -340,72 +338,9 @@
 <span id="337">337</span>
 <span id="338">338</span>
 <span id="339">339</span>
-<span id="340">340</span>
-<span id="341">341</span>
-<span id="342">342</span>
-<span id="343">343</span>
-<span id="344">344</span>
-<span id="345">345</span>
-<span id="346">346</span>
-<span id="347">347</span>
-<span id="348">348</span>
-<span id="349">349</span>
-<span id="350">350</span>
-<span id="351">351</span>
-<span id="352">352</span>
-<span id="353">353</span>
-<span id="354">354</span>
-<span id="355">355</span>
-<span id="356">356</span>
-<span id="357">357</span>
-<span id="358">358</span>
-<span id="359">359</span>
-<span id="360">360</span>
-<span id="361">361</span>
-<span id="362">362</span>
-<span id="363">363</span>
-<span id="364">364</span>
-<span id="365">365</span>
-<span id="366">366</span>
-<span id="367">367</span>
-<span id="368">368</span>
-<span id="369">369</span>
-<span id="370">370</span>
-<span id="371">371</span>
-<span id="372">372</span>
-<span id="373">373</span>
-<span id="374">374</span>
-<span id="375">375</span>
-<span id="376">376</span>
-<span id="377">377</span>
-<span id="378">378</span>
-<span id="379">379</span>
-<span id="380">380</span>
-<span id="381">381</span>
-<span id="382">382</span>
-<span id="383">383</span>
-<span id="384">384</span>
-<span id="385">385</span>
-<span id="386">386</span>
-<span id="387">387</span>
-<span id="388">388</span>
-<span id="389">389</span>
-<span id="390">390</span>
-<span id="391">391</span>
-<span id="392">392</span>
-<span id="393">393</span>
-<span id="394">394</span>
-<span id="395">395</span>
-<span id="396">396</span>
-<span id="397">397</span>
-<span id="398">398</span>
-<span id="399">399</span>
-<span id="400">400</span>
-<span id="401">401</span>
-</pre><div class="example-wrap"><pre class="rust ">
-<span class="doccomment">//! All stuff relate to simulate subcommand</span>
+</pre><pre class="rust"><code><span class="doccomment">//! All stuff relate to simulate subcommand</span>
 
-<span class="kw">use</span> <span class="ident">anyhow</span>::<span class="ident">Context</span>;
+<span class="kw">use</span> <span class="ident">anyhow::Context</span>;
 
 <span class="doccomment">/// Store quantity as coverage of number of base</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
@@ -414,60 +349,60 @@
     <span class="ident">base</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">Quantity</span> {
-    <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>;
+<span class="kw">impl</span> <span class="ident">std::str::FromStr</span> <span class="kw">for</span> <span class="ident">Quantity</span> {
+    <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::error::Cli</span>;
 
-    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span>::<span class="prelude-val">Err</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Err</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">s</span>.<span class="ident">as_bytes</span>() {
-            <span class="kw-2">&amp;</span>[<span class="ident">rest</span> @ .., <span class="string">b&#39;x&#39;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">rest</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">number</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">number</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Quantity</span> {
+            <span class="kw-2">&amp;</span>[<span class="ident">rest</span> @ .., <span class="string">b&#39;x&#39;</span>] =&gt; <span class="kw">match</span> <span class="ident">std::str::from_utf8</span>(<span class="ident">rest</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">number</span>) =&gt; <span class="kw">match</span> <span class="ident">u64::from_str</span>(<span class="ident">number</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="ident">n</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Quantity</span> {
                         <span class="ident">coverage</span>: <span class="ident">n</span>,
                         <span class="ident">base</span>: <span class="prelude-val">None</span>,
                     }),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseQuantity</span>),
                 },
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseQuantity</span>),
             },
-            <span class="kw-2">&amp;</span>[<span class="ident">rest</span> @ .., <span class="string">b&#39;G&#39;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">rest</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">number</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">number</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Quantity</span> {
+            <span class="kw-2">&amp;</span>[<span class="ident">rest</span> @ .., <span class="string">b&#39;G&#39;</span>] =&gt; <span class="kw">match</span> <span class="ident">std::str::from_utf8</span>(<span class="ident">rest</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">number</span>) =&gt; <span class="kw">match</span> <span class="ident">u64::from_str</span>(<span class="ident">number</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="ident">n</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Quantity</span> {
                         <span class="ident">coverage</span>: <span class="number">0</span>,
                         <span class="ident">base</span>: <span class="prelude-val">Some</span>(<span class="ident">n</span> <span class="op">*</span> <span class="number">1_000_000_000</span>),
                     }),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseQuantity</span>),
                 },
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseQuantity</span>),
             },
-            <span class="kw-2">&amp;</span>[<span class="ident">rest</span> @ .., <span class="string">b&#39;M&#39;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">rest</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">number</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">number</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Quantity</span> {
+            <span class="kw-2">&amp;</span>[<span class="ident">rest</span> @ .., <span class="string">b&#39;M&#39;</span>] =&gt; <span class="kw">match</span> <span class="ident">std::str::from_utf8</span>(<span class="ident">rest</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">number</span>) =&gt; <span class="kw">match</span> <span class="ident">u64::from_str</span>(<span class="ident">number</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="ident">n</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Quantity</span> {
                         <span class="ident">coverage</span>: <span class="number">0</span>,
                         <span class="ident">base</span>: <span class="prelude-val">Some</span>(<span class="ident">n</span> <span class="op">*</span> <span class="number">1_000_000</span>),
                     }),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseQuantity</span>),
                 },
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseQuantity</span>),
             },
-            <span class="kw-2">&amp;</span>[<span class="ident">rest</span> @ .., <span class="string">b&#39;K&#39;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">rest</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">number</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">number</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Quantity</span> {
+            <span class="kw-2">&amp;</span>[<span class="ident">rest</span> @ .., <span class="string">b&#39;K&#39;</span>] =&gt; <span class="kw">match</span> <span class="ident">std::str::from_utf8</span>(<span class="ident">rest</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">number</span>) =&gt; <span class="kw">match</span> <span class="ident">u64::from_str</span>(<span class="ident">number</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="ident">n</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Quantity</span> {
                         <span class="ident">coverage</span>: <span class="number">0</span>,
                         <span class="ident">base</span>: <span class="prelude-val">Some</span>(<span class="ident">n</span> <span class="op">*</span> <span class="number">1_000</span>),
                     }),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseQuantity</span>),
                 },
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseQuantity</span>),
             },
-            <span class="ident">rest</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">rest</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">number</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">number</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Quantity</span> {
+            <span class="ident">rest</span> =&gt; <span class="kw">match</span> <span class="ident">std::str::from_utf8</span>(<span class="ident">rest</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">number</span>) =&gt; <span class="kw">match</span> <span class="ident">u64::from_str</span>(<span class="ident">number</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="ident">n</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Quantity</span> {
                         <span class="ident">coverage</span>: <span class="number">0</span>,
                         <span class="ident">base</span>: <span class="prelude-val">Some</span>(<span class="ident">n</span>),
                     }),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseQuantity</span>),
                 },
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseQuantity</span>),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseQuantity</span>),
             },
         }
     }
@@ -475,10 +410,10 @@
 
 <span class="kw">impl</span> <span class="ident">Quantity</span> {
     <span class="doccomment">/// Convert Quantity in a number of base, if base is set return just number of base else return genome_length times coverage</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">number_of_base</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">genome_length</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">number_of_base</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">genome_length</span>: <span class="ident">u64</span>) -&gt; <span class="ident">u64</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">base</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">n</span>,
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">genome_length</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">coverage</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>,
+            <span class="prelude-val">None</span> =&gt; <span class="ident">genome_length</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">coverage</span>,
         }
     }
 }
@@ -487,18 +422,18 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Duo</span>(<span class="kw">pub</span> <span class="ident">u64</span>, <span class="kw">pub</span> <span class="ident">u64</span>);
 
-<span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">Duo</span> {
-    <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>;
+<span class="kw">impl</span> <span class="ident">std::str::FromStr</span> <span class="kw">for</span> <span class="ident">Duo</span> {
+    <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::error::Cli</span>;
 
-    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span>::<span class="prelude-val">Err</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Err</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">elements</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">split</span>(<span class="string">&#39;,&#39;</span>).<span class="ident">collect</span>();
 
         <span class="kw">if</span> <span class="ident">elements</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="number">2</span> {
-            <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseDuo</span>)
+            <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseDuo</span>)
         } <span class="kw">else</span> {
-            <span class="kw">match</span> (<span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">elements</span>[<span class="number">0</span>]), <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">elements</span>[<span class="number">1</span>])) {
-                (<span class="prelude-val">Ok</span>(<span class="ident">a</span>), <span class="prelude-val">Ok</span>(<span class="ident">b</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Duo</span>(<span class="ident">a</span>, <span class="ident">b</span>)),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseDuo</span>),
+            <span class="kw">match</span> (<span class="ident">u64::from_str</span>(<span class="ident">elements</span>[<span class="number">0</span>]), <span class="ident">u64::from_str</span>(<span class="ident">elements</span>[<span class="number">1</span>])) {
+                (<span class="prelude-val">Ok</span>(<span class="ident">a</span>), <span class="prelude-val">Ok</span>(<span class="ident">b</span>)) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Duo</span>(<span class="ident">a</span>, <span class="ident">b</span>)),
+                <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseDuo</span>),
             }
         }
     }
@@ -508,22 +443,22 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Trio</span>(<span class="kw">pub</span> <span class="ident">u64</span>, <span class="kw">pub</span> <span class="ident">u64</span>, <span class="kw">pub</span> <span class="ident">u64</span>);
 
-<span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">Trio</span> {
-    <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>;
+<span class="kw">impl</span> <span class="ident">std::str::FromStr</span> <span class="kw">for</span> <span class="ident">Trio</span> {
+    <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::error::Cli</span>;
 
-    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span>::<span class="prelude-val">Err</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Err</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">elements</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">split</span>(<span class="string">&#39;,&#39;</span>).<span class="ident">collect</span>();
 
         <span class="kw">if</span> <span class="ident">elements</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="number">3</span> {
-            <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseTrio</span>)
+            <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseTrio</span>)
         } <span class="kw">else</span> {
             <span class="kw">match</span> (
-                <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">elements</span>[<span class="number">0</span>]),
-                <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">elements</span>[<span class="number">1</span>]),
-                <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">elements</span>[<span class="number">2</span>]),
+                <span class="ident">u64::from_str</span>(<span class="ident">elements</span>[<span class="number">0</span>]),
+                <span class="ident">u64::from_str</span>(<span class="ident">elements</span>[<span class="number">1</span>]),
+                <span class="ident">u64::from_str</span>(<span class="ident">elements</span>[<span class="number">2</span>]),
             ) {
-                (<span class="prelude-val">Ok</span>(<span class="ident">a</span>), <span class="prelude-val">Ok</span>(<span class="ident">b</span>), <span class="prelude-val">Ok</span>(<span class="ident">c</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Trio</span>(<span class="ident">a</span>, <span class="ident">b</span>, <span class="ident">c</span>)),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantParseTrio</span>),
+                (<span class="prelude-val">Ok</span>(<span class="ident">a</span>), <span class="prelude-val">Ok</span>(<span class="ident">b</span>), <span class="prelude-val">Ok</span>(<span class="ident">c</span>)) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Trio</span>(<span class="ident">a</span>, <span class="ident">b</span>, <span class="ident">c</span>)),
+                <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantParseTrio</span>),
             }
         }
     }
@@ -532,176 +467,114 @@
 <span class="doccomment">/// Found path to model file</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// If value is path to a file just return value else search in `python -c &quot;import sys; print(&#39;,&#39;.join(sys.path))&quot;`</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">found_model</span>(<span class="ident">value</span>: <span class="ident">String</span>, <span class="ident">model_type</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>);
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">found_model</span>(<span class="ident">value</span>: <span class="ident">String</span>, <span class="ident">model_type</span>: <span class="ident">String</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span><span class="ident">std::path::PathBuf</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">std::path::PathBuf::from</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>);
 
     <span class="kw">if</span> <span class="ident">path</span>.<span class="ident">is_file</span>() {
-        <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Model parameter is a file&quot;</span>);
+        <span class="macro">log::info!</span>(<span class="string">&quot;Model parameter is a file&quot;</span>);
         <span class="prelude-val">Ok</span>(<span class="ident">path</span>)
     } <span class="kw">else</span> {
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">process</span>::<span class="ident">Command</span>::<span class="ident">new</span>(<span class="string">&quot;python&quot;</span>)
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">std::process::Command::new</span>(<span class="string">&quot;python&quot;</span>)
             .<span class="ident">args</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;-c&quot;</span>, <span class="string">&quot;import sys; print(&#39;,&#39;.join(sys.path))&quot;</span>])
             .<span class="ident">output</span>()
-            .<span class="ident">with_context</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantFoundModelPath</span>)<span class="question-mark">?</span>;
+            .<span class="ident">with_context</span>(<span class="op">|</span><span class="op">|</span> <span class="ident"><span class="kw">crate</span>::error::Cli::CantFoundModelPath</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">paths</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">result</span>.<span class="ident">stdout</span>)
-            .<span class="ident">with_context</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantFoundModelPath</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">paths</span> <span class="op">=</span> <span class="ident">std::str::from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">result</span>.<span class="ident">stdout</span>)
+            .<span class="ident">with_context</span>(<span class="op">|</span><span class="op">|</span> <span class="ident"><span class="kw">crate</span>::error::Cli::CantFoundModelPath</span>)<span class="question-mark">?</span>;
 
         <span class="kw">for</span> <span class="ident">path</span> <span class="kw">in</span> <span class="ident">paths</span>.<span class="ident">split</span>(<span class="string">&#39;,&#39;</span>) {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">local_path</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">path</span>);
-            <span class="ident">local_path</span>.<span class="ident">push</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;badread/{}_models/&quot;</span>, <span class="ident">model_type</span>));
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">local_path</span> <span class="op">=</span> <span class="ident">std::path::PathBuf::from</span>(<span class="ident">path</span>);
+            <span class="ident">local_path</span>.<span class="ident">push</span>(<span class="macro">format!</span>(<span class="string">&quot;badread/{}_models/&quot;</span>, <span class="ident">model_type</span>));
             <span class="ident">local_path</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>);
             <span class="ident">local_path</span>.<span class="ident">set_extension</span>(<span class="string">&quot;gz&quot;</span>);
 
             <span class="kw">if</span> <span class="ident">local_path</span>.<span class="ident">is_file</span>() {
-                <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Model found in python sys.path&quot;</span>);
+                <span class="macro">log::info!</span>(<span class="string">&quot;Model found in python sys.path&quot;</span>);
                 <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">local_path</span>);
             }
         }
 
-        <span class="prelude-val">Err</span>(<span class="ident">anyhow</span>::<span class="macro">anyhow</span><span class="macro">!</span>(<span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Cli</span>::<span class="ident">CantFoundModelPath</span>))
+        <span class="prelude-val">Err</span>(<span class="macro">anyhow::anyhow!</span>(<span class="ident"><span class="kw">crate</span>::error::Cli::CantFoundModelPath</span>))
     }
 }
 
 <span class="doccomment">/// Struct use to parse simulate subcommand argument</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">clap</span>::<span class="ident">Clap</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">clap::Parser</span>, <span class="ident">Debug</span>)]</span>
 <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Generate fake long read&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Command</span> {
-    <span class="doccomment">/// Path to reference sequence in fasta format</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;reference&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Reference fasta (can be gzipped, bzip2ped, xzped)&quot;</span>,
-        <span class="ident">required</span> <span class="op">=</span> <span class="bool-val">true</span>
-    )]</span>
+    <span class="doccomment">/// Path to reference fasta (can be gzipped, bzip2ped, xzped)</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;reference&quot;</span>, <span class="ident">required</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
     <span class="kw">pub</span> <span class="ident">reference_path</span>: <span class="ident">String</span>,
 
-    <span class="doccomment">/// Path to reference sequence in fasta format</span>
-    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;output&quot;</span>, <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Where read is write&quot;</span>)]</span>
+    <span class="doccomment">/// Path where read is write</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;output&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">output_path</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
-    <span class="doccomment">/// Quantity of base rustyread have to generate</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;quantity&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Either an absolute value (e.g. 250M) or a relative depth (e.g. 25x)&quot;</span>,
-        <span class="ident">required</span> <span class="op">=</span> <span class="bool-val">true</span>
-    )]</span>
+    <span class="doccomment">/// Either an absolute value (e.g. 250M) or a relative depth (e.g. 25x)</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;quantity&quot;</span>, <span class="ident">required</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
     <span class="kw">pub</span> <span class="ident">quantity</span>: <span class="ident">Quantity</span>,
 
-    <span class="doccomment">/// Read length distribution parameter</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;length&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Fragment length distribution (mean and stdev)&quot;</span>,
-        <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;15000,13000&quot;</span>
-    )]</span>
+    <span class="doccomment">/// Fragment length distribution (mean and stdev)</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;length&quot;</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;15000,13000&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">length</span>: <span class="ident">Duo</span>,
 
-    <span class="doccomment">/// Identity distribution parameter</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;identity&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Sequencing identity distribution (mean, max and stdev)&quot;</span>,
-        <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;85,95,5&quot;</span>
-    )]</span>
+    <span class="doccomment">/// Sequencing identity distribution (mean, max and stdev)</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;identity&quot;</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;85,95,5&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">identity</span>: <span class="ident">Trio</span>,
 
-    <span class="doccomment">/// Error model used</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;error_model&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Path to an error model file&quot;</span>,
-        <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;nanopore2020&quot;</span>
-    )]</span>
+    <span class="doccomment">/// Path to an error model file</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;error_model&quot;</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;nanopore2020&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">error_model</span>: <span class="ident">String</span>,
 
-    <span class="doccomment">/// Qualtity score model used</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;qscore_model&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Path to an quality score model file&quot;</span>,
-        <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;nanopore2020&quot;</span>
-    )]</span>
+    <span class="doccomment">/// Path to an quality score model file</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;qscore_model&quot;</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;nanopore2020&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">qscore_model</span>: <span class="ident">String</span>,
 
-    <span class="doccomment">/// Seed used</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;seed&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Random number generator seed for deterministic output (default: different output each time)&quot;</span>
-    )]</span>
+    <span class="doccomment">/// Random number generator seed for deterministic output (default: different output each time)</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;seed&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">seed</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
 
-    <span class="doccomment">/// Start adapter parameter</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;start_adapter&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Adapter parameters for read starts (rate and amount)&quot;</span>,
-        <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;90,60&quot;</span>
-    )]</span>
+    <span class="doccomment">/// Adapter parameters for read starts (rate and amount)</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;start_adapter&quot;</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;90,60&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">start_adapter</span>: <span class="ident">Duo</span>,
 
-    <span class="doccomment">/// End adapter parameter</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;end_adapter&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Adapter parameters for read ends (rate and amount)&quot;</span>,
-        <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;50,20&quot;</span>
-    )]</span>
+    <span class="doccomment">/// Adapter parameters for read ends (rate and amount)</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;end_adapter&quot;</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;50,20&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">end_adapter</span>: <span class="ident">Duo</span>,
 
-    <span class="doccomment">/// Start adapter sequence</span>
+    <span class="doccomment">/// Adapter parameters for read starts</span>
     <span class="attribute">#[<span class="ident">clap</span>(
         <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;start_adapter_seq&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Adapter parameters for read starts&quot;</span>,
         <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;AATGTACTTCGTTCAGTTACGTATTGCT&quot;</span>
     )]</span>
     <span class="kw">pub</span> <span class="ident">start_adapter_seq</span>: <span class="ident">String</span>,
 
-    <span class="doccomment">/// End adapter sequence</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;end_adapter_seq&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Adapter parameters for read ends&quot;</span>,
-        <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;GCAATACGTAACTGAACGAAGT&quot;</span>
-    )]</span>
+    <span class="doccomment">/// Adapter parameters for read ends</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;end_adapter_seq&quot;</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;GCAATACGTAACTGAACGAAGT&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">end_adapter_seq</span>: <span class="ident">String</span>,
 
-    <span class="doccomment">/// Junk reads parameter</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;junk_reads&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;This percentage of reads wil be low complexity junk&quot;</span>,
-        <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;1&quot;</span>
-    )]</span>
+    <span class="doccomment">/// This percentage of reads wil be low complexity junk</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;junk_reads&quot;</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;1&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">junk</span>: <span class="ident">f64</span>,
 
-    <span class="doccomment">/// Random reads parameter</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;random_reads&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;This percentage of reads wil be random sequence&quot;</span>,
-        <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;1&quot;</span>
-    )]</span>
+    <span class="doccomment">/// This percentage of reads wil be random sequence</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;random_reads&quot;</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;1&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">random</span>: <span class="ident">f64</span>,
 
-    <span class="doccomment">/// Chimera parameter</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;chimera&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Percentage at which separate fragments join together&quot;</span>,
-        <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;1&quot;</span>
-    )]</span>
+    <span class="doccomment">/// Percentage at which separate fragments join together</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;chimera&quot;</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;1&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">chimera</span>: <span class="ident">f64</span>,
 
-    <span class="doccomment">/// Glitches parameter</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;glitches&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Read glitch parameters (rate, size and skip)&quot;</span>,
-        <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;10000,25,25&quot;</span>
-    )]</span>
+    <span class="doccomment">/// Read glitch parameters (rate, size and skip)</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;glitches&quot;</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;10000,25,25&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">glitches</span>: <span class="ident">Trio</span>,
 
-    <span class="doccomment">/// Small plasmid bias or not</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;small_plasmid_bias&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;If set, then small circular plasmids are lost when the fragment length is too high (default: small plasmids are included regardless of fragment length)&quot;</span>
-    )]</span>
+    <span class="doccomment">/// If set, then small circular plasmids are lost when the fragment length is too high (default: small plasmids are included regardless of fragment length)</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;small_plasmid_bias&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">small_plasmid_bias</span>: <span class="ident">bool</span>,
 
-    <span class="doccomment">/// Limit memory usage</span>
-    <span class="attribute">#[<span class="ident">clap</span>(
-        <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;number_base_store&quot;</span>,
-        <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Number of base, rustyread can store in ram before write in output in absolute value (e.g. 250M) or a relative depth (e.g. 25x)&quot;</span>
-    )]</span>
+    <span class="doccomment">/// Number of base, rustyread can store in ram before write in output in absolute value (e.g. 250M) or a relative depth (e.g. 25x)</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;number_base_store&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">nb_base_store</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Quantity</span><span class="op">&gt;</span>,
 }
 
@@ -709,101 +582,101 @@
 <span class="kw">mod</span> <span class="ident">t</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
+    <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">parse_quantity</span>() {
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;50&quot;</span>).<span class="ident">unwrap</span>(),
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Quantity::from_str</span>(<span class="string">&quot;50&quot;</span>).<span class="ident">unwrap</span>(),
             <span class="ident">Quantity</span> {
                 <span class="ident">coverage</span>: <span class="number">0</span>,
                 <span class="ident">base</span>: <span class="prelude-val">Some</span>(<span class="number">50</span>)
             }
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;50K&quot;</span>).<span class="ident">unwrap</span>(),
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Quantity::from_str</span>(<span class="string">&quot;50K&quot;</span>).<span class="ident">unwrap</span>(),
             <span class="ident">Quantity</span> {
                 <span class="ident">coverage</span>: <span class="number">0</span>,
                 <span class="ident">base</span>: <span class="prelude-val">Some</span>(<span class="number">50_000</span>)
             }
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;50M&quot;</span>).<span class="ident">unwrap</span>(),
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Quantity::from_str</span>(<span class="string">&quot;50M&quot;</span>).<span class="ident">unwrap</span>(),
             <span class="ident">Quantity</span> {
                 <span class="ident">coverage</span>: <span class="number">0</span>,
                 <span class="ident">base</span>: <span class="prelude-val">Some</span>(<span class="number">50_000_000</span>)
             }
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;50G&quot;</span>).<span class="ident">unwrap</span>(),
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Quantity::from_str</span>(<span class="string">&quot;50G&quot;</span>).<span class="ident">unwrap</span>(),
             <span class="ident">Quantity</span> {
                 <span class="ident">coverage</span>: <span class="number">0</span>,
                 <span class="ident">base</span>: <span class="prelude-val">Some</span>(<span class="number">50_000_000_000</span>)
             }
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;50x&quot;</span>).<span class="ident">unwrap</span>(),
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Quantity::from_str</span>(<span class="string">&quot;50x&quot;</span>).<span class="ident">unwrap</span>(),
             <span class="ident">Quantity</span> {
                 <span class="ident">coverage</span>: <span class="number">50</span>,
                 <span class="ident">base</span>: <span class="prelude-val">None</span>
             }
         );
 
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;50z&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;bépo50&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;bépo50K&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;bépo50M&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;bépo50G&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;bépo50x&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Quantity::from_str</span>(<span class="string">&quot;&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Quantity::from_str</span>(<span class="string">&quot;50z&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Quantity::from_str</span>(<span class="string">&quot;bépo50&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Quantity::from_str</span>(<span class="string">&quot;bépo50K&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Quantity::from_str</span>(<span class="string">&quot;bépo50M&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Quantity::from_str</span>(<span class="string">&quot;bépo50G&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Quantity::from_str</span>(<span class="string">&quot;bépo50x&quot;</span>).<span class="ident">is_err</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">quantity2number_of_base</span>() {
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;50&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">number_of_base</span>(<span class="number">50</span>), <span class="number">50</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;50K&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">number_of_base</span>(<span class="number">50</span>),
+        <span class="macro">assert_eq!</span>(<span class="ident">Quantity::from_str</span>(<span class="string">&quot;50&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">number_of_base</span>(<span class="number">50</span>), <span class="number">50</span>);
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Quantity::from_str</span>(<span class="string">&quot;50K&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">number_of_base</span>(<span class="number">50</span>),
             <span class="number">50_000</span>
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;50M&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">number_of_base</span>(<span class="number">50</span>),
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Quantity::from_str</span>(<span class="string">&quot;50M&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">number_of_base</span>(<span class="number">50</span>),
             <span class="number">50_000_000</span>
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;50G&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">number_of_base</span>(<span class="number">50</span>),
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Quantity::from_str</span>(<span class="string">&quot;50G&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">number_of_base</span>(<span class="number">50</span>),
             <span class="number">50_000_000_000</span>
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Quantity</span>::<span class="ident">from_str</span>(<span class="string">&quot;50x&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">number_of_base</span>(<span class="number">50</span>), <span class="number">2500</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">Quantity::from_str</span>(<span class="string">&quot;50x&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">number_of_base</span>(<span class="number">50</span>), <span class="number">2500</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">parse_pair</span>() {
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Duo</span>::<span class="ident">from_str</span>(<span class="string">&quot;50,45&quot;</span>).<span class="ident">unwrap</span>(), <span class="ident">Duo</span>(<span class="number">50</span>, <span class="number">45</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">Duo::from_str</span>(<span class="string">&quot;50,45&quot;</span>).<span class="ident">unwrap</span>(), <span class="ident">Duo</span>(<span class="number">50</span>, <span class="number">45</span>));
 
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Duo</span>::<span class="ident">from_str</span>(<span class="string">&quot;50,43,&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Duo</span>::<span class="ident">from_str</span>(<span class="string">&quot;50,43,74&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Duo</span>::<span class="ident">from_str</span>(<span class="string">&quot;50,43,,&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Duo</span>::<span class="ident">from_str</span>(<span class="string">&quot;50,,43&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Duo</span>::<span class="ident">from_str</span>(<span class="string">&quot;,,&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Duo::from_str</span>(<span class="string">&quot;50,43,&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Duo::from_str</span>(<span class="string">&quot;50,43,74&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Duo::from_str</span>(<span class="string">&quot;50,43,,&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Duo::from_str</span>(<span class="string">&quot;50,,43&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Duo::from_str</span>(<span class="string">&quot;,,&quot;</span>).<span class="ident">is_err</span>());
 
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Duo</span>::<span class="ident">from_str</span>(<span class="string">&quot;bépo50,43&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Duo</span>::<span class="ident">from_str</span>(<span class="string">&quot;50,bépo43&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Duo::from_str</span>(<span class="string">&quot;bépo50,43&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Duo::from_str</span>(<span class="string">&quot;50,bépo43&quot;</span>).<span class="ident">is_err</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">parse_trio</span>() {
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Trio</span>::<span class="ident">from_str</span>(<span class="string">&quot;50,45,74&quot;</span>).<span class="ident">unwrap</span>(), <span class="ident">Trio</span>(<span class="number">50</span>, <span class="number">45</span>, <span class="number">74</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">Trio::from_str</span>(<span class="string">&quot;50,45,74&quot;</span>).<span class="ident">unwrap</span>(), <span class="ident">Trio</span>(<span class="number">50</span>, <span class="number">45</span>, <span class="number">74</span>));
 
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Trio</span>::<span class="ident">from_str</span>(<span class="string">&quot;50,43&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Trio</span>::<span class="ident">from_str</span>(<span class="string">&quot;50,43,,&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Trio</span>::<span class="ident">from_str</span>(<span class="string">&quot;50,,43&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Trio</span>::<span class="ident">from_str</span>(<span class="string">&quot;,,,&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Trio::from_str</span>(<span class="string">&quot;50,43&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Trio::from_str</span>(<span class="string">&quot;50,43,,&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Trio::from_str</span>(<span class="string">&quot;50,,43&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Trio::from_str</span>(<span class="string">&quot;,,,&quot;</span>).<span class="ident">is_err</span>());
 
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Trio</span>::<span class="ident">from_str</span>(<span class="string">&quot;bépo50,43,74&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Trio</span>::<span class="ident">from_str</span>(<span class="string">&quot;50,bépo43,74&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Trio</span>::<span class="ident">from_str</span>(<span class="string">&quot;50,43,bépo74&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Trio::from_str</span>(<span class="string">&quot;bépo50,43,74&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Trio::from_str</span>(<span class="string">&quot;50,bépo43,74&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">Trio::from_str</span>(<span class="string">&quot;50,43,bépo74&quot;</span>).<span class="ident">is_err</span>());
     }
 }
-</pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rustyread" data-search-js="../../../search-index.js"></div>
-    <script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>
+</code></pre></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rustyread" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
+</body></html>

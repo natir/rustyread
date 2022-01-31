@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["rustyread"] = [{"text":"impl <a class=\"trait\" href=\"https://docs.rs/clap/3.0.0-beta.2/clap/derive/trait.Subcommand.html\" title=\"trait clap::derive::Subcommand\">Subcommand</a> for <a class=\"enum\" href=\"rustyread/cli/enum.SubCommand.html\" title=\"enum rustyread::cli::SubCommand\">SubCommand</a>","synthetic":false,"types":["rustyread::cli::SubCommand"]}];
+implementors["rustyread"] = [{"text":"impl Subcommand for <a class=\"enum\" href=\"rustyread/cli/enum.SubCommand.html\" title=\"enum rustyread::cli::SubCommand\">SubCommand</a>","synthetic":false,"types":["rustyread::cli::SubCommand"]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
