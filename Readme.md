@@ -154,7 +154,7 @@ If you haven't a rust environment you can use [rustup](https://rustup.rs/) or yo
 #### With cargo
 
 ```
-cargo install --git https://github.com/natir/rustyread.git --tag 0.4
+cargo install --git https://github.com/natir/rustyread.git --tag 0.4.1
 ```
 
 ### From source
@@ -162,7 +162,7 @@ cargo install --git https://github.com/natir/rustyread.git --tag 0.4
 ```
 git clone https://github.com/natir/rustyread.git
 cd rustyread
-git checkout 0.4
+git checkout 0.4.1
 cargo install --path .
 ```
 
