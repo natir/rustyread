@@ -174,7 +174,7 @@
 <span class="comment">/* local use */</span>
 
 <span class="doccomment">/// An enum to represent type of read</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ReadType</span> {
     <span class="ident">Real</span>,
     <span class="ident">Junk</span>,
@@ -182,7 +182,7 @@
 }
 
 <span class="doccomment">/// Store information about origin of read</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Origin</span> {
     <span class="kw">pub</span> <span class="ident">ref_id</span>: <span class="ident">String</span>,
     <span class="kw">pub</span> <span class="ident">strand</span>: <span class="ident">char</span>,
