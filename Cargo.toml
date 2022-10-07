@@ -4,7 +4,7 @@ version = "0.4.0"
 authors = ["Pierre Marijon <pierre.marijon@hhu.de>"]
 edition = "2021"
 description = "A long read generator based on badread method"
-rust-version = "1.56"
+rust-version = "1.57"
 
 homepage = "https://github.com/natir/rustyread"
 repository = "https://github.com/natir/rustyread"
