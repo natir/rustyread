@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["align",""],["edit_distance",""]]});
+window.SIDEBAR_ITEMS = {"fn":[["align",""],["edit_distance",""]]};

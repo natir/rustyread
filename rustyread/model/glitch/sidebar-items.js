@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Glitch","Struct to generate glitches in fragment"]]});
+window.SIDEBAR_ITEMS = {"struct":[["Glitch","Struct to generate glitches in fragment"]]};

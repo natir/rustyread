@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Reference","Store a reference sequence"],["References","A collections of sequence"]]});
+window.SIDEBAR_ITEMS = {"struct":[["Reference","Store a reference sequence"],["References","A collections of sequence"]]};

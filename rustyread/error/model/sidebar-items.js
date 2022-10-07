@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Model","Enum to manage error polymorphism"]]});
+window.SIDEBAR_ITEMS = {"enum":[["Model","Enum to manage error polymorphism"]]};

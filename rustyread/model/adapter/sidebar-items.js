@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Adapter","Struct to get sequence adapter"]]});
+window.SIDEBAR_ITEMS = {"struct":[["Adapter","Struct to get sequence adapter"]]};

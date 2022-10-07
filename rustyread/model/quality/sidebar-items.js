@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Quality","Struct to load and apply quality model"]]});
+window.SIDEBAR_ITEMS = {"struct":[["Quality","Struct to load and apply quality model"]]};

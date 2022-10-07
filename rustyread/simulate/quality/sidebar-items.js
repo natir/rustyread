@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["generate_quality","Generate quality string"]]});
+window.SIDEBAR_ITEMS = {"fn":[["generate_quality","Generate quality string"]]};

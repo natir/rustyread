@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["random_error","Add a single random error in a kmer"]],"struct":[["Error","Struct to load and apply error model"]]});
+window.SIDEBAR_ITEMS = {"fn":[["random_error","Add a single random error in a kmer"]],"struct":[["Error","Struct to load and apply error model"]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Cli","Enum to manage error polymorphism"]]});
+window.SIDEBAR_ITEMS = {"enum":[["Cli","Enum to manage error polymorphism"]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Fragments","An iterator produce fragment, a description and a seed"]]});
+window.SIDEBAR_ITEMS = {"struct":[["Fragments","An iterator produce fragment, a description and a seed"]]};
