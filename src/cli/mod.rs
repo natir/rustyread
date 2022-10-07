@@ -10,8 +10,8 @@ pub mod simulate;
 #[derive(clap::Parser, std::fmt::Debug)]
 #[clap(
     name = "rustyread",
-    version = "0.4 Pidgeotto",
-    author = "Pierre Marijon <pierre.marijon@hhu.de>"
+    version = "0.4.1 Machamp",
+    author = "Pierre Marijon <pierre@marijon.fr>"
 )]
 pub struct Command {
     /// Subcommand call

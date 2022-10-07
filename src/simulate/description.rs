@@ -7,7 +7,7 @@
 /* local use */
 
 /// An enum to represent type of read
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ReadType {
     Real,
     Junk,
@@ -15,7 +15,7 @@ pub enum ReadType {
 }
 
 /// Store information about origin of read
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Origin {
     pub ref_id: String,
     pub strand: char,

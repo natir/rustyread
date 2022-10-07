@@ -10,7 +10,7 @@ use crate::model;
 pub type Seq = Vec<u8>;
 pub type Cigar = Vec<u8>;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 /// A struct to represent a change in a sequence
 pub struct Change {
     begin: usize,

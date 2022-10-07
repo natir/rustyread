@@ -3,7 +3,7 @@
 use anyhow::Context;
 
 /// Store quantity as coverage of number of base
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Quantity {
     coverage: u64,
     base: Option<u64>,
@@ -79,7 +79,7 @@ impl Quantity {
 }
 
 /// Store a pair of value, can be parse from str if it's match with \d+,\d+
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Duo(pub u64, pub u64);
 
 impl std::str::FromStr for Duo {
@@ -100,7 +100,7 @@ impl std::str::FromStr for Duo {
 }
 
 /// Store a trio of value, can be parse from str if it's match with \d+,\d+,\d++
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Trio(pub u64, pub u64, pub u64);
 
 impl std::str::FromStr for Trio {

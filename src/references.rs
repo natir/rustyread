@@ -13,7 +13,7 @@ use crate::model;
 type Text = Box<[u8]>;
 
 /// Store a reference sequence
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Reference {
     pub id: String,
     pub seq: Text,

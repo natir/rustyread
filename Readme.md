@@ -50,25 +50,23 @@ Rustyread memory usage could be estimated with formula: `2 * reference base + 2 
 ### Full usage
 
 ```
-rustyread 0.4 Pidgeotto
-Pierre Marijon <pierre.marijon@hhu.de>
+rustyread 0.4.1 Machamp
+Pierre Marijon <pierre@marijon.fr>
 A long read simulator based on badread idea and model
 
 USAGE:
-    rustyread [FLAGS] [OPTIONS] <SUBCOMMAND>
-
-FLAGS:
-    -h, --help         Prints help information
-    -v, --verbosity    verbosity level also control by environment variable RUSTYREAD_LOG if flag is
-                       set RUSTYREAD_LOG value is ignored
-    -V, --version      Prints version information
+    rustyread [OPTIONS] <SUBCOMMAND>
 
 OPTIONS:
-    -t, --threads <threads>    Number of thread use by rustyread, 0 use all avaible core, default
+    -h, --help                 Print help information
+    -t, --threads <THREADS>    Number of thread use by rustyread, 0 use all avaible core, default
                                value 0
+    -v, --verbosity            Verbosity level also control by environment variable RUSTYREAD_LOG if
+                               flag is set RUSTYREAD_LOG value is ignored
+    -V, --version              Print version information
 
 SUBCOMMANDS:
-    help        Prints this message or the help of the given subcommand(s)
+    help        Print this message or the help of the given subcommand(s)
     simulate    Generate fake long read
 ```
 
